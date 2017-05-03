@@ -1,0 +1,47 @@
+doctype html
+html
+  head
+    title DRIPO
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='/stylesheets/bootstrap.min.css', rel='stylesheet', media='screen')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+       .row.wrap
+          .col-sm-4
+          .col-sm-4.test
+            .col-sm-12.selectstation
+              br
+              br
+              if add_flag == "more"
+                form(role='form',action="/addstation",method="post")
+                  h2 Please add a Nursing Station Name
+                  br
+                  .form-group
+                  input.form-control(type='text', name="sname", placeholder='Station Name')
+                  br
+                  button.btn.btn-success.col-sm-6(style='float:none;margin:auto' type='submit') Add Station
+              else if add_flag=="newuser"
+                form(role='form',action="/addstation",method="post")
+                  h2 Please add a Nursing Station to start with
+                  br
+                  .form-group
+                  input.form-control(type='text', name="sname", placeholder='Station Name')
+                  br
+                  button.btn.btn-success.col-sm-6(type='submit') Add Station
+              else
+                form(role='form',action="/selectstation",method="post")
+                  h2 Select a Nursing Station
+                  br
+                  .form-group
+                  select.form-control(name='statn')
+                    each stat in stations
+                      option(value='#{stat.id}') #{stat.sname}
+                  br
+                  br
+                  .col-sm-6
+                      a.btn.btn-default.col-sm-12(href='/addstation?add_flag=more') Add New Station
+                  .col-sm-6
+                      button.btn.btn-success.col-sm-12(type='submit') Select        
+                &nbsp;
+  script(src='/js/jquery.min.js')
+  script(src='/js/bootstrap.min.js')

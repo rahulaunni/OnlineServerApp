@@ -1,0 +1,36 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title Dripo Care
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
+    link(href='/stylesheets/grayscale.css', rel='stylesheet')
+    link(href='/font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Raleway', rel='stylesheet')
+  body
+    .tile.row
+      .col-sm-1
+      .col-sm-7.pt2
+        h1#dc Dripo Care
+        p
+          | Of pious of spirit derive hatred gains eternal-return convictions. Convictions madness philosophy right zarathustra zarathustra. Dead eternal-return intentions burying zarathustra.
+      .col-sm-4.pt3
+        .login-box
+            form(action='/login', method='POST')
+              .form-group
+                label(for='exampleInputEmail1') User Name  
+                input#exampleInputEmail1.form-control(type='text', name='username', placeholder='User Name')
+              .form-group
+                label(for='exampleInputPassword1') Password 
+                input#exampleInputPassword1.form-control(type='password', name='password', placeholder='Password')  
+              .col-sm-6
+                button.btn.btn-success.col-sm-12(type='submit') Demo Login
+              .col-sm-6
+                a.btn.btn-primary.col-sm-12(href='/register') Register
+              span Username:test Password:pass
+            p#clock
+            script(src='/javascripts/clock.js')

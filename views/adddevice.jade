@@ -1,0 +1,7 @@
+each networks in network 
+  a.wifiname(data-url='/addwifi?wifiname=#{networks.ssid}') #{networks.ssid}
+  br
+div.icon(data-url="/adddevice")
+  div.btn.btn-primary Scan Device
+br
+a.connection.btn.btn-success(data-url='/connectdevice') Add Device

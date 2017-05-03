@@ -1,0 +1,98 @@
+h2 Add Patient
+form(role='form')
+                h4 Personal Details
+                .form-group
+                .col-sm-4
+                  input.form-control(type='text', name="pname", placeholder='Name')
+                .col-sm-4
+                  input.form-control(type='Number', name="pwt", placeholder='Weight')
+                .col-sm-4
+                  input.form-control(type='Number', name="page", placeholder='age')
+                  br
+                .col-sm-12
+                  select.form-control(name='bedid')
+                    each bed in beds
+                      option(value='#{bed._id}') #{bed.bname}
+                   br
+                h4 Medications
+                .col-sm-12.medicationlist(id="medicineholder")
+                  .medicinedata
+                    .col-sm-11
+                      .col-sm-6
+                        input.form-control(type='text', name="mname", placeholder='Medicine name')
+                      .col-sm-6
+                        input.form-control(type='Number', name="mrate", placeholder='ml/hr')
+                      .col-sm-12
+                        h5 Schedule
+                          span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
+                      .col-sm-12.timedata
+                          .col-sm-1.night(data-toggle="off") 00:00
+                          .col-sm-1.night(data-toggle="off") 01:00
+                          .col-sm-1.night(data-toggle="off") 02:00
+                          .col-sm-1.night(data-toggle="off") 03:00
+                          .col-sm-1.night(data-toggle="off") 04:00
+                          .col-sm-1.night(data-toggle="off") 05:00
+                          .col-sm-1(data-toggle="off") 06:00
+                          .col-sm-1(data-toggle="off") 07:00
+                          .col-sm-1(data-toggle="off") 08:00
+                          .col-sm-1(data-toggle="off") 09:00
+                          .col-sm-1(data-toggle="off") 10:00
+                          .col-sm-1(data-toggle="off") 11:00
+                          .col-sm-1(data-toggle="off") 12:00
+                          .col-sm-1(data-toggle="off") 13:00
+                          .col-sm-1(data-toggle="off") 14:00
+                          .col-sm-1(data-toggle="off") 15:00
+                          .col-sm-1(data-toggle="off") 16:00
+                          .col-sm-1(data-toggle="off") 17:00
+                          .col-sm-1.night(data-toggle="off") 18:00
+                          .col-sm-1.night(data-toggle="off") 19:00
+                          .col-sm-1.night(data-toggle="off") 20:00
+                          .col-sm-1.night(data-toggle="off") 21:00
+                          .col-sm-1.night(data-toggle="off") 22:00
+                          .col-sm-1.night(data-toggle="off") 23:00
+                       
+                    .col-sm-1.remove
+                      span.glyphicon.glyphicon-remove                                      
+                button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
+                br 
+                button.btn.btn-success(id="submit_button" type='button' style="margin-top:1em;scale:1.4") Submit
+                &nbsp;
+                .medicinedata-toload(style="display:none")
+                    .col-sm-11
+                      .col-sm-6
+                        input.form-control(type='text', name="mname", placeholder='Medicine name')
+                      .col-sm-6
+                        input.form-control(type='Number', name="mrate", placeholder='ml/hr')
+                      .col-sm-12
+                        h5 Schedule
+                          span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
+                      .col-sm-12.timedata
+                          .col-sm-1.night(data-toggle="off") 00:00
+                          .col-sm-1.night(data-toggle="off") 01:00
+                          .col-sm-1.night(data-toggle="off") 02:00
+                          .col-sm-1.night(data-toggle="off") 03:00
+                          .col-sm-1.night(data-toggle="off") 04:00
+                          .col-sm-1.night(data-toggle="off") 05:00
+                          .col-sm-1(data-toggle="off") 06:00
+                          .col-sm-1(data-toggle="off") 07:00
+                          .col-sm-1(data-toggle="off") 08:00
+                          .col-sm-1(data-toggle="off") 09:00
+                          .col-sm-1(data-toggle="off") 10:00
+                          .col-sm-1(data-toggle="off") 11:00
+                          .col-sm-1(data-toggle="off") 12:00
+                          .col-sm-1(data-toggle="off") 13:00
+                          .col-sm-1(data-toggle="off") 14:00
+                          .col-sm-1(data-toggle="off") 15:00
+                          .col-sm-1(data-toggle="off") 16:00
+                          .col-sm-1(data-toggle="off") 17:00
+                          .col-sm-1.night(data-toggle="off") 18:00
+                          .col-sm-1.night(data-toggle="off") 19:00
+                          .col-sm-1.night(data-toggle="off") 20:00
+                          .col-sm-1.night(data-toggle="off") 21:00
+                          .col-sm-1.night(data-toggle="off") 22:00
+                          .col-sm-1.night(data-toggle="off") 23:00
+                       
+                    .col-sm-1.remove
+                      span.glyphicon.glyphicon-remove                            
+                
+script(src='/js/addpatient.js')

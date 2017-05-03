@@ -1,0 +1,190 @@
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('/fonts/glyphicons-halflings-regular.eot');
+  src: url('/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+}
+
+html,body,.row {
+  height:100%;
+  overflow:hidden;
+ 
+}
+body{
+ background:#EEEEEE;
+}
+.leftbar{
+height:100%;
+color:#FCFCFC;
+text-align:center;
+padding:0px;
+background:#263238;
+transition:all 1s;
+overflow:hidden;
+
+}
+
+.leftbar .iconmain{
+text-align:center;
+background:#111111;
+height:50px;
+padding-top:10px;
+margin-bottom:30px;
+font-size:25px;
+}
+
+.leftbar .iconmain span::before{
+letter-spacing:-14px;
+}
+
+
+.leftbar .icon{
+text-align:right;
+width:300%;
+transition:all 1s;
+font-size:140%;
+line-height:30px;
+height:40px;
+}
+
+.leftbar .icon span::before{
+letter-spacing:-9px;
+}
+.leftbar .icon div{
+font-size:18px;
+padding-top:2px;
+float:left;
+width:65%;
+text-align:left;
+color: #818181;
+transition: 1s
+}
+.leftbar .icon div:hover{
+    color: white;
+    background-blend-mode: overlay;
+}
+
+.leftbar .icon span{
+margin-right:14%;
+float:left;
+width:21%;
+transition:all 1s;
+}
+.leftbar .icon span:hover{
+  background-blend-mode: overlay;
+    
+}
+.middlebar{
+overflow:scroll;
+padding-top:10px;
+height:100%;
+transition:all 1s;
+}
+
+.middlebar .card{
+border-radius:10px;
+background-color:#FFFFFF;
+border:1px solid #CCCCCC;
+margin-bottom:1em;
+padding:0px;
+overflow:hidden;
+display:flex;
+}
+
+.middlebar .card .bed{
+color:#FFFFFF;
+background:#263238;
+text-align:center;
+display:flex;
+}
+
+
+.bed h3{
+display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width:100%;
+}
+
+
+
+.middlebar .card div{
+margin:0px;
+padding:0px;
+border-radius:.1em;
+padding-bottom:0px;
+}
+
+.middlebar .span{
+border-radius:.1em;
+border:1px solid #CCCCCC;
+}
+
+
+.middlebar .card .cardname{
+padding:10px;
+padding-left:3em;
+}
+
+
+.middlebar .card .schhold{
+padding-top:.8em;
+
+}
+
+.middlebar .card .schhold div{
+border-top:1px solid #aaaaaa;
+}
+
+.middlebar .card .schhold .cnt{
+border:none;
+background:#263238;
+color:#FFFFFF;
+margin-top:-.5em;
+font-size:.8em;
+padding:2px;
+}
+
+
+.medicines{
+text-align:center;
+background:#EEEEEE;
+line-height:1em;
+font-size:10px;
+}
+
+.medicines p{
+line-height:1em;
+margin:.5em;
+font-weight:bolder;
+border-right:1px solid #AAAAAA;
+}
+
+.selectstation{
+	text-align: center;
+	background: white;
+	border-radius: .3em;
+	box-shadow: 0px 0px 5px #CCCCCC;
+	padding:3em;
+	padding-bottom: 4em;
+	padding-top: 0;
+}
+.test{
+	 position: relative;
+  top: 50%;
+  transform: translateY(-50%)
+}
+.reg{
+  text-align: center;
+  background: white;
+  border-radius: .3em;
+  box-shadow: 0px 0px 5px #CCCCCC;
+  padding-bottom: 4em;
+  padding:10%;
+  margin:0;
+  float: none;
+  margin:auto;
+}
+.select{
+  background-color: green;
+}
