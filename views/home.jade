@@ -2,21 +2,22 @@ div.col-sm-12
       each bed in beds
          div.col-sm-12.card
                        div.col-sm-2.bed
-                         h3 #{bed.bname}
-
-                       div.col-sm-10(style="background:#FFFFFF")
-                         div.col-sm-6.cardname #{bed._patient.name} 
-                           
-                         div.col-sm-6.cardname
-                           h4 
-                         div.col-sm-12.medicines
+                        h3 #{bed.bname}
+                        br
+                        h5 #{bed._patient.name} 
+                       div.col-sm-7.medication(style="background:white")
+                        div.col-sm-12.medicines
                            each med in bed._patient._medication
-                             div.col-sm-3
-                               p
+                             div.col-sm-3.medname
                                span #{med.name}
-                             div.col-sm-9.schhold
+                             div.col-sm-8.schhold
                               each tim in med._timetable
-                                div.col-sm-1  #{tim.time}
+                                div.col-sm-2.time  #{tim.time}
+                       div.col-sm-3.infusion
+                          h4 Next Infusion
+                          h3 03:00 PM
                                
+                         
+                             
                          
                              

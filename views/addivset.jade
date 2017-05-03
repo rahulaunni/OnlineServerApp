@@ -1,14 +1,14 @@
 .col-sm-12
   br
   br
-  form(role='form',action="/addset",method="post")
-  h4 Add IV set
-  h5  IV set Name
-  .form-group
-  input.form-control(type='text', name="ivname", placeholder='IV set')
-  br
-  h5  IV set Dropfactor
-  .form-group
-  input.form-control(type='text', name="ivdpf", placeholder='IV Drop Factor')
-  br
-  button.btn.btn-info(type='submit') Add Station
+  form(role='form',action="/addivset",method="post")
+    h4 Add IV set
+    h5  IV set Name
+    .form-group
+    input.form-control(type='text', name="ivname", placeholder='IV set')
+    br
+    h5  IV set Dropfactor
+    .form-group
+    input.form-control(type='text', name="ivdpf", placeholder='IV Drop Factor')
+    br
+    button.btn.btn-info(type='submit') Add IV-Set

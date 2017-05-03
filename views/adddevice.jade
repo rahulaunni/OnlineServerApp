@@ -1,7 +1,9 @@
-each networks in network 
-  a.wifiname(data-url='/addwifi?wifiname=#{networks.ssid}') #{networks.ssid}
+.col-sm-12
   br
-div.icon(data-url="/adddevice")
-  div.btn.btn-primary Scan Device
-br
-a.connection.btn.btn-success(data-url='/connectdevice') Add Device
+  br
+  form(role='form',action="/adddevice",method="post")
+    h4 Add Device
+    .form-group
+    input.form-control(type='text', name="divid", placeholder='Device #ID')
+    br
+    button.btn.btn-info(type='submit') Add Device

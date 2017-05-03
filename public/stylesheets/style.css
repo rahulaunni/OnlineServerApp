@@ -90,15 +90,24 @@ overflow:hidden;
 display:flex;
 }
 
-.middlebar .card .bed{
-color:#FFFFFF;
+.middlebar .card {
 background:#263238;
 text-align:center;
 display:flex;
 }
-
+.bed{
+  color:white;
+  background-color: #2A3F52;
+}
 
 .bed h3{
+display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width:100%;
+}
+.bed h5{
 display: flex;
   justify-content: center;
   flex-direction: column;
@@ -109,10 +118,7 @@ display: flex;
 
 
 .middlebar .card div{
-margin:0px;
-padding:0px;
 border-radius:.1em;
-padding-bottom:0px;
 }
 
 .middlebar .span{
@@ -127,13 +133,9 @@ padding-left:3em;
 }
 
 
-.middlebar .card .schhold{
-padding-top:.8em;
-
-}
-
 .middlebar .card .schhold div{
-border-top:1px solid #aaaaaa;
+padding-bottom: .8em;
+padding-top: .8em;
 }
 
 .middlebar .card .schhold .cnt{
@@ -142,15 +144,17 @@ background:#263238;
 color:#FFFFFF;
 margin-top:-.5em;
 font-size:.8em;
-padding:2px;
 }
 
 
 .medicines{
 text-align:center;
-background:#EEEEEE;
+background:white;
 line-height:1em;
 font-size:10px;
+}
+.medicine span{
+  color:black;
 }
 
 .medicines p{
@@ -161,16 +165,16 @@ border-right:1px solid #AAAAAA;
 }
 
 .selectstation{
-	text-align: center;
-	background: white;
-	border-radius: .3em;
-	box-shadow: 0px 0px 5px #CCCCCC;
-	padding:3em;
-	padding-bottom: 4em;
-	padding-top: 0;
+  text-align: center;
+  background: white;
+  border-radius: .3em;
+  box-shadow: 0px 0px 5px #CCCCCC;
+  padding:3em;
+  padding-bottom: 4em;
+  padding-top: 0;
 }
 .test{
-	 position: relative;
+   position: relative;
   top: 50%;
   transform: translateY(-50%)
 }
@@ -187,4 +191,45 @@ border-right:1px solid #AAAAAA;
 }
 .select{
   background-color: green;
+}
+.infusion{
+  background-color: #21B698;
+}
+.infusion h4{
+  color: white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width:100%;
+}
+.infusion h3{
+  display: flex;
+  color:white;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width:100%;
+}
+.medicines{
+  padding-top: 10px;
+
+}
+.medname{
+  background-color: #F0F3F3;
+  border-radius: 25px;
+  padding: .5em;
+  line-height: .7em;
+  padding:1em; 
+
+}
+.schhold{
+  padding: 0px;
+  margin-bottom: .2em;
+}
+.time{
+  padding: 0px;
+  background-color: #21B698;
+  margin-left: .2em;
+
 }
