@@ -42,8 +42,9 @@ text-align:right;
 width:300%;
 transition:all 1s;
 font-size:140%;
-line-height:30px;
 height:40px;
+display: felx;
+padding-top: .5em;
 }
 
 .leftbar .icon span::before{
@@ -51,28 +52,32 @@ letter-spacing:-9px;
 }
 .leftbar .icon div{
 font-size:18px;
-padding-top:2px;
-float:left;
+/*padding-top:2px;
+*/float:left;
 width:65%;
 text-align:left;
 color: #818181;
 transition: 1s
 }
-.leftbar .icon div:hover{
+.leftbar .icon .a:hover{
     color: white;
     background-blend-mode: overlay;
 }
-
+.leftbar .active {
+    background-color: green;
+    
+    background-blend-mode: overlay;
+}
 .leftbar .icon span{
 margin-right:14%;
 float:left;
 width:21%;
 transition:all 1s;
 }
-.leftbar .icon span:hover{
+/*.leftbar .icon span:hover{
   background-blend-mode: overlay;
     
-}
+}*/
 .middlebar{
 overflow:scroll;
 padding-top:10px;

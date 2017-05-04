@@ -55,3 +55,8 @@ $(document).on("click","#middlebar .connection",function(){
   $( ".middlebar" ).html( data );
 });
 });
+$( ".leftbar .icon" ).click(function(){
+	$(".leftbar .active").removeClass("active"); //Remove any "active" class  
+	    $(this).addClass("active"); //Add "active" class to selected tab  
+	    return false;
+});
