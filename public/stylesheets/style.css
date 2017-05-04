@@ -64,8 +64,8 @@ transition: 1s
     background-blend-mode: overlay;
 }
 .leftbar .active {
-    background-color: green;
-    
+    transition-delay: .3s;
+    background-color:#21B698; 
     background-blend-mode: overlay;
 }
 .leftbar .icon span{
