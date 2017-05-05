@@ -57,43 +57,47 @@ router.get('/home', checkAuthentication, function(req, res) {
                 } 
             } 
         Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable'}}}).exec(function(err,bedd){
-        // reordering to sorted order
-        var bed=[];
-        for (var key in arr_bed_new)
-        {
-            for (var key2 in bedd)
-            {
-                if(arr_bed_new[key].toString()==bedd[key2]._id.toString())
-                {
-                    bed.push(bedd[key2])
+       var arr_pat=[];
+               for (var key in bedd) {
+                   arr_pat[key]=bedd[key]._patient._id;
 
-                }
-            }
+               }
+               // reordering to sorted order
+               var bed=[];
+               for (var key in arr_bed_new)
+               {
+                   for (var key2 in bedd)
+                   {
+                       if(arr_bed_new[key].toString()==bedd[key2]._id.toString())
+                       {
+                           bed.push(bedd[key2])
 
-        }
-        Timetable.find({'bed':{$in:arr_bed_new},'infused':'not_infused'}).sort({time:1}).exec(function(err,timee){
-                    if (err) return console.error(err);
-                    var arr_time_new=[];
-                    var n=timee.length;
-                    var count=0;
-                    for(var c=0;c<n;c++) //For removing duplicate bed ids 
-                        { 
-                            for(var d=0;d<count;d++) 
-                            { 
-                                if(timee[c].bed.toString()==arr_time_new[d].bed.toString()) 
-                                    break; 
-                            } 
-                            if(d==count) 
-                            { 
-                                arr_time_new[count] = timee[c]; 
-                                count++; 
-                            } 
-                        }
+                       }
+                   }
 
-                  for(var key in bed){
-                    bed[key].__v = arr_time_new[key].time;
-                    console.log(key);
-                  }  
+               }
+               Timetable.find({'patient':{$in:arr_pat},'infused':'not_infused'}).sort({time:1}).exec(function(err,timee){
+                   if (err) return console.error(err);
+                   var arr_time_new=[];
+                   var n=timee.length;
+                   var count=0;
+                   for(var c=0;c<n;c++) //For removing duplicate time  
+                       { 
+                           for(var d=0;d<count;d++) 
+                           { 
+                               if(timee[c].patient.toString()==arr_time_new[d].patient.toString()) 
+                                   break; 
+                           } 
+                           if(d==count) 
+                           { 
+                               arr_time_new[count] = timee[c]; 
+                               count++; 
+                           } 
+                       }
+
+                 for(var key in bed){
+                   bed[key].__v = arr_time_new[key].time;
+                 }  
                  res.render('home', {user: req.user,beds:bed,time:arr_time_new});
                     });
             });
@@ -211,7 +215,6 @@ router.post('/selectstation', checkAuthentication, function(req, res) {
     }, function(err, stat) {
         if (err) return console.error(err);
         req.session.station = stat.id;
-        console.log(req.session.station);
         res.redirect('/');
     });
 
@@ -219,9 +222,6 @@ router.post('/selectstation', checkAuthentication, function(req, res) {
 
 
 router.post('/addpatient', checkAuthentication, function(req, res) {
-console.log(req.body);
-
-
 // ADDING PATIENT
 		var patient= new Patient({
         name: req.body.patient.name,
@@ -269,6 +269,7 @@ console.log(req.body);
 								 var timin={};
 							 	 timin._bed=req.body.bed;
                                  timin.bed=req.body.bed;
+                                 timin.patient=patient._id.toString();
 								 timin._medication=currentValue._id;
                                  timin.station=req.session.station;
 								 timin.infused="not_infused";
@@ -303,12 +304,10 @@ console.log(req.body);
 
 });
 router.post('/adddevice', checkAuthentication, function(req, res) {
-    console.log(req.body);
     Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
 router.post('/addivset', checkAuthentication, function(req, res) {
-    console.log(req.body);
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
