@@ -71,11 +71,36 @@ router.get('/home', checkAuthentication, function(req, res) {
             }
 
         }
-         res.render('home', {user: req.user,beds:bed});
-            });
-    });
+        Timetable.find({'bed':{$in:arr_bed_new},'infused':'not_infused'}).sort({time:1}).exec(function(err,timee){
+                    if (err) return console.error(err);
+                    var arr_time_new=[];
+                    var n=timee.length;
+                    var count=0;
+                    for(var c=0;c<n;c++) //For removing duplicate bed ids 
+                        { 
+                            for(var d=0;d<count;d++) 
+                            { 
+                                if(timee[c].bed.toString()==arr_time_new[d].bed.toString()) 
+                                    break; 
+                            } 
+                            if(d==count) 
+                            { 
+                                arr_time_new[count] = timee[c]; 
+                                count++; 
+                            } 
+                        }
 
-});
+                  for(var key in bed){
+                    bed[key].__v = arr_time_new[key].time;
+                    console.log(key);
+                  }  
+                 res.render('home', {user: req.user,beds:bed,time:arr_time_new});
+                    });
+            });
+            });
+
+        });
+
 
 
 router.get('/register', function(req, res) {
