@@ -58,20 +58,23 @@ html {
     padding-left: 1em;
     color:gray;
 }
-.pt2 p{
-    padding: 1.5em;
-    font-size:1.2em;
-    line-height: 1.6em;
-    list-style-type: none;
+
+.pt2 img{
+    text-align: center;
+    padding-right: 1em;
+    width: 10%;
 }
 #dc{
-        margin: 20px;
-        font-size: 4em;
-        margin-bottom: .5em;
-}
-.pt2{
-   /* height: 80%;*/
+/*        margin: 20px;
+*/        font-size: 4em;
+/*        margin-bottom: .5em;
+*/}
+.pt2 {
+text-align: center;
+padding-bottom: 100px;
+padding-right: 20px;
 }
 .pt3{
     padding: 0px;
+    padding-bottom: 2em;
 }
