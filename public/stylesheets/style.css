@@ -43,8 +43,8 @@ margin-right:14%;
 width:300%;
 transition:all 1s;
 font-size:140%;
-height:40px;
-display: felx;
+height:50px;
+display: flex;
 padding-top: .5em;
 }
 
@@ -97,7 +97,7 @@ display:flex;
 
 .middlebar .card {
 background:#263238;
-text-align:center;
+text-align:right;
 display:flex;
 }
 .bed{
@@ -105,26 +105,14 @@ display:flex;
   background-color: #2A3F52;
 }
 
-.bed h3{
-display: flex;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  width:100%;
-}
-.bed h5{
-display: flex;
+.bed h2,.bed h4{
+  display: flex;
   justify-content: center;
   flex-direction: column;
   text-align: center;
   width:100%;
 }
 
-
-
-.middlebar .card div{
-border-radius:.1em;
-}
 
 .middlebar .span{
 border-radius:.1em;
@@ -138,32 +126,25 @@ padding-left:3em;
 }
 
 
-.middlebar .card .schhold div{
-padding-bottom: .8em;
-padding-top: .8em;
-}
-
 .middlebar .card .schhold .cnt{
 border:none;
 background:#263238;
 color:#FFFFFF;
-margin-top:-.5em;
-font-size:.8em;
 }
 
-
+.medication{
+  padding:0px;
+}
 .medicines{
 text-align:center;
 background:white;
-line-height:1em;
-font-size:10px;
+
 }
 .medicine span{
   color:black;
 }
 
 .medicines p{
-line-height:1em;
 margin:.5em;
 font-weight:bolder;
 border-right:1px solid #AAAAAA;
@@ -199,8 +180,9 @@ border-right:1px solid #AAAAAA;
 }
 .infusion{
   background-color: #21B698;
+  padding-right: 0px;
 }
-.infusion h4{
+.infusion h4,.infusion h2{
   color: white;
   display: flex;
   justify-content: center;
@@ -208,33 +190,107 @@ border-right:1px solid #AAAAAA;
   text-align: center;
   width:100%;
 }
-.infusion h3{
-  display: flex;
-  color:white;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  width:100%;
-}
+
 .medicines{
   padding-top: 10px;
 
 }
 .medname{
   background-color: #F0F3F3;
-  border-radius: 25px;
-  padding: .5em;
-  line-height: .7em;
-  padding:1em; 
+  border-top-left-radius: 3em;
+  border-bottom-left-radius: 3em;
+  padding:0px;
+  padding-left: .2em;
+}
 
+.stats{
+  background-color: #e71f63;
+  float: left;
+  width:23px;
+  height: 10%;
+  border-radius: 100%;
 }
 .schhold{
   padding: 0px;
-  margin-bottom: .2em;
+}
+.medicinehold{
+  margin-top: .3em;
+}
+
+.medname, .time{
+  padding-top:.3em;
+  padding-bottom:.3em;
+  font-size: 120%;
 }
 .time{
-  padding: 0px;
   background-color: #21B698;
   margin-left: .2em;
 
+}
+.infusion{
+   display: flex;
+}
+.infusion .del {
+ background-color: #FFFFFF;
+ padding:0px;
+}
+.del span{
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+   align-items: center;
+   color:#2A3F52;
+}
+
+.del span:first-child{
+  border-bottom: 1px solid #CCCCCC;
+
+}
+.msg{
+  text-align: center;
+  transition: all 1s;
+  width:100%;
+  position: relative;
+  height:0;
+  top:-100%;
+  overflow: hidden;
+  background-color: #F0F3F3;
+  color:#e71f63;
+}
+.msg div,.msg h4{
+height: 0px;
+overflow: visible;
+position: relative;
+top:31%;
+font-weight: bold;
+padding-top: 0px;
+padding-bottom: 0px;
+margin: 0px;
+}
+
+.msg div button{
+  width:100%;
+  font-weight: bold;
+}
+.holder{
+  transition: all 1s;
+  height: 100%;
+  background-color: #FFFFFF;
+  z-index:10;
+  position: relative;
+  top:0%;
+}
+
+
+.addposcn{
+  position: relative;
+  top:100%;
+  transition: all 1s;
+}
+.addposmodal{
+position: relative;
+top:-100%;
+height:100%;
+transition: all 1s;
 }

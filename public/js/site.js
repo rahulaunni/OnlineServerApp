@@ -43,20 +43,31 @@ $(document).on("click","#middlebar .icon",function(){
   $( ".middlebar" ).html( data );
 });
 });
-
-$(document).on("click","#middlebar .wifiname",function(){
-	$.get($(this).attr("data-url"), function( data ) {
-  $( ".middlebar" ).html( data );
-});
-});
-
 $(document).on("click","#middlebar .connection",function(){
 	$.get($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );
 });
 });
 $( ".leftbar .icon" ).click(function(){
-	$(".leftbar .active").removeClass("active"); //Remove any "active" class  
-	    $(this).addClass("active"); //Add "active" class to selected tab  
+	$(".leftbar .active").removeClass("active");   
+	    $(this).addClass("active"); 
 	    return false;
+});
+$(document).on("click","#middlebar .confirm",function(){
+	$.post($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
+
+$(document).on("click","#middlebar .delete",function(){
+$(this).parent().parent().parent().parent().children('.msg').addClass('addposmodal');
+$(this).parent().parent().parent().addClass('addposcn');
+});
+
+
+$(document).on("click","#middlebar .cancel",function(){
+		$(this).parent().parent().siblings().removeClass('addposcn');
+	$(this).parent().parent().removeClass('addposmodal');
+
+
 });

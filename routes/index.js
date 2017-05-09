@@ -163,12 +163,6 @@ router.get('/addbed', checkAuthentication, function(req, res) {
         user: req.user
     });
 });
-//to get wifi password
-router.get('/adddevice', checkAuthentication, function(req, res) {
-        res.render('adddevice', {
-            user: req.user
-        });
-    });
 router.get('/addivset', checkAuthentication, function(req, res) {
     res.render('addivset', {
         user: req.user
@@ -303,10 +297,6 @@ router.post('/addpatient', checkAuthentication, function(req, res) {
     });
 
 });
-router.post('/adddevice', checkAuthentication, function(req, res) {
-    Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
-    res.redirect('/');
-});
 router.post('/addivset', checkAuthentication, function(req, res) {
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
@@ -331,7 +321,28 @@ router.post('/register', function(req, res) {
 router.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/addstation?add_flag=null');
 });
-
+router.post('/deletebed', checkAuthentication, function(req, res) {
+    console.log(req.query.bed);
+    Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
+      console.log(bed);  
+    });
+    Patient.update({_bed:req.query.bed},{$unset:{_bed:""}},function(err,bed){
+      console.log(bed);  
+    });
+    Timetable.collection.remove({bed:req.query.bed})
+    res.redirect('/');    
+});
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//This request has change from ProjectServerApp
+router.get('/adddevice', checkAuthentication, function(req, res) {
+        res.render('adddevice', {
+            user: req.user
+        });
+});
+router.post('/adddevice', checkAuthentication, function(req, res) {
+    Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
+    res.redirect('/');
+});
 
 
 module.exports = router;
