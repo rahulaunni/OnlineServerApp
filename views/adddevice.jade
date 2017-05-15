@@ -1,9 +1,20 @@
-.col-sm-12
-  br
-  br
-  form(role='form',action="/adddevice",method="post")
-    h4 Add Device
-    .form-group
-    input.form-control(type='text', name="divid", placeholder='Device #ID')
-    br
-    button.btn.btn-info(type='submit') Add Device
+.col-sm-12.main
+  .col-sm-12.tab
+    ul.nav.nav-tabs.ivsetpills
+      li
+        a.list(data-toggle='pill', data-url='/listdevice') View
+      li.active
+        a.add(data-toggle='pill', data-url='/adddevice') Add 
+   .col-sm-12.cnt
+        each networks in network
+         .col-sm-6 
+           br
+           span #{networks.ssid}
+         .col-sm-6
+           br
+           a.connection.btn.btn-success.gyyphicons.glyphicon-plus(data-url='/addwifi?wifiname=#{networks.ssid}')
+        .col-sm-4   
+        div.icon(data-url="/adddevice")
+          br
+          div.btn.btn-primary Scan Device
+        br

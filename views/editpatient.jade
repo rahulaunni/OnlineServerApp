@@ -1,0 +1,99 @@
+div.deleteids
+  each bed in beds
+    input.form-control.delbedid(type='hidden', name="delbedid",  value='#{bed._id}')
+    input.form-control.delpid(type='hidden', name="delpid",  value='#{bed._patient._id}')
+    each med in bed._patient._medication
+      input.form-control.delmedid(type='hidden', name="delmedid", value='#{med._id}')
+      each tim in med._timetable
+        input.form-control.deltimeid(type='hidden', name="timeid", value='#{tim._id}')    
+.col-sm-12.main
+  .col-sm-12.cnt
+    each bed in beds 
+      h2 Edit Patient Details
+      form(role='form')
+                      h4 Personal Details
+                      .form-group
+                      .col-sm-4
+                        input.form-control(type='text', name="pname", placeholder='Name' value='#{bed._patient.name}')
+                        input.form-control(type='hidden', name="pid",  value='#{bed._patient._id}')
+                      .col-sm-4
+                        input.form-control(type='Number', name="pwt", placeholder='Weight' value='#{bed._patient.weight}')
+                      .col-sm-4
+                        input.form-control(type='Number', name="page", placeholder='age' value='#{bed._patient.age}')
+                        br
+                      .col-sm-12
+                        select.form-control(name='bedid')
+                          each bedlist in bedlists
+                            option(value='#{bedlist._id}') #{bedlist.bname}
+                         br
+                      h4 Medications
+                      .col-sm-12.medicationlist(id="medicineholder")
+                        each med in bed._patient._medication
+                          .medicinedata
+                            .col-sm-11
+                              .col-sm-6
+                                input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}')
+                                input.form-control(type='hidden', name="medid", value='#{med._id}')
+                              .col-sm-6
+                                input.form-control(type='Number', name="mrate", placeholder='ml/hr' value='#{med.rate}')
+                              .col-sm-12.timid
+                                h5 Schedule
+                                  each tim in med._timetable
+                                    input.form-control(type='hidden', name="timeid", value='#{tim._id}')
+                                  span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
+                              .col-sm-12.timedata
+                                - for (var i = 0; i < 24; ++i) {
+                                  - var flag=0
+                                  each tim in med._timetable
+                                    - if(i == tim.time)
+                                      - flag=1
+                                - if(flag==1)
+                                  .col-sm-1.night.select(data-toggle="on")=i+':00'
+                                - else
+                                  .col-sm-1.night(data-toggle="off")=i+':00'
+                                - }        
+                            .col-sm-1.remove
+                              span.glyphicon.glyphicon-remove                                      
+                      button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
+                      br 
+                      button.btn.btn-success(id="submit_button" type='button' style="margin-top:1em;scale:1.4") Update
+                      &nbsp;
+                      .medicinedata-toload(style="display:none")
+                          .col-sm-11
+                            .col-sm-6
+                              input.form-control(type='text', name="mname", placeholder='Medicine name')
+                            .col-sm-6
+                              input.form-control(type='Number', name="mrate", placeholder='ml/hr')
+                            .col-sm-12
+                              h5 Schedule
+                                span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
+                            .col-sm-12.timedata
+                                .col-sm-1.night(data-toggle="off") 00:00
+                                .col-sm-1.night(data-toggle="off") 01:00
+                                .col-sm-1.night(data-toggle="off") 02:00
+                                .col-sm-1.night(data-toggle="off") 03:00
+                                .col-sm-1.night(data-toggle="off") 04:00
+                                .col-sm-1.night(data-toggle="off") 05:00
+                                .col-sm-1(data-toggle="off") 06:00
+                                .col-sm-1(data-toggle="off") 07:00
+                                .col-sm-1(data-toggle="off") 08:00
+                                .col-sm-1(data-toggle="off") 09:00
+                                .col-sm-1(data-toggle="off") 10:00
+                                .col-sm-1(data-toggle="off") 11:00
+                                .col-sm-1(data-toggle="off") 12:00
+                                .col-sm-1(data-toggle="off") 13:00
+                                .col-sm-1(data-toggle="off") 14:00
+                                .col-sm-1(data-toggle="off") 15:00
+                                .col-sm-1(data-toggle="off") 16:00
+                                .col-sm-1(data-toggle="off") 17:00
+                                .col-sm-1.night(data-toggle="off") 18:00
+                                .col-sm-1.night(data-toggle="off") 19:00
+                                .col-sm-1.night(data-toggle="off") 20:00
+                                .col-sm-1.night(data-toggle="off") 21:00
+                                .col-sm-1.night(data-toggle="off") 22:00
+                                .col-sm-1.night(data-toggle="off") 23:00
+                               
+                          .col-sm-1.remove
+                            span.glyphicon.glyphicon-remove                            
+                        
+    script(src='/js/editpatient.js')

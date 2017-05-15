@@ -1,12 +1,19 @@
-doctype html
-html
-  head
-    title DRIPO
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(href='/stylesheets/bootstrap.min.css', rel='stylesheet', media='screen')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-body
-  h2 #{user.username}
-     h2 #{counts.count}
-  each bed in beds
-    h2 #{bed.bname}
+div.col-sm-12
+      each bed in beds
+         div.col-sm-12.card
+                       div.col-sm-2.bed(style="background:#2A3F52")
+                         h3 #{bed.bname}
+
+                       div.col-sm-10(style="background:#FFFFFF")
+                         div.col-sm-6.cardname #{bed._patient.name} 
+                           
+                         div.col-sm-6.cardname
+                           h4 
+                         div.col-sm-12.medicines
+                           each med in bed._patient._medication
+                             div.col-sm-3
+                               p
+                               span #{med.name}
+                             div.col-sm-9.schhold
+                              each tim in med._timetable
+                                div.col-sm-1  #{tim.time}

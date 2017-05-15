@@ -1,0 +1,11 @@
+div.col-sm-12.main
+	.col-sm-12.tab
+		ul.nav.nav-tabs.ivsetpills
+			li.active
+				a.list(data-toggle='pill', data-url='/listbed') View
+			li
+				a.add(data-toggle='pill', data-url='/addbed') Add   
+	.col-sm-12.cnt
+		each bed in beds
+			div.col-sm-12
+				h4 #{bed.bname}

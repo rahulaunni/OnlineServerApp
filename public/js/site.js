@@ -58,16 +58,28 @@ $(document).on("click","#middlebar .confirm",function(){
   $( ".middlebar" ).html( data );
 });
 });
-
+$(document).on("click","#middlebar .editpatient",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
 $(document).on("click","#middlebar .delete",function(){
 $(this).parent().parent().parent().parent().children('.msg').addClass('addposmodal');
 $(this).parent().parent().parent().addClass('addposcn');
 });
-
-
 $(document).on("click","#middlebar .cancel",function(){
 		$(this).parent().parent().siblings().removeClass('addposcn');
 	$(this).parent().parent().removeClass('addposmodal');
 
 
+});
+$(document).on("click","#middlebar .add",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
+$(document).on("click","#middlebar .list",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
 });

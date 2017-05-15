@@ -1,34 +1,35 @@
 div.col-sm-12
-      each bed in beds
-         div.col-sm-12.card
-                       div.col-sm-2.bed
-                        h2 #{bed.bname}
-                        h4 #{bed._patient.name} 
-                       div.col-sm-10.medication(style="background:white")
-                        div.holder
-                          div.col-sm-9.medicines
-                             each med in bed._patient._medication
-                              div.col-sm-12.medicinehold
-                                 div.col-sm-4.medname
-                                   div.stats &nbsp
-                                   div #{med.name}
-                                 div.col-sm-8.schhold
-                                   each tim in med._timetable
-                                     div.col-sm-2.time  #{tim.time}
-                          div.col-sm-3.infusion
-                            .col-sm-10
-                              h4 Next Infusion at
-                              h2 #{bed.__v+':00'}
-                            .col-sm-2.del
-                               span.btn-default.delete.glyphicon.glyphicon-remove
-                               span.btn-default.delete.glyphicon.glyphicon-pencil
-                        div.msg#msg
-                          h4.col-sm-6 Are you sure you want to delete
-                          div.col-sm-2
-                            button.btn.btn-danger.confirm(type='submit' data-url='/deletebed?bed=#{bed._id}') Confirm
-                          div.col-sm-2
-                            button.btn.btn-success.cancel(type='submit') Cancel
-                       
+  .col-sm-12.cnt
+        each bed in beds
+           div.col-sm-12.card
+                         div.col-sm-2.bed
+                          h2 #{bed.bname}
+                          h4 #{bed._patient.name} 
+                         div.col-sm-10.medication(style="background:white")
+                          div.holder
+                            div.col-sm-9.medicines
+                               each med in bed._patient._medication
+                                div.col-sm-12.medicinehold
+                                   div.col-sm-4.medname
+                                     div.stats &nbsp
+                                     div #{med.name}
+                                   div.col-sm-8.schhold
+                                     each tim in med._timetable
+                                       div.col-sm-2.time  #{tim.time}
+                            div.col-sm-3.infusion
+                              .col-sm-10.infc
+                                h4 Next Infusion at
+                                h2 #{bed.__v+':00'}
+                              .col-sm-2.del
+                                 span.btn-default.delete.glyphicon.glyphicon-remove
+                                 span.btn-default.editpatient.glyphicon.glyphicon-pencil(data-url='/editpatient?bed=#{bed._id}')
+                          div.msg#msg
+                            h4.col-sm-6 Are you sure you want to delete
+                            div.col-sm-2
+                              button.btn.btn-danger.confirm(type='submit' data-url='/deletebed?bed=#{bed._id}') Delete
+                            div.col-sm-2
+                              button.btn.btn-success.cancel(type='submit') Cancel
+                         
 
 
 

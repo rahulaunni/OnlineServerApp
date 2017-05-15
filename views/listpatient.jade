@@ -1,0 +1,15 @@
+div.col-sm-12.main
+	.col-sm-12.tab
+		ul.nav.nav-tabs.ivsetpills
+			li.active
+				a.list(data-toggle='pill', data-url='/listpatient') View
+			li
+				a.add(data-toggle='pill', data-url='/addpatient') Add 
+	.col-sm-12.cnt
+		each patient in patients 
+			div.col-sm-4
+				h4 #{patient.name}
+			div.col-sm-4
+				h4 #{patient.age}
+			div.col-sm-4
+				h4 #{patient.weight}
