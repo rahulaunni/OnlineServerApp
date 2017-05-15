@@ -526,6 +526,17 @@ router.post('/deletebed', checkAuthentication, function(req, res) {
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //This request has change from ProjectServerApp
+router.get('/listdevice',checkAuthentication,function(req,res){
+    Device.find({'sname':req.session.station}).exec(function(err,device){
+        if (err)return console,log(err);
+        res.render('listdevice',{
+            user: req.user,
+            devices:device
+        });
+
+    });
+
+});
 router.get('/adddevice', checkAuthentication, function(req, res) {
         res.render('adddeviceonl', {
             user: req.user

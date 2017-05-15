@@ -1,9 +1,15 @@
-.col-sm-12
-  br
-  br
-  form(role='form',action="/adddevice",method="post")
-    h4 Add Device
-    .form-group
-    input.form-control(type='text', name="divid", placeholder='Device #ID')
-    br
-    button.btn.btn-info(type='submit') Add Device
+.col-sm-12.main
+	.col-sm-12.tab
+		ul.nav.nav-tabs.ivsetpills
+			li
+				a.list(data-toggle='pill', data-url='/listdevice') View
+			li.active
+				a.add(data-toggle='pill', data-url='/adddevice') Add       
+	.col-sm-12.cnt
+		form(role='form',action="/adddevice",method="post")
+			h4 Add Device
+			.form-group
+			input.form-control(type='text', name="divid", placeholder='Device #ID')
+			br
+			button.btn.btn-info(type='submit') Add Device
+
