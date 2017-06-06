@@ -44,7 +44,18 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // mongoose
-mongoose.connect('mongodb://localhost/dripov2');
+// mongoose.connect('mongodb://localhost/dripov2');
+mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reconnectInterval:10000} }, function(error) {
+    if(error)
+    {   
+        
+        console.log("mongodb connection failed");
+    }
+    else
+    {
+        console.log("mongodb connection success");
+    }
+});
 
 app.use(session({secret: "Shhsssh"}));
 
@@ -96,8 +107,8 @@ var Device = require('./models/device')
 
 client.on('connect', function() {
     console.log("started");
-    client.subscribe('dripo/#');
-})
+    client.subscribe('dripo/#',{ qos: 1 });
+});
 
 
 client.on('message', function(topic, message) {
@@ -109,7 +120,7 @@ client.on('message', function(topic, message) {
         if (res[2] == 'req') {
                 if (message == "df") {
                     console.log(dev[0].divid);
-                    client.publish('dripo/' + id + '/df', "60&60&20&20&15&15&10&10&");
+                    client.publish('dripo/' + id + '/df',"60&60&20&20&15&15&10&10&",{ qos: 1, retain: false });
                 } 
             }
         else if(res[2]=='bed_req'){
@@ -165,7 +176,7 @@ client.on('message', function(topic, message) {
                         var pub_bed_slicer=pub_bedd.slice(0,19);
                         var pub_bed=pub_bed_slicer.join('');
 
-                        client.publish('dripo/' + id + '/bed',pub_bed);
+                        client.publish('dripo/' + id + '/bed',pub_bed,{ qos: 1, retain: false });
 
                         });
                 });
@@ -221,7 +232,7 @@ client.on('message', function(topic, message) {
                           pub_medd.push('&');  
                         }
                         var pub_med=pub_medd.join('');
-                        client.publish('dripo/' + id + '/med',pub_med);
+                        client.publish('dripo/' + id + '/med',pub_med,{ qos: 1, retain: false });
 
                         });
           }); 
@@ -239,7 +250,7 @@ client.on('message', function(topic, message) {
             var alert=30;
             var pub_rate=pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
             console.log(pub_rate);
-            client.publish('dripo/' + id + '/rate2set',pub_rate);
+            client.publish('dripo/' + id + '/rate2set',pub_rate,{ qos: 1, retain: false });
         });
         }
        }); 
