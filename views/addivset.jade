@@ -10,12 +10,13 @@
       h4 Add IV set
       h5  IV set Name
       .form-group
-      input.form-control(type='text', name="ivname", placeholder='IV set')
+      input.form-control(type='text', name="ivname", placeholder='IV set' required)
       br
       h5  IV set Dropfactor
       .form-group
-      input.form-control(type='text', name="ivdpf", placeholder='IV Drop Factor')
+      input.form-control(type='number', name="ivdpf", placeholder='IV Drop Factor' data-validation='number' required )
+      br
       br
       button.btn.btn-info(type='submit') Add IV-Set
-   
+
       

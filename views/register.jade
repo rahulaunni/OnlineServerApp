@@ -7,8 +7,6 @@ html
     link(href='/stylesheets/bootstrap.min.css', rel='stylesheet', media='screen')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    extends layout
-
     block content
       .col-sm-4
       .col-sm-4.container.test
@@ -18,16 +16,19 @@ html
           br
           form(role='form', action="/register",method="post")
             .form-group
-                input.form-control.col-sm-12(type='text', name="hname", placeholder='Enter Hospital Name')
+                input.form-control.col-sm-12(type='text', name="hname", placeholder='Enter Hospital Name' required)
                 br
                 br
             .form-group
-                input.form-control.col-sm-12(type='text', name="username", placeholder='Enter email')
+                input.form-control.col-sm-12(type='text', name="username", placeholder='Enter email',data-validation='email' data-validation-error-msg='Please enter a valid E-mail' required)
                 br
                 br
             .form-group
-                input.form-control.col-sm-12(type='password', name="password", placeholder='Password')
+                input.form-control.col-sm-12(type='password', name="password_confirmation", placeholder='Password' data-validation='strength' data-validation-strength="2" required)
                 br
+                br
+            .form-group
+                input.form-control.col-sm-12(type='password', name="password", placeholder='Re-enter Password' data-validation='confirmation' required)
                 br
                 br
             .col-sm-6      
@@ -35,5 +36,8 @@ html
             .col-sm-6      
                 a.btn.btn-primary.col-sm-12(href='/login') Cancel
             &nbsp;
-
-
+script(src='/js/jquery.min.js')
+script(src='/js/jQuery-Form-Validator/form-validator/jquery.form-validator.min.js')
+script(src='/js/regvalidator.js')
+           
+            

@@ -8,6 +8,7 @@ var Medication = require('../models/medication');
 var Timetable = require('../models/timetable');
 var Device = require('../models/device');
 var Ivset = require('../models/ivset');
+var Tempaccount = require('../models/tempaccount');
 var router = express.Router();
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
@@ -17,6 +18,7 @@ const wifiPassword = require('wifi-password');
 const wifiName = require('wifi-name');
 var ip = require('ip');
 var ObjectId = require('mongodb').ObjectID;
+var nodemailer = require("nodemailer");
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
         next();
@@ -74,7 +76,7 @@ router.get('/home', checkAuthentication, function(req, res) {
             {
                 if(arr_bed_new[key].toString()==bedd[key2]._id.toString())
                 {
-                    bed.push(bedd[key2])
+                    bed.push(bedd[key2]);
 
                 }
             }
@@ -113,7 +115,12 @@ router.get('/home', checkAuthentication, function(req, res) {
 
 
 router.get('/register', function(req, res) {
+   
     res.render('register', {});
+});
+router.get('/forgot', function(req, res) {
+   
+    res.render('forgot', {});
 });
 router.get('/addstation', checkAuthentication, function(req, res) {
     //console.log(req.query.add_flag);
@@ -197,7 +204,7 @@ router.get('/listpatient',checkAuthentication,function(req,res){
 
 });
 router.get('/addbed', checkAuthentication, function(req, res) {
-    res.render('addbednew', {
+    res.render('addbed', {
         user: req.user
     });
 });
@@ -309,12 +316,12 @@ console.log(req.body);
             });         
             var med=[{}];
             for (var key in req.body.medications) {
-                var medin={}
-                medin._bed=req.body.bed,
+                var medin={};
+                medin._bed=mongoose.Types.ObjectId(req.body.bed),
                 medin._station=req.session.station,
                 medin.name=req.body.medications[key].name,
-                medin.rate=req.body.medications[key].rate
-                
+                medin.rate=req.body.medications[key].rate,
+
                 med[key]=medin;
                 }
                 
@@ -415,7 +422,7 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
                 var med=[{}];
                 for (var key in req.body.medications) {
                     var medin={}
-                    medin._bed=req.body.bed,
+                    medin._bed=ObjectId(req.body.bed),
                     medin._station=req.session.station,
                     medin.name=req.body.medications[key].name,
                     medin.rate=req.body.medications[key].rate
@@ -485,21 +492,107 @@ router.post('/addivset', checkAuthentication, function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-    Account.register(new Account({
-        username: req.body.username,
-        hname: req.body.hname
-    }), req.body.password, function(err, account) {
-        if (err) {
-            return res.render('register', {
-                account: account
-            });
-        }
+//check whether the user is already registered    
+    Account.find({'username':req.body.username}).exec(function(err, tempp) {
+    if(tempp.length !==0){
+        res.render('errusralreadyexist');
+    }
+//if new user    
+    else
+    {
+    //setting up node mailer to send verification mail
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'dripocare@gmail.com', // our mail id and password
+        pass: '3v3lab5.co'
+      }
+    });
+    //making the verification link
+    var rand=Math.floor((Math.random() * 100) + ((54*1245)*5678)); //creating a random id for verification
+    var host=req.get('host');
+    //passing unique id and username as query
+    var link="http://"+req.get('host')+"/verify?id="+rand+"&uid="+req.body.username; 
+    //e-mail part
+    var mailOptions = {
+      from: 'dripocare@gmail.com',
+      to: req.body.username,
+      subject: 'Verification Link For Dripo.care',
+    html : "Hello "+req.body.username+",<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
+    };
+    //sending e-mail to registered mail id
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
 
-        passport.authenticate('local')(req, res, function() {
-            res.redirect('/login');
+      }
+    });
+    //storing user details + unique id in a temp collection
+        Tempaccount.collection.update({username:req.body.username},{$set:{username:req.body.username,hname:req.body.hname,password:req.body.password,rand:rand.toString(),host:host.toString(),link:link.toString()}},{upsert:true})
+        res.render('reglinksend',{mailid:req.body.username,msg1:"A link has been send to",msg2:"Verify the link and complete the registration"});
+       }
+});
+router.get('/verify',function(req,res){
+    //search whether the user is available in temp collection
+    Tempaccount.find({'username':req.query.uid}).exec(function(err,tmp){
+        //for the link exipration that is temp account is deleted on first link visit
+        if(tmp.length==0)
+        {
+            res.render('regcmpltmsg',{msg:"Link has been Expired"});
+        }
+        else
+        {
+            //comparing the link with the link stored in database
+            console.log(req.protocol+":/"+req.get('host'));
+            if((req.protocol+"://"+req.get('host'))==("http://"+tmp[0].host))
+            {                    
+                console.log(tmp[0].rand);
+                console.log(req.query.id);
+                console.log("Domain is matched. Information is from Authentic email");
+                //comparing the unique-id
+                if(req.query.id==tmp[0].rand)
+                {
+                    console.log("email is verified");
+                    Tempaccount.find({'rand':req.query.id}).exec(function(err, temp) {
+                        console.log(temp);
+                        //Registering the user by creating an permanent account
+                        Account.register(new Account({
+                            username: temp[0].username,
+                            hname: temp[0].hname}),temp[0].password, function(err, account) {
+                            if (err) {
+                                console.log(err);
+                                res.end(err);
+                            }
+                            else
+                            //after successful permanent account creation; deleting the temp account
+                            Tempaccount.collection.remove({'rand':req.query.id.toString()});
+                            res.render('regcmpltmsg',{msg:'Registration completed Successfuly'});
+                            passport.authenticate('local')(req, res, function() {
+                                res.redirect('/login');
+                            });
+                        });
+
+
+                    });
+                }
+                else
+                {
+                    console.log("email is not verified");
+                    res.end("<h1>Bad Request</h1>");
+                }
+            }
+            else
+            {
+                res.end("<h1>Request is from unknown source");
+            }
+            }
         });
+    
     });
 });
+
 router.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/addstation?add_flag=null');
 });
@@ -507,23 +600,116 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
 router.post('/deletebed', checkAuthentication, function(req, res) {
     console.log(req.query.bed);
     Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
-      console.log(bed);  
     });
     Bed.update({_id:req.query.bed},{$set:{bedstatus:"unoccupied"}},function(err,bed){
-      console.log(bed);  
     });
     Patient.update({_bed:req.query.bed},{$set:{patientstatus:"inactive"}},function(err,bed){
-      console.log(bed);  
     });
     Patient.update({_bed:req.query.bed},{$unset:{_bed:""}},function(err,bed){
+    });
+    Medication.update({_bed:req.query.bed},{$unset:{_bed:""}},function(err,bed){
       console.log(bed);  
     });
-
-    Timetable.collection.remove({bed:req.query.bed})
-    res.redirect('/');
-
-    
+    Timetable.collection.remove({bed:req.query.bed});
+    res.redirect('/');    
 });
+//forgot password
+router.post('/forgot', function(req, res) {
+    //check whether there is a user
+    Account.find({'username':req.body.username}).exec(function(err, temp) {
+    if(temp.length===0){
+        res.render('errnouserfound');
+    }
+    else{
+    console.log(temp);
+    //setting up node mailer
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'dripocare@gmail.com', // our mail id and password
+        pass: '3v3lab5.co'
+      }
+    });
+    var rand=Math.floor((Math.random() * 100) + ((54*1245)*5678*897656)); //creating a random id for verification
+    var host=req.get('host');
+    var loginn="http://"+req.get('host')+"/login";
+    var link="http://"+req.get('host')+"/reset?id="+rand+"&uid="+req.body.username+"&hid="+temp[0].hname; //making link
+    var mailOptions = {
+      from: 'dripocare@gmail.com',
+      to: req.body.username,
+      subject: 'Reset Password of Dripo.care',
+    html : "Hello"+req.body.username+",<br> Please Click on the link to reset your password.<br><a href="+link+">Click here to verify</a>" 
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        //add code to store temp account
+
+      }
+    });
+        Tempaccount.collection.update({username:req.body.username},{$set:{username:req.body.username,rand:rand.toString(),host:host.toString(),link:link.toString()}},{upsert:true})
+        res.render('reglinksend',{mailid:req.body.username,msg1:"A link to change your password has been send to",msg2:""});
+    }
+});
+});
+router.get('/reset',function(req,res){
+    //search for temp account and for link exipiration
+    Tempaccount.find({'username':req.query.uid}).exec(function(err,tmp){
+         if(tmp.length===0)
+        {
+            res.render('regcmpltmsg',{msg:"Link has been Expired"});
+        }
+
+        else
+        {
+            console.log(req.protocol+":/"+req.get('host'));
+            if((req.protocol+"://"+req.get('host'))==("http://"+tmp[0].host))
+            {
+                console.log("Domain is matched. Information is from Authentic email");
+                console.log(req.query.id);
+                if(req.query.id==tmp[0].rand)
+                {
+                    console.log("email is verified");           
+                    res.render('passwordreset',{user:req.query.uid,hospital:req.query.hid});
+                    Tempaccount.collection.remove({'rand':req.query.id.toString()});
+                }
+                else
+                {
+                    console.log("email is not verified");
+                    res.end("<h1>Bad Request</h1>");
+                }
+            }
+            else
+            {
+                res.end("<h1>Request is from unknown source");
+            }
+            }
+
+        });
+   
+   
+});
+
+router.post('/passwordreset', function(req, res) {
+    Account.findByUsername(req.body.username).then(function(sanitizedUser) {
+            if (sanitizedUser) {
+                sanitizedUser.setPassword(req.body.password, function() {
+                    sanitizedUser.save();
+                    res.render('regcmpltmsg',{msg:'Password Has Been Changed Successfuly'});
+                });
+            } else {
+                res.render('errnouserfound');
+            }
+        }, function(err) {
+            console.error(err);
+        });
+
+
+});
+
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //This request has change from ProjectServerApp
 router.get('/listdevice',checkAuthentication,function(req,res){

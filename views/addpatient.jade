@@ -7,18 +7,18 @@
         a.add(data-toggle='pill', data-url='/addpatient') Add
   .col-sm-12.cnt 
     h2 Add Patient
-    form(role='form')
+    form(role='form' id='register')
                     h4 Personal Details
                     .form-group
                     .col-sm-4
-                      input.form-control(type='text', name="pname", placeholder='Name')
+                      input.form-control(type='text', name="pname", placeholder='Name' required)
                     .col-sm-4
-                      input.form-control(type='Number', name="pwt", placeholder='Weight')
+                      input.form-control(type='Number', name="pwt", placeholder='Weight' required )
                     .col-sm-4
-                      input.form-control(type='Number', name="page", placeholder='age')
+                      input.form-control(type='Number', name="page", placeholder='age' required)
                       br
                     .col-sm-12
-                      select.form-control(name='bedid')
+                      select.form-control(name='bedid' required )
                         each bed in beds
                           option(value='#{bed._id}') #{bed.bname}
                        br
@@ -27,9 +27,9 @@
                       .medicinedata
                         .col-sm-11
                           .col-sm-6
-                            input.form-control(type='text', name="mname", placeholder='Medicine name')
+                            input.form-control(type='text', name="mname", placeholder='Medicine name' required)
                           .col-sm-6
-                            input.form-control(type='Number', name="mrate", placeholder='ml/hr')
+                            input.form-control(type='Number', name="mrate", placeholder='ml/hr' required)
                           .col-sm-12
                             h5 Schedule
                               span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
@@ -63,7 +63,7 @@
                           span.glyphicon.glyphicon-remove                                      
                     button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
                     br 
-                    button.btn.btn-success(id="submit_button" type='button' style="margin-top:1em;scale:1.4") Submit
+                    button.btn.btn-success(id="submit_button" type='submit' style="margin-top:1em;scale:1.4") Submit
                     &nbsp;
                     .medicinedata-toload(style="display:none")
                         .col-sm-11
@@ -102,5 +102,4 @@
                            
                         .col-sm-1.remove
                           span.glyphicon.glyphicon-remove                            
-                    
 script(src='/js/addpatient.js')

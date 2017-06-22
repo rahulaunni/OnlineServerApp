@@ -22,14 +22,17 @@ html(lang='en')
             form(action='/login', method='POST')
               .form-group
                 label(for='exampleInputEmail1') User Name  
-                input#exampleInputEmail1.form-control(type='text', name='username', placeholder='User Name')
+                input#exampleInputEmail1.form-control(type='text', name='username', placeholder='User Name' data-validation="email" required)
               .form-group
                 label(for='exampleInputPassword1') Password 
-                input#exampleInputPassword1.form-control(type='password', name='password', placeholder='Password')  
+                input#exampleInputPassword1.form-control(type='password', name='password', placeholder='Password' required)  
               .col-sm-6
                 button.btn.btn-success.col-sm-12(type='submit') Demo Login
               .col-sm-6
                 a.btn.btn-primary.col-sm-12(href='/register') Register
-              span Username:test Password:pass
+              span Username:dripocare Password:password
+              br
+              a(href='/forgot') Forgot Password?
             p#clock
             script(src='/javascripts/clock.js')
+           

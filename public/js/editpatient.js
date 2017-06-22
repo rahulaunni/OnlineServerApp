@@ -2,12 +2,13 @@ $( "#add_med" ).click(function() {
 var str=$(".medicinedata-toload").html();
 var res = "<div class='medicinedata'>"+str+"</div>";
 $("#medicineholder").append(res);
+$("#medicineholder input").prop('required',true);
 });
 
 $(document).on('click','.remove',function(){
 $(this).parent().remove();
 });
-
+//$(".timedata div").click(function(){
 $(document).on('click','.timedata div',function(){
 	 if($(this).attr('data-toggle')=='off'){
 			$(this).addClass("select");
@@ -19,8 +20,11 @@ $(document).on('click','.timedata div',function(){
 	
 });
 
-
-$(document).on('click','#submit_button',function(){
+//$("#submit_button").click(function(){
+//$(document).on('click','#submit_button',function(){
+//$(document).on('submit','#register',function(e){
+$("#register").submit(function(e){
+ 	    e.preventDefault();	
 var data={};
 data.bed=$( "select[name='bedid']" ).val();
 data.delbed=$( "input[name='delbedid']" ).val();
@@ -74,6 +78,6 @@ console.log(data);
                             window.location='/';
                         }
                     });
-
-
+ 
+	return false;
 });

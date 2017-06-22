@@ -2,12 +2,13 @@ $( "#add_med" ).click(function() {
 var str=$(".medicinedata-toload").html();
 var res = "<div class='medicinedata'>"+str+"</div>";
 $("#medicineholder").append(res);
+$("#medicineholder input").prop('required',true);
 });
 
 $(document).on('click','.remove',function(){
 $(this).parent().remove();
 });
-
+//$(".timedata div").click(function(){
 $(document).on('click','.timedata div',function(){
 	 if($(this).attr('data-toggle')=='off'){
 			$(this).addClass("select");
@@ -19,12 +20,16 @@ $(document).on('click','.timedata div',function(){
 	
 });
 
+//$("#submit_button").click(function(){
+//$(document).on('click','#submit_button',function(){
+//$(document).on('submit','#register',function(e){
+$("#register").submit(function(e){
 
-$(document).on('click','#submit_button',function(){
+ 	    e.preventDefault();
 var data={};
 data.bed=$( "select[name='bedid']" ).val();
-data.patient={}
-data.medications=[{}]
+data.patient={};
+data.medications=[{}];
 data.patient.name=$( "input[name='pname']" ).val();
 data.patient.age=$( "input[name='page']" ).val();
 data.patient.weight=$( "input[name='pwt']" ).val();
@@ -54,7 +59,9 @@ $( ".medicinedata" ).each(function( index ) {
 });
 console.log("Ok");
 console.log(data);
-
+// $(function(){
+//        $("input").prop('required',true);
+// });
 				$.ajax({
 						type: 'POST',
 						data: JSON.stringify(data),
@@ -64,6 +71,6 @@ console.log(data);
                             window.location='/';
                         }
                     });
-
+    return false;
 
 });

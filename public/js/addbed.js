@@ -1,21 +1,26 @@
 $( "#add_bed" ).click(function() {
 var str=$(".bedtoadd").html();
 var res = "<div class='bedadd'>"+str+"</div>";
-$(".repeat").append(res);
+$(".addbed").append(res);
+//adding required for input field when clicking add more
+$(".addbed input").prop('required',true);
 });
 $(document).on('click','.remove',function(){
 $(this).parent().remove();
 });
-$("#submit_bed").click(function(){
+
+//$(document).on('submit','#register',function(e){
+ 	    //e.preventDefault();
+$("#register").submit(function(e){
+	e.preventDefault();
 	var data={};
 	data.bedname=[];
-	$( ".bedadd").find(".bname" ).each(function(index){
-	data.bedname[index]=$(this).val();;
-	});
-	console.log("Ok");
+	$( ".bedadd .addbed").find(".bname" ).each(function(index){
+	data.bedname[index]=$(this).val();
 	console.log(data);
+	});
 
-					$.ajax({
+						$.ajax({
 							type: 'POST',
 							data: JSON.stringify(data),
 					        contentType: 'application/json',
@@ -24,5 +29,6 @@ $("#submit_bed").click(function(){
 	                            window.location='/';
 	                        }
 	                    });
-
+		return false;
+	                
 });
