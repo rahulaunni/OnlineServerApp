@@ -89,7 +89,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
 
 // mqtt part*******************************************************************************************************************
 
@@ -102,6 +101,7 @@ var Patient = require('./models/patient');
 var Medication = require('./models/medication');
 var Timetable = require('./models/timetable');
 var Device = require('./models/device')
+var Ivset = require('./models/ivset')
 
 client.on('connect', function() {
     console.log("started");
@@ -249,11 +249,51 @@ client.on('message', function(topic, message) {
             client.publish('dripo/' + id + '/rate2set',pub_rate,{ qos: 1, retain: false });
         });
         }
-        else if (res[2] == 'req') {
-                if (message == "df") {
-                    console.log(dev[0].divid);
-                    client.publish('dripo/' + id + '/df',"60&60&20&20&15&15&10&10&",{ qos: 1, retain: false });
-                } 
+        else if (res[2] == 'req_df') { 
+                Medication.find({'_id':message}).exec(function(err,mrate){
+                    var mlhr=mrate[0].rate;
+                //search and sort all the dfs and stored it in an array
+                Ivset.find({'sname':dev[0].sname,'uid':dev[0].uid}).sort({ivdpf:1}).exec(function(err,dfs){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        //for sending only relavant dfs
+                        var df=[];
+                        for(var key in dfs)
+                        {
+                            df[key]=dfs[key].ivdpf;
+                        }
+                        var maxdf=18000/mlhr;
+                        var index=0;
+                        for(var key1 in df)
+                        {
+                            if(df[key1]<=maxdf)
+                            {
+                                index+=1;
+                            }
+                        }
+                        var rdf=df.slice(0,index);
+                        var pub_dff=[];
+                        for (var key2 in rdf)
+                        {
+                          pub_dff.push(rdf[key2]); 
+                          pub_dff.push('&'); 
+                          pub_dff.push(rdf[key2]); 
+                          pub_dff.push('&'); 
+
+                        }
+                        var pub_df=pub_dff.join('');
+                        //condition to send dfs
+
+                        client.publish('dripo/' + id + '/df',pub_df,{ qos: 1, retain: false });
+
+
+                    }
+
+                });
+            });
+                
             }
 
         }
@@ -262,4 +302,14 @@ client.on('message', function(topic, message) {
     
 
 });
+//socket.io config
+var socket_io    = require( "socket.io" );
+var io = socket_io();
+app.io = io;
+// socket.io events
+io.on( "connection", function( socket )
+{
+    console.log( "A user connected" );
+});
 
+module.exports = app;

@@ -5,7 +5,7 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 var Ivset = new Schema({
 	ivname:String,
-	ivdpf:String,
+	ivdpf:Number,
 	uid:String,
 	sname:String
 });

@@ -19,6 +19,7 @@ const wifiName = require('wifi-name');
 var ip = require('ip');
 var ObjectId = require('mongodb').ObjectID;
 var nodemailer = require("nodemailer");
+
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
         next();
