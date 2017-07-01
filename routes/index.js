@@ -69,6 +69,26 @@ router.get('/home', checkAuthentication, function(req, res) {
             arr_pat[key]=bedd[key]._patient._id;
 
         }
+        for(var lp1=0;lp1<bedd.length;lp1++)
+        {
+            for(var lp2=0;lp2<bedd[lp1]._patient._medication.length;lp2++)
+            {
+               for(var i =0;i<bedd[lp1]._patient._medication.length;i++)
+               {
+                for(var j =0;j<bedd[lp1]._patient._medication.length;j++)
+                {
+                    if(bedd[lp1]._patient._medication[i]._timetable[0].time<bedd[lp1]._patient._medication[j]._timetable[0].time)            
+                        {
+                            var temp=bedd[lp1]._patient._medication[i];
+                            bedd[lp1]._patient._medication[i]=bedd[lp1]._patient._medication[j];
+                            bedd[lp1]._patient._medication[j]=temp;
+                        }
+                    }
+               }
+
+            }
+
+        }
         //reordering the returened array of object to sorted order
         var bed=[];
         for (var key in arr_bed_new)
