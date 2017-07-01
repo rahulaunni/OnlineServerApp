@@ -328,3 +328,15 @@ transition: all 1s;
 .ivsetpills li{
   float: right;
 }
+.progressbar{
+  padding: 0px;
+  height:33px;
+  border-style:solid;
+  border-color: #F0F3F3;
+}
+.displayen{
+  display: block;
+}
+.displaydis{
+  display: none;
+}

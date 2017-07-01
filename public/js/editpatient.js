@@ -51,6 +51,7 @@ $( ".medicinedata" ).each(function( index ) {
 	medicine_data.name=$(this).find("input[name='mname']").val();
 	medicine_data.medid=$(this).find("input[name='medid']").val();
 	medicine_data.rate=$(this).find("input[name='mrate']").val();
+	medicine_data.tvol=$(this).find("input[name='tvol']").val();
 	var j=0,cn=0;
 	$(this).find(".timedata div").each(function(index){
 		if($(this).attr('data-toggle')=='on'){

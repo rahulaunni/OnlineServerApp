@@ -31,11 +31,13 @@ div.deleteids
                         each med in bed._patient._medication
                           .medicinedata
                             .col-sm-11
-                              .col-sm-6
+                              .col-sm-4
                                 input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}' required)
                                 input.form-control(type='hidden', name="medid", value='#{med._id}')
-                              .col-sm-6
+                              .col-sm-4
                                 input.form-control(type='Number', name="mrate", placeholder='ml/hr' value='#{med.rate}' required)
+                              .col-sm-4
+                                input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml' value='#{med.tvol}' required)
                               .col-sm-12.timid
                                 h5 Schedule
                                   each tim in med._timetable
@@ -60,10 +62,12 @@ div.deleteids
                       &nbsp;
                       .medicinedata-toload(style="display:none")
                           .col-sm-11
-                            .col-sm-6
+                            .col-sm-4
                               input.form-control(type='text', name="mname", placeholder='Medicine name')
-                            .col-sm-6
+                            .col-sm-4
                               input.form-control(type='Number', name="mrate", placeholder='ml/hr')
+                            .col-sm-4
+                              input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml')   
                             .col-sm-12
                               h5 Schedule
                                 span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)

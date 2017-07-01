@@ -8,6 +8,7 @@ _station:{ type: Schema.ObjectId, ref: 'Station'},
 _timetable:[{ type: Schema.ObjectId, ref: 'Timetable'}],
 name:String,
 rate:Number,
+tvol:Number
 });
 
 

@@ -36,7 +36,7 @@ router.get('/', checkAuthentication, function(req, res) {
 });
 router.get('/home', checkAuthentication, function(req, res) {
         //find timetable and sort in ascending order,there will be duplicates beacause search query is station and user id
-        Timetable.find({'station':req.session.station,'userid':req.user.id}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':'not_infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
         //storing sorted bed ids into an array
         var arr_bed=[];
@@ -322,6 +322,7 @@ console.log(req.body);
                 medin._station=req.session.station,
                 medin.name=req.body.medications[key].name,
                 medin.rate=req.body.medications[key].rate,
+                medin.tvol=req.body.medications[key].tvol,
 
                 med[key]=medin;
                 }
@@ -426,7 +427,9 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
                     medin._bed=ObjectId(req.body.bed),
                     medin._station=req.session.station,
                     medin.name=req.body.medications[key].name,
-                    medin.rate=req.body.medications[key].rate
+                    medin.rate=req.body.medications[key].rate,
+                    medin.tvol=req.body.medications[key].tvol,
+
                     
                     med[key]=medin;
                     }

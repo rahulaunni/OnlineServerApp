@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var http = require("http");
 var app = express();
+var ObjectId = require('mongodb').ObjectID;
 
 
 // view engine setup
@@ -102,7 +103,6 @@ var Medication = require('./models/medication');
 var Timetable = require('./models/timetable');
 var Device = require('./models/device')
 var Ivset = require('./models/ivset')
-
 client.on('connect', function() {
     console.log("started");
     client.subscribe('dripo/#',{ qos: 1 });
@@ -121,7 +121,7 @@ client.on('message', function(topic, message) {
         else{ 
         if(res[2]=='bed_req'){
             if(message == "bed"){
-                    Timetable.find({'station':dev[0].sname,'userid':dev[0].uid}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+                    Timetable.find({'station':dev[0].sname,'userid':dev[0].uid,'infused':'not_infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
                     if (err) return console.error(err);
                     var arr_bed=[];
                     for (var key in tim) {
@@ -190,7 +190,7 @@ client.on('message', function(topic, message) {
                 var arr_med_new=[];
                 var n=arr_med.length;
                 var count=0;
-                for(var c=0;c<n;c++) //For removing duplicate bed ids 
+                for(var c=0;c<n;c++) //For removing duplicate med ids 
                     { 
                         for(var d=0;d<count;d++) 
                         { 
@@ -239,14 +239,20 @@ client.on('message', function(topic, message) {
        else if (res[2]== 'rate_req'){
           Medication.find({'_id':message}).populate({path:'_bed',model:'Bed',populate:{path:'_patient',model:'Patient'}}).exec(function(err,ratee){
             if (err) return console.error(err);
+            Timetable.find({'_medication':message,'infused':'not_infused'}).sort({time:1}).exec(function(err,tim){
+            if (err) return console.error(err);
+            var timid=tim[0]._id;
+            console.log(timid);
             var rate=ratee[0].rate;
             var mname=ratee[0].name;
             var pname=ratee[0]._bed._patient.name;
-            var vol=100;
+            //var vol=ratee[0].tvol;
+            var vol=25;
             var alert=30;
-            var pub_rate=pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
+            var pub_rate=timid+'&'+pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
             console.log(pub_rate);
             client.publish('dripo/' + id + '/rate2set',pub_rate,{ qos: 1, retain: false });
+        });
         });
         }
         else if (res[2] == 'req_df') { 
@@ -302,14 +308,135 @@ client.on('message', function(topic, message) {
     
 
 });
+//********************************SOcketio part*********************************************************
 //socket.io config
 var socket_io    = require( "socket.io" );
 var io = socket_io();
 app.io = io;
+var sys = require('sys');
+var net = require('net');
 // socket.io events
-io.on( "connection", function( socket )
+io.sockets.on( "connection", function( socket )
 {
-    console.log( "A user connected" );
-});
 
+    console.log( "Client Connected.." );
+
+    socket.on('join', function(data) {
+
+        if(data==='retainsend'){
+        client=mqtt.connect('mqtt://localhost:1883');
+        client.on('connect', function() {
+          console.log("started");
+          client.subscribe('dripo/#',{ qos: 1 });
+        });
+       client.on('message', function (topic, payload, packet) {
+       var res = topic.split("/");
+       var id = res[1];
+        Device.find({'divid':id}).exec(function(err,dev){
+        if (dev==0){
+            //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
+        }
+        else{
+        if(topic=='dripo/'+ id + '/mon')
+        {
+            io.sockets.emit('mqtt',{'topic':topic.toString(),'payload':payload.toString()});
+            //Mqttmessage.collection.update({divid:res[1]},{$set:{divid:res[1],topic:topic,payload:payload.toString()}},{upsert:true})
+
+        } 
+        else
+        {
+            
+        }
+        }
+        });
+        });
+
+        console.log(data);
+    }
+    else{
+        console.log(data);
+
+    }
+    });
+     // socket connection indicates what mqtt topic to subscribe to in data.topic
+    socket.on('subscribe', function (data) {
+        console.log('Subscribing to '+data.topic);
+        socket.join(data.topic);
+        client.subscribe(data.topic);
+    });
+     // when socket connection publishes a message, forward that message the the mqtt broker
+    socket.on('publish', function (data) {
+        console.log('Publishing to '+data.topic);
+        client.publish(data.topic,data.payload);
+    });
+
+});
+// listen to messages coming from the mqtt broker
+client.on('message', function (topic, payload, packet) {
+     var res = topic.split("/");
+    var id = res[1];
+        Device.find({'divid':id}).exec(function(err,dev){
+        if (dev==0){
+            //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
+        }
+        else{
+        if(topic=='dripo/'+ id + '/mon')
+        {
+            io.sockets.emit('mqtt',{'topic':topic.toString(),'payload':payload.toString()});
+            var message = payload.toString();
+            var ress = message.split("-");
+            var medid = ress[0];
+            var timeid= ress[1];
+            var status = ress[2];
+            var rateml = ress[3];
+            var volinfused = ress[4];
+            var remaintime = ress[5];
+            var tvol = ress[6];
+            var progress_width = ((volinfused/tvol)*100);
+            if(status=='start')
+            {        
+                //Timetable.collection.update({_id:timeid},{$set:{infused:'infusing'}},{upsert:false});
+
+                 Timetable.update({_id:timeid},{$set:{infused:"infusing"}},function(err,bed){
+                    if(err){console.log(err);}
+
+                    });
+            }
+            if(status=='Complete')
+            {
+                 Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
+                    if(err){console.log(err);}
+                    });
+            }  
+            if(status=='stop')
+            {   
+                if(progress_width<95)
+                {
+                     Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
+                    if(err){console.log(err);}
+                    }); 
+                }
+                else
+                {
+                    Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
+                       if(err){console.log(err);}
+                      });
+
+                }
+                
+            }  
+            if(status=='Block_ACK'||status=='Rate Err_ACK'||status=='Empty_ACK')
+            {
+                Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
+                    if(err){console.log(err);}
+                    });
+            }
+        } 
+        else
+        {
+            console.log("invalid topic for socketio");
+        }
+}
+});
+});
 module.exports = app;

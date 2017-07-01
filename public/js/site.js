@@ -26,6 +26,7 @@ $( ".leftbar .icon span").css("margin-right","14%");
 
 $.get( "/home", function( data ) {
   $( ".middlebar" ).html( data );
+    
 });
 
 

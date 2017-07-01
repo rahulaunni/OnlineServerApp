@@ -34,5 +34,10 @@ html(lang='en')
               br
               a(href='/forgot') Forgot Password?
             p#clock
-            script(src='/javascripts/clock.js')
-           
+script(src='/javascripts/clock.js')
+script(src='/js/jquery.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js')
+script.
+      var socket = io.connect('http://localhost');
+      socket.on('connect', function(data) {
+      });         

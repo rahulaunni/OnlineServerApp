@@ -1,7 +1,7 @@
 div.col-sm-12
   .col-sm-12.cnt
         each bed in beds
-           div.col-sm-12.card
+           div.col-sm-12.card(id='#{bed._id}')
                          div.col-sm-2.bed
                           h2 #{bed.bname}
                           h4 #{bed._patient.name} 
@@ -13,13 +13,18 @@ div.col-sm-12
                                    div.col-sm-4.medname
                                      div.stats &nbsp
                                      div #{med.name}
-                                   div.col-sm-8.schhold
+                                   div.col-sm-8.schhold(id='#{med._id}')
                                      each tim in med._timetable
                                        div.col-sm-2.time  #{tim.time}
+                                   div.col-sm-8.progressbar.displaydis(id='#{med._id}'+'copy')
+                                     div.progress-bar.progress-bar-info.progress-bar-striped.active(id='#{med._id}'+'copy2')(role='progressbar',aria-valuemin='0', aria-valuemax='100')
+                                      span(id='#{med._id}'+'copy3') 
                             div.col-sm-3.infusion
                               .col-sm-10.infc
                                 h4 Next Infusion at
                                 h2 #{bed.__v+':00'}
+                              .col-sm-10.infusing(style="display:none")
+                                h2 Infusing
                               .col-sm-2.del
                                  span.btn-default.delete.glyphicon.glyphicon-remove
                                  span.btn-default.editpatient.glyphicon.glyphicon-pencil(data-url='/editpatient?bed=#{bed._id}')
@@ -29,7 +34,10 @@ div.col-sm-12
                               button.btn.btn-danger.confirm(type='submit' data-url='/deletebed?bed=#{bed._id}') Delete
                             div.col-sm-2
                               button.btn.btn-success.cancel(type='submit') Cancel
-                       
+script(src="/js/home.js")
+
+
+
 
 
 
