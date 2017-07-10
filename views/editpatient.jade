@@ -32,7 +32,7 @@ div.deleteids
                           .medicinedata
                             .col-sm-11
                               .col-sm-4
-                                input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}' required)
+                                input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}' required readonly)
                                 input.form-control(type='hidden', name="medid", value='#{med._id}')
                               .col-sm-4
                                 input.form-control(type='Number', name="mrate", placeholder='ml/hr' value='#{med.rate}' required)
@@ -40,19 +40,20 @@ div.deleteids
                                 input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml' value='#{med.tvol}' required)
                               .col-sm-12.timid
                                 h5 Schedule
-                                  each tim in med._timetable
-                                    input.form-control(type='hidden', name="timeid", value='#{tim._id}')
                                   span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
                               .col-sm-12.timedata
                                 - for (var i = 0; i < 24; ++i) {
                                   - var flag=0
+                                  - var timid;
                                   each tim in med._timetable
-                                    - if(i == tim.time)
+                                    - if(i == tim.time){
                                       - flag=1
+                                      - timid=tim._id;
+                                     - }
                                 - if(flag==1)
-                                  .col-sm-1.night.select(data-toggle="on")=i+':00'
+                                  .col-sm-1.night.select(data-toggle="on" data-id=timid)=i +':00'
                                 - else
-                                  .col-sm-1.night(data-toggle="off")=i+':00'
+                                  .col-sm-1.night(data-toggle="off" data-id=med._id)=i+':00'
                                 - }        
                             .col-sm-1.remove
                               span.glyphicon.glyphicon-remove                                      
@@ -64,6 +65,7 @@ div.deleteids
                           .col-sm-11
                             .col-sm-4
                               input.form-control(type='text', name="mname", placeholder='Medicine name')
+                              input.form-control(type='hidden', name="medid", value='new')
                             .col-sm-4
                               input.form-control(type='Number', name="mrate", placeholder='ml/hr')
                             .col-sm-4

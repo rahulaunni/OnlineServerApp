@@ -16,6 +16,7 @@ $(document).on('click','.timedata div',function(){
 		}else{
 	        $(this).removeClass("select");
 	        $(this).attr('data-toggle','off');
+	       // $(this). removeAttr("data-id");
 		}
 	
 });
@@ -28,19 +29,19 @@ $("#register").submit(function(e){
 var data={};
 data.bed=$( "select[name='bedid']" ).val();
 data.delbed=$( "input[name='delbedid']" ).val();
-data.patient={}
-data.medications=[{}]
+data.patient={};
+data.medications=[{}];
 data.patient.name=$( "input[name='pname']" ).val();
 data.patient.pid=$( "input[name='delpid']" ).val();
 data.patient.age=$( "input[name='page']" ).val();
 data.patient.weight=$( "input[name='pwt']" ).val();
 data.delete_medications=[];
-data.delete_timedata=[]
+data.delete_timedata=[];
 $( ".delmedid" ).each(function(index){
-data.delete_medications[index]=$(this).val();;
+data.delete_medications[index]=$(this).val();
 });
 $( ".deltimeid" ).each(function(index){
-data.delete_timedata[index]=$(this).val();;
+data.delete_timedata[index]=$(this).val();
 });
 var i=0;
 
@@ -48,6 +49,7 @@ $( ".medicinedata" ).each(function( index ) {
 	
 	var medicine_data={};
 	var time=[];
+	var id=[];
 	medicine_data.name=$(this).find("input[name='mname']").val();
 	medicine_data.medid=$(this).find("input[name='medid']").val();
 	medicine_data.rate=$(this).find("input[name='mrate']").val();
@@ -56,19 +58,21 @@ $( ".medicinedata" ).each(function( index ) {
 	$(this).find(".timedata div").each(function(index){
 		if($(this).attr('data-toggle')=='on'){
 			time[j]=cn;
+			id[j]=$(this).attr('data-id');
 			j++;
 		}
 		cn++;
 	});
-	
+	console.log(time);	
+	console.log(id);
 	medicine_data.time=time;
+	medicine_data.timeid=id;
 	//$(this).attr('data-toggle')
 	data.medications[i]=medicine_data;
     i++;
 });
 
 console.log("Ok");
-console.log(data);
 
 				$.ajax({
 						type: 'POST',
