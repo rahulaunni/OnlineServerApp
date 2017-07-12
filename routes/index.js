@@ -6,6 +6,7 @@ var Bed = require('../models/bed');
 var Patient = require('../models/patient');
 var Medication = require('../models/medication');
 var Timetable = require('../models/timetable');
+
 var Device = require('../models/device');
 var Ivset = require('../models/ivset');
 var Tempaccount = require('../models/tempaccount');
@@ -359,6 +360,8 @@ console.log(req.body);
                         Patient.collection.update({_id:patient._id},{$push:{_medication:med[key]._id}},{upsert:false})
                         // add timings of medicine to timings collection
                         }
+
+
                         tim=[{}];
                         var cn=0;
                         docs.ops.forEach(function callback(currentValue, index, array) {
@@ -403,7 +406,7 @@ console.log(req.body);
 
 });
 router.post('/updatepatient',checkAuthentication, function(req,res){
-//get the array of medication ids and time ids to be deleted passing values from editpatient.js 
+    //get the array of medication ids and time ids to be deleted passing values from editpatient.js 
     var delete_medication=[];
     for (var key in req.body.delete_medications) {
         delete_medication[key]=ObjectId(req.body.delete_medications[key]);
@@ -414,29 +417,35 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
     }
     var patid = ObjectId(req.body.patient.pid);
     var bedid = ObjectId(req.body.delbed);
-    //update patient collection based on edited data
-    Patient.collection.update({'_id':patid},{$set:{name:req.body.patient.name,age:req.body.patient.age,weight:req.body.patient.weight,_bed:req.body.bed}},function(err,patient){
-           //console.log(patient);  
-     });
-    //check condition for bed change
-    if(req.body.delbed==req.body.bed)
+    var newbedid = ObjectId(req.body.bed);
+
+    Patient.collection.update({'_id':patid},{$set:{name:req.body.patient.name,age:req.body.patient.age,weight:req.body.patient.weight,_bed:req.body.bed}});
+    if(req.body.delbed == req.body.bed)
     {
-        console.log("No bed change");
+       console.log("no bed change");
     }
-    //if bed change remove patient reference and set bed status to unoccupied.Givr ref to new bed 
-    else
+    else{
+           Bed.collection.update({'_id':bedid},{$unset:{_patient:""}});
+           Bed.collection.update({'_id':bedid},{$set:{bedstatus:"unoccupied"}});
+           Bed.collection.update({'_id':newbedid},{$set:{_patient:patid,bedstatus:"occupied"}});
+           Timetable.collection.updateMany({'bed':req.body.delbed},{$set:{bed:req.body.bed,_bed:req.body.bed}});
+           Medication.collection.updateMany({'_bed':bedid},{$set:{_bed:req.body.bed}});
+                            
+
+
+       } 
+    //saving the updated medication data
+    for(var lp3=0;lp3<req.body.medications.length;lp3++)
     {
-        Bed.collection.update({'_id':bedid},{$unset:{_patient:""}},function(err,bed){
-         console.log(bed);  
-       });
-       Bed.collection.update({'_id':bedid},{$set:{bedstatus:"unoccupied"}},function(err,bed){
-         console.log(bed);  
-        });
-       Bed.collection.update({'_id':req.body.bed},{$set:{_patient:patid,bedstatus:"occupied"}},function(err,bed){
-         console.log(bed);  
-        });
-    }
-//case 1:User deleted a medicine:-delete medication collection and all timetable collection
+     if(req.body.medications[lp3].medid != "new")
+     {    
+         var medid = ObjectId(req.body.medications[lp3].medid);
+        Medication.collection.update({_id:medid},{$set:{rate:req.body.medications[lp3].rate,tvol:req.body.medications[lp3].tvol}},{upsert:false});
+    
+     }
+    } 
+
+//delmedids returns the medicine ids for deletion----if user deleted a medicine
    var medids=[];
    for(var key in req.body.medications)
    {
@@ -460,25 +469,12 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
     }
   
    }
-Medication.collection.remove({'_id': {$in:delmedids}});
-Timetable.collection.remove({'_medication': {$in:delmedids}});
-Patient.collection.update({_id:patid},{$pull:{_medication:{$in:delmedids}}},{upsert:false});
-
-//case 2: User edited a medicine details or timedata:- Update medicine collection and timetable collection
-   //saving the updated medication data
-   for(var lp3=0;lp3<req.body.medications.length;lp3++)
-   {
-    if(req.body.medications[lp3].medid != "new")
-    {    
-        var medid = ObjectId(req.body.medications[lp3].medid);
-       Medication.collection.update({_id:medid},{$set:{rate:req.body.medications[lp3].rate,tvol:req.body.medications[lp3].tvol}},{upsert:false});
- 
-    }
-     console.log(req.body.medications[lp3].time);
-   }
-   //sub case:::for deleting the time data which already exist
-   //passed time ids 
-   var timeidss=[];
+var doop=(typeof(medids[0])).toString();
+console.log(delmedids);
+if(doop != 'undefined')
+{
+//deltimeids array has all the timeids of existing medicine to be deleted from database---user removes a time
+    var timeidss=[];
     for(var lp4=0;lp4<req.body.medications.length;lp4++)
     {
         for(var lp5=0;lp5<req.body.medications[lp4].timeid.length;lp5++)
@@ -512,24 +508,13 @@ Patient.collection.update({_id:patid},{$pull:{_medication:{$in:delmedids}}},{ups
     }
   
    } 
-   //removing timetable collection   
- Timetable.collection.remove({'_id': {$in:deltimeids}});
- //removing refernce from medicine collection
-    for(var lp9=0;lp9<req.body.medications.length;lp9++)
-    {
-    if(req.body.medications[lp9].medid != "new")
-    {    
-        var medidd = ObjectId(req.body.medications[lp9].medid);
-       Medication.collection.update({_id:medidd},{$pull:{_timetable:{$in:deltimeids}}},{upsert:false});
- 
-    }
+console.log(deltimeids);
 
-   }
-   //subcase 2::: adding a time to an existing medicine
-  var newtime,newtimedata,tim={},existmedid;
+//tim returns new time to be added to existing medicine
+  var newtime,newtimedata,tim=[{}],existmedid;
    for(var lp10 in req.body.medications)
    {
-        if(req.body.medications[lp10].medid != "new")
+        if(req.body.medications[lp10].medid.toString() != "new")
         {
             for(var lp11 in req.body.medications[lp10].timeid)
             {
@@ -540,16 +525,17 @@ Patient.collection.update({_id:patid},{$pull:{_medication:{$in:delmedids}}},{ups
               {
                 if(newtime==delete_medication[lp12])
                 {
+                    var timin={};
                     console.log("New time");
-                    tim._bed=req.body.bed;
-                    tim.bed=req.body.bed;
-                    tim.patient=patid.toString();
-                    tim._medication=existmedid;
-                    tim.station=req.session.station;
-                    tim.infused="not_infused";
-                    tim.userid=req.user.id;
-                    tim.time=newtimedata;
-                    savemed(tim,existmedid);
+                    timin._bed=req.body.bed;
+                    timin.bed=req.body.bed;
+                    timin.patient=patid.toString();
+                    timin._medication=existmedid;
+                    timin.station=req.session.station;
+                    timin.infused="not_infused";
+                    timin.userid=req.user.id;
+                    timin.time=newtimedata;
+                    tim.push(timin);
                     break;
                         }
                 if(lp12==(delete_medication.length-1))
@@ -563,117 +549,156 @@ Patient.collection.update({_id:patid},{$pull:{_medication:{$in:delmedids}}},{ups
 
         }
 
-   }
-   function savemed(tim1,existmedid1) {     
-    console.log("i am inside fun");
-   Timetable.collection.insert(tim1, onInsert);
-       function onInsert(err,times) {
-           if (err){console.log(err);} 
-           else{
-            console.log(times.ops[0]._id);   
-            Medication.collection.update({'_id':existmedid1},{$push:{_timetable:times.ops[0]._id}},{upsert:false});
-           
-               }
-           }
-       }
-                       
-                                                
-});
-//     Patient.collection.remove({'_id':patid})
-//     Medication.collection.remove({'_id': {$in:delete_medication}})
-//     Timetable.collection.remove({'_id': {$in:delete_timedata}})
-//     Bed.collection.update({'_id':bedid},{$unset:{_patient:""}},function(err,bed){
-//       console.log(bed);  
-//     });
-//     Bed.collection.update({'_id':bedid},{$set:{bedstatus:"unoccupied"}},function(err,bed){
-//       console.log(bed);  
-//     });
-//     // ADDING PATIENT
-//             var patient= new Patient({
-//             name: req.body.patient.name,
-//             patientstatus:'active',
-//             age: req.body.patient.age,
-//             weight: req.body.patient.weight,
-//             _bed: req.body.bed,
-//             _station:req.session.station
-//             });
-//            patient.save(function(err, patient_to_add) {
-//             if (err) return console.error(err);
-                
-//                 // get medications
-//                 Bed.findOne({ _id: req.body.bed}, function (err, doc){
-//                   doc._patient = patient;
-//                   doc.bedstatus = 'occupied';
-//                   doc.save();
-//                 });         
-//                 var med=[{}];
-//                 for (var key in req.body.medications) {
-//                     var medin={}
-//                     medin._bed=ObjectId(req.body.bed),
-//                     medin._station=req.session.station,
-//                     medin.name=req.body.medications[key].name,
-//                     medin.rate=req.body.medications[key].rate,
-//                     medin.tvol=req.body.medications[key].tvol,
+   } 
+   //to eliminate first element which is an empty object
+   tim.shift();
+   console.log(tim);
+//new med details in med array
+   var med=[{}];
+   var arrin1=[];
+   for(var key in req.body.medications)
+     {
+      if(req.body.medications[key].medid.toString() == "new")
+      {   
+          var medin={};
+          medin._bed=mongoose.Types.ObjectId(req.body.bed),
+          medin._station=req.session.station,
+          medin.name=req.body.medications[key].name,
+          medin.rate=req.body.medications[key].rate,
+          medin.tvol=req.body.medications[key].tvol,
+          med.push(medin);
+          arrin1.push(req.body.medications[key].time);
+      }
+     }  
+     med.shift();
+     console.log(med);
+     console.log(arrin1);
 
-                    
-//                     med[key]=medin;
-//                     }
-                    
-//                 Medication.collection.insert(med, onInsert);
+     var medidd=[];
+      for(var lp9=0;lp9<req.body.medications.length;lp9++)
+      {
+      if(req.body.medications[lp9].medid != "new")
+      {    
+          medidd.push(ObjectId(req.body.medications[lp9].medid));
+     
+      }
 
-//                     function onInsert(err,docs) {
-//                     if (err) {
-           
-//                     } else {
-//                             // console.log('med value');
-//                             // console.log(med[0]._id);
-//                             for (var key in med){
-//                             Patient.collection.update({_id:patient._id},{$push:{_medication:med[key]._id}},{upsert:false})
-//                             // add timings of medicine to timings collection
-//                             }
-//                             tim=[{}];
-//                             var cn=0;
-//                             docs.ops.forEach(function callback(currentValue, index, array) {
-                                
-//                                  var arrin=req.body.medications[index].time;
-//                                  for(var j=0;j<arrin.length;j++){
-//                                      var timin={};
-//                                      timin._bed=req.body.bed;
-//                                      timin.bed=req.body.bed;
-//                                      timin.patient=patient._id.toString();
-//                                      timin._medication=currentValue._id;
-//                                      timin.station=req.session.station;
-//                                      timin.infused="not_infused";
-//                                      timin.userid=req.user.id;
-//                                      timin.time=arrin[j];
-//                                      tim[cn]=timin;
-//                                      cn++;
-//                                      }
-                                                        
-//                             });
-                            
-//                             Timetable.collection.insert(tim, onInsert);
-                    
-//                                     function onInsert(err,times) {
-//                                         if (err) {
-//                                         } else {
-//                                         for (var key in med) 
-//                                         {
-//                                             for (var key2 in tim)
-//                                                 if(med[key]._id===tim[key2]._medication)
-//                                         Medication.collection.update({_id:med[key]._id},{$push:{_timetable:tim[key2]._id}},{upsert:false})
-//                                         }
-//                                         res.redirect('/');
-//                                         }
-//                                     }
+     }
 
-//                         }
-//                     }
+//adding a new medicine
+if(med.length >0){
+Medication.collection.insert(med, onInsert);
+
+    function onInsert(err,docs) {
+    if (err) {console.log(err);
+
+    } else {         
+            for (var key in med){
+            Patient.collection.update({_id:patid},{$push:{_medication:med[key]._id}},{upsert:false});
+            }
+            timm=[{}];
+            var cn=0;
+            docs.ops.forEach(function callback(currentValue, index, array) {
+
+                 var arrin=arrin1[index];
+                 for(var j=0;j<arrin.length;j++){
+                     var timin={};
+                     timin._bed=req.body.bed;
+                     timin.bed=req.body.bed;
+                     timin.patient=patid.toString();
+                     timin._medication=currentValue._id;
+                     timin.station=req.session.station;
+                     timin.infused="not_infused";
+                     timin.userid=req.user.id;
+                     timin.time=arrin[j];
+                     timm[cn]=timin;
+                     cn++;
+                     }
+                                        
+            });
             
+            Timetable.collection.insert(timm, onInsert);
+    
+                    function onInsert(err,times) {
+                        if (err) {
+                        } else {
+                        for (var key in med) 
+                        {
+                            for (var key2 in timm)
+                                if(med[key]._id===timm[key2]._medication)
+                        Medication.collection.update({_id:med[key]._id},{$push:{_timetable:timm[key2]._id}},{upsert:false});
+                        }
+                        }
+                    }
 
-//         });
+        }
+    }
+ }    
+    var bulktime = Timetable.collection.initializeOrderedBulkOp();
+    //remove all timetables when a medicine is deleted
+    if(delmedids.length > 0)
+    delmedids.forEach(function(currentValue,index,array){
+    bulktime.find({'_medication': currentValue}).remove();
+    });
+    //remove  timetables from already existing medicine
+    if(deltimeids.length >0)
+    deltimeids.forEach(function(currentValue,index,array){
+    bulktime.find({'_id': currentValue}).remove();
+    });
+    //inserting timetable to already existing medicine
+    if(tim.length > 0)
+    tim.forEach(function(currentValue,index,array){
+    bulktime.insert(currentValue);
+    });
+    if(delmedids.length > 0 || deltimeids.length > 0 || tim.length>0)
+    bulktime.execute(function(err, result) {
+            if(err) {
 
-// });
+            } else{
+                var bulkmed=Medication.collection.initializeOrderedBulkOp();
+                //remove medication on delete medicine
+                if(delmedids.length > 0)
+                delmedids.forEach(function(currentValue,index,array){
+                bulkmed.find({'_id': currentValue}).remove();
+                });
+                //remove timetable reference in medication when user deletes a time
+                if(medidd.length > 0)
+                medidd.forEach(function(currentValue,index,array){
+                bulkmed.find({'_id': currentValue}).update({$pull:{_timetable:{$in:deltimeids}}});
+                });
+                //add refernece of new time to already existing ids
+                if(tim.length > 0)
+                tim.forEach(function(currentValue,index,array){
+                bulkmed.find({'_id':currentValue._medication}).update({$push:{_timetable:currentValue._id}});
+                });
+                if(delmedids.length > 0 || deltimeids.length > 0 || tim.length>0)
+                bulkmed.execute(function(err, result2) {
+                    if(err){
+                    }
+                    else{
+                        var bulkpat=Patient.collection.initializeOrderedBulkOp();
+                        bulkpat.find({'_id':patid}).update({$pull:{_medication:{$in:delmedids}}});
+                        bulkpat.execute(function(err, result2) {
+                            if(err){
+                            }
+                            else{
+                                console.log("ok");
+                            }
+                        });
+                    }
+                });
+
+            }         
+        });
+
+}
+res.redirect('/');
+
+});
+
+
+
+
 router.post('/addivset', checkAuthentication, function(req, res) {
     console.log(req.body);
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
@@ -787,18 +812,13 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
 });
 
 router.post('/deletebed', checkAuthentication, function(req, res) {
-    console.log(req.query.bed);
+    var bedid=ObjectId(req.query.bed);
     Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
     });
     Bed.update({_id:req.query.bed},{$set:{bedstatus:"unoccupied"}},function(err,bed){
     });
-    Patient.update({_bed:req.query.bed},{$set:{patientstatus:"inactive"}},function(err,bed){
-    });
-    Patient.update({_bed:req.query.bed},{$unset:{_bed:""}},function(err,bed){
-    });
-    Medication.update({_bed:req.query.bed},{$unset:{_bed:""}},function(err,bed){
-      console.log(bed);  
-    });
+    Patient.collection.update({'_bed':bedid},{$set:{patientstatus:"inactive"},$unset:{_bed:""}});
+    Medication.collection.updateMany({'_bed':bedid},{$unset:{_bed:""}});
     Timetable.collection.remove({bed:req.query.bed});
     res.redirect('/');    
 });

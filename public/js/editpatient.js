@@ -9,6 +9,7 @@ $(document).on('click','.remove',function(){
 $(this).parent().remove();
 });
 //$(".timedata div").click(function(){
+// $(document).on("ready",function(){
 $(document).on('click','.timedata div',function(){
 	 if($(this).attr('data-toggle')=='off'){
 			$(this).addClass("select");
@@ -18,8 +19,8 @@ $(document).on('click','.timedata div',function(){
 	        $(this).attr('data-toggle','off');
 	       // $(this). removeAttr("data-id");
 		}
-	
-});
+	});
+// });
 
 //$("#submit_button").click(function(){
 //$(document).on('click','#submit_button',function(){
