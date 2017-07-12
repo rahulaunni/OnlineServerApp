@@ -40,6 +40,7 @@ div.deleteids
                                 input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml' value='#{med.tvol}' required)
                               .col-sm-12.timid
                                 h5 Schedule
+                                  span(data-toggle='tooltip', data-placement="top",title='Please enter time details' id="my") &nbsp&nbsp 
                                   span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
                               .col-sm-12.timedata
                                 - for (var i = 0; i < 24; ++i) {
