@@ -4,7 +4,7 @@
   src: url('/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
 
-html,body,.row {
+html,body{
   height:100%;
   overflow:hidden;
  
@@ -20,66 +20,58 @@ padding:0px;
 background:#263238;
 transition:all 1s;
 overflow:hidden;
-
+font-size:25px;
 }
 
 .leftbar .iconmain{
-text-align:center;
 background:#111111;
 height:50px;
 padding-top:10px;
 margin-bottom:30px;
-font-size:25px;
 }
 
-.leftbar .iconmain span::before{
-letter-spacing:-14px;
+.leftbar .iconmain .cnt{
+text-align:center;
+line-height:50px;
+
 }
-
-
 .leftbar .icon{
-text-align:right;
-margin-right:14%;
-width:300%;
-transition:all 1s;
-font-size:140%;
-height:50px;
+overflow:hidden;
+height:10%;
+}
+.leftbar .icon .cntin{
+transition:all 2s;
+position:relative;
+text-align:center;
+font-size:60%;
+line-height:100%;
+height:100%;
 display: flex;
-padding-top: .5em;
+align-items: center;
 }
 
-.leftbar .icon span::before{
-letter-spacing:-9px;
+.trint{
+transform: translate(150%,0%);
 }
-.leftbar .icon div{
-font-size:18px;
-/*padding-top:2px;
-*/float:left;
-width:65%;
-text-align:left;
-color: #818181;
-transition: 1s
+
+.trcollapse{
+transform: translate(0%,0%)
 }
-.leftbar .icon .a:hover{
-    color: white;
-    background-blend-mode: overlay;
-}
-.leftbar .active {
-    background-color:#21B698; 
-    background-blend-mode: overlay;
-}
-.leftbar .icon span{
-margin-right:14%;
-float:left;
-width:21%;
+
+.leftbar .icon .ic{
+display:flex;
+align-items:center;
+justify-content:center;
 transition:all 1s;
+height:100%;
+line-height:100%;
+font-size:100%;
+transform:scale(.7);
 }
-/*.leftbar .icon span:hover{
-  background-blend-mode: overlay;
-    
-}*/
+
 .middlebar{
-overflow:scroll;
+overflow-y:scroll;
+overflow-x:hidden;
 padding:0px;
 height:100%;
 transition:all 1s;
@@ -231,13 +223,12 @@ border-right:1px solid #AAAAAA;
 }
 
 .medname, .time{
-  padding-top:.3em;
-  padding-bottom:.3em;
-  font-size: 120%;
+  padding:.3em;
+  font-size: 100%;
 }
 .time{
   background-color: #21B698;
-  margin-left: .2em;
+  margin-left:.5%;
 
 }
 .infusion{
@@ -339,4 +330,174 @@ transition: all 1s;
 }
 .displaydis{
   display: none;
+}
+/* list bed */
+
+.list-bed{
+background:#ffffff;
+border: 1px solid #CCCCCC;
+margin-top:1em;
+display:flex;
+align-items:center;
+padding:0px;
+}
+.b1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#f3f3f3;
+}
+
+.i1{
+justify-content:center;
+display:flex;
+align-items:center;
+border-right:1px solid #CCCCCC;
+height:100%;
+line-height:20px;
+padding:10px;
+}
+
+.i2{
+justify-content:center;
+display:flex;
+align-items:center;
+text-align:center;
+line-height:20px;
+line-height:20px;
+}    
+
+/* list patient */
+
+.list-patient{
+background:#ffffff;
+border: 1px solid #CCCCCC;
+margin-top:1em;
+display:flex;
+align-items:center;
+padding:0px;
+}    
+.n1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#f3f3f3;
+}
+.a1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#ffffff;
+}
+.w1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#f3f3f3;
+
+}
+.l1{
+justify-content:center;
+display:flex;
+align-items:center;
+border-right:1px solid #CCCCCC;
+height:100%;
+line-height:20px;
+padding:10px;
+}
+.l2{
+justify-content:center;
+display:flex;
+align-items:center;
+text-align:center;
+line-height:20px;
+line-height:20px;
+}
+
+/* list device */
+
+.list-device{
+background:#ffffff;
+border: 1px solid #CCCCCC;
+margin-top:1em;
+display:flex;
+align-items:center;
+padding:0px;
+}
+.d1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#f3f3f3;
+}
+.m1{
+justify-content:center;
+display:flex;
+align-items:center;
+border-right:1px solid #CCCCCC;
+height:100%;
+line-height:20px;
+padding:10px;
+}
+.m2{
+justify-content:center;
+display:flex;
+align-items:center;
+text-align:center;
+line-height:20px;
+line-height:20px;
+}
+
+/* list ivset */
+
+.list-ivset{
+background:#ffffff;
+border: 1px solid #CCCCCC;
+margin-top:1em;
+display:flex;
+align-items:center;
+padding:0px;
+}
+.iv1{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#f3f3f3;
+}
+.iv2{
+font-size:20px;
+text-align:center;
+border-right:1px solid #CCCCCC;
+background-color:#ffffff;
+}
+.x1{
+justify-content:center;
+display:flex;
+align-items:center;
+border-right:1px solid #CCCCCC;
+height:100%;
+line-height:20px;
+padding:10px;
+}
+.x2{
+justify-content:center;
+display:flex;
+align-items:center;
+text-align:center;
+line-height:20px;
+line-height:20px;
+}
+
+
+::-webkit-scrollbar {
+    width:2px;
+}
+::-webkit-scrollbar-track {
+    background-color: #CCCCCC;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #aaaaaa;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
 }

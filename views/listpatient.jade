@@ -7,9 +7,14 @@ div.col-sm-12.main
 				a.add(data-toggle='pill', data-url='/addpatient') Add 
 	.col-sm-12.cnt
 		each patient in patients 
-			div.col-sm-4
-				h4 #{patient.name}
-			div.col-sm-4
-				h4 #{patient.age}
-			div.col-sm-4
-				h4 #{patient.weight}
+			div.col-sm-12.list-patient
+				div.col-sm-3.n1
+					h4 #{patient.name}
+				div.col-sm-4.a1
+					h4 #{patient.age}
+				div.col-sm-3.w1
+					h4 #{patient.weight}
+				.col-sm-1.l1
+					span.glyphicon.glyphicon-pencil
+				.col-sm-1.l2
+					span.glyphicon.glyphicon-remove

@@ -7,6 +7,10 @@ div.col-sm-12.main
 				a.add(data-toggle='pill', data-url='/adddevice') Add    
 	.col-sm-12.cnt
 		each device in devices
-			div.col-sm-12
-				h4 #{device.divid}
-		
+			div.col-sm-12.list-device
+				.col-sm-10.d1
+					h4 #{device.divid}
+				.col-sm-1.m1
+					span.glyphicon.glyphicon-pencil
+				.col-sm-1.m2
+					span.glyphicon.glyphicon-remove

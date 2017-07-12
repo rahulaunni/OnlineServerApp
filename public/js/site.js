@@ -1,12 +1,22 @@
 $( ".leftbar .iconmain" ).click(function() {
+	
 $( ".leftbar .iconmain span" ).removeClass("glyphicon-menu-hamburger");
 $( ".leftbar .iconmain span" ).addClass("glyphicon-chevron-left");
+
+$( ".leftbar .icon .cntin").removeClass("trint");
+$( ".leftbar .icon .ic").removeClass("col-sm-12");
+
+$( ".leftbar .icon .cntin").addClass("trcollapse");
+$( ".leftbar .icon .ic").addClass("col-sm-3");
+
 $( ".leftbar").removeClass("col-sm-1");
 $( ".middlebar").removeClass("col-sm-11");
-$( ".leftbar").addClass("col-sm-3");
-$( ".middlebar").addClass("col-sm-9");
-$( ".leftbar .icon").css("width","100%");
-$( ".leftbar .icon span").css("margin-right","10%");
+
+
+$( ".leftbar").addClass("col-sm-2");
+$( ".middlebar").addClass("col-sm-10");
+
+
 });
 
 $( ".middlebar" ).click(function() {
@@ -16,12 +26,23 @@ collapse();
 function collapse(){
 $( ".leftbar .iconmain span" ).removeClass("glyphicon-chevron-left");
 $( ".leftbar .iconmain span" ).addClass("glyphicon-menu-hamburger");
-$( ".leftbar").removeClass("col-sm-3");
-$( ".middlebar").removeClass("col-sm-9");
+$( ".leftbar .icon .cntin").removeClass("trcollapse");
+$( ".leftbar .icon .ic").removeClass("col-sm-3");
+
+
+$( ".leftbar .icon .cntin").addClass("trint");
+$( ".leftbar .icon .ic").addClass("col-sm-12");
+
+
+$( ".leftbar").removeClass("col-sm-2");
+$( ".middlebar").removeClass("col-sm-10");
 $( ".leftbar").addClass("col-sm-1");
 $( ".middlebar").addClass("col-sm-11");
-$( ".leftbar .icon").css("width","300%");
-$( ".leftbar .icon span").css("margin-right","14%");
+
+
+
+
+
 }
 
 $.get( "/home", function( data ) {
@@ -45,7 +66,9 @@ $(document).on("click","#middlebar .icon",function(){
 });
 });
 $(document).on("click","#middlebar .connection",function(){
+	
 	$.get($(this).attr("data-url"), function( data ) {
+		console.log("ok");
   $( ".middlebar" ).html( data );
 });
 });
