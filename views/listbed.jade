@@ -6,6 +6,12 @@ div.col-sm-12.main
 			li
 				a.add(data-toggle='pill', data-url='/addbed') Add   
 	.col-sm-12.cnt
-		each bed in beds
-			div.col-sm-12
-				h4 #{bed.bname}
+			each bed in beds                                          
+				div.col-sm-12.list-bed
+					.col-sm-10.b1
+						h4 #{bed.bname}
+					.col-sm-1.i1
+						span.glyphicon.glyphicon-pencil
+					.col-sm-1.i2
+						span.glyphicon.glyphicon-remove
+						

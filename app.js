@@ -45,6 +45,7 @@ passport.deserializeUser(Account.deserializeUser());
 
 // mongoose
 // mongoose.connect('mongodb://localhost/dripov2');
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reconnectInterval:10000} }, function(error) {
     if(error)
     {   

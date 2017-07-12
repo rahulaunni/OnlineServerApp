@@ -7,7 +7,12 @@ div.col-sm-12.main
 				a.add(data-toggle='pill', data-url='/addivset') Add 
 	.col-sm-12.cnt
 		each ivset in ivsets
-			div.col-sm-6
-				h4 #{ivset.ivname}
-			div.col-sm-6
-				h4 #{ivset.ivdpf}
+			div.col-sm-12.list-ivset
+				div.col-sm-5.iv1
+					h4 #{ivset.ivname}
+				div.col-sm-5.iv2
+					h4 #{ivset.ivdpf}
+				.col-sm-1.x1
+					span.glyphicon.glyphicon-pencil
+				.col-sm-1.x2
+					span.glyphicon.glyphicon-remove
