@@ -1,8 +1,24 @@
 .col-sm-1.leftbar
 	div.iconmain
 		span.glyphicon.glyphicon-menu-hamburger
-	div.icon.active.col-sm-12(data-url="/home")
+	div.icon.activem.col-sm-12(data-url="/home")
 		div.col-sm-12.ic
-			span.glyphicon.glyphicon-menu-hamburger
-		div.cntin.trint home
-
+			span.glyphicon.glyphicon-home
+		div.cntin.trint Home
+	div.icon.col-sm-12(data-url="/addpatient")
+		div.col-sm-12.ic
+			span.glyphicon.glyphicon-user
+		div.cntin.trint Add Patient
+	div.icon.col-sm-12(data-url="/addbed")
+		div.col-sm-12.ic
+			span.glyphicon.glyphicon-bed
+		div.cntin.trint Add Bed
+	div.icon.col-sm-12(data-url="/adddevice")
+		div.col-sm-12.ic
+			span.glyphicon.glyphicon-phone
+		div.cntin.trint Add Device
+	div.icon.col-sm-12(data-url="/addivset")
+		div.col-sm-12.ic
+			span.glyphicon.glyphicon-tint
+		div.cntin.trint Add IVSet
+	a.btn.btn-danger.glyphicon.glyphicon-off(href='/logout') 

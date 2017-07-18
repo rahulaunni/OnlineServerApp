@@ -72,9 +72,10 @@ $(document).on("click","#middlebar .connection",function(){
   $( ".middlebar" ).html( data );
 });
 });
+
 $( ".leftbar .icon" ).click(function(){
-	$(".leftbar .active").removeClass("active");   
-	    $(this).addClass("active"); 
+	$(".leftbar .icon").removeClass("activem");   
+	    $(this).addClass("activem"); 
 	    return false;
 });
 $(document).on("click","#middlebar .confirm",function(){
