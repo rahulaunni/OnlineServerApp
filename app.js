@@ -394,6 +394,7 @@ client.on('message', function (topic, payload, packet) {
             var remaintime = ress[5];
             var tvol = ress[6];
             var progress_width = ((volinfused/tvol)*100);
+            //database operations while infusion
             if(status=='start')
             {        
                 //Timetable.collection.update({_id:timeid},{$set:{infused:'infusing'}},{upsert:false});
