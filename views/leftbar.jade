@@ -1,4 +1,4 @@
-.col-sm-1.leftbar
+.col-lg-1.col-sm-1.col-md-1.hidden-xs.leftbar
 	div.iconmain
 		span.glyphicon.glyphicon-menu-hamburger
 	div.icon.activem.col-sm-12(data-url="/home")
@@ -21,4 +21,20 @@
 		div.col-sm-12.ic
 			span.glyphicon.glyphicon-tint
 		div.cntin.trint Add IVSet
-	a.btn.btn-danger.glyphicon.glyphicon-off(href='/logout') 
+	a.btn.btn-danger.glyphicon.glyphicon-off(href='/logout')
+
+nav.navbar.navbar-inverse.navbar-default.hidden-sm.hidden-md.hidden-lg(style="margin:0px")
+	.container-fluid
+		.navbar-header(data-toggle="collapse" data-target="#navbar")
+			a.navbar-brand(href='#') Dripo Care
+		ul.nav#navbar.navbar-nav.collapse.navbar-collapse
+			li.active.iconm(data-url="/home")
+				a(href="#") Home
+			li.active.iconm(data-url="/addpatient")
+				a(href="#") Additpatient
+			li.active.iconm(data-url="/addbed")
+				a(href="#") Addbed
+			li.active.iconm(data-url="/adddevice")
+				a(href="#") Adddevice
+			li.active.iconm(data-url="/addivset")
+				a(href="#") Addivset

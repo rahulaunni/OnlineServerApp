@@ -11,17 +11,16 @@
             h4 Please add a Bed Name
             div.addbed
               .form-group
-              .col-sm-11
+              .col-sm-11.null
                 input.form-control.bname(type='text', name="bname", placeholder='Bed name' required)
                 br    
             button.btn.btn-info(id="add_bed",type="button") Add More Bed
-            br
             br
             button.btn.btn-success(id='submit_bed' type='submit') Submit
       .bedtoadd(style="display:none")
           .col-sm-11
             input.form-control.bname(type='text', name="bname", placeholder='Bed name')
-            br
+           br
           .col-sm-1.remove
             span.glyphicon.glyphicon-remove 
 script(src='/js/addbed.js')

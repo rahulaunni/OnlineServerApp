@@ -6,16 +6,20 @@ $( ".leftbar .iconmain span" ).addClass("glyphicon-chevron-left");
 $( ".leftbar .icon .cntin").removeClass("trint");
 $( ".leftbar .icon .ic").removeClass("col-sm-12");
 
+
 $( ".leftbar .icon .cntin").addClass("trcollapse");
 $( ".leftbar .icon .ic").addClass("col-sm-3");
 
 $( ".leftbar").removeClass("col-sm-1");
 $( ".middlebar").removeClass("col-sm-11");
+$( ".leftbar").removeClass("col-lg-1");
+$( ".middlebar").removeClass("col-lg-11");
 
 
 $( ".leftbar").addClass("col-sm-2");
 $( ".middlebar").addClass("col-sm-10");
-
+$( ".leftbar").addClass("col-lg-2");
+$( ".middlebar").addClass("col-lg-10");
 
 });
 
@@ -39,6 +43,11 @@ $( ".middlebar").removeClass("col-sm-10");
 $( ".leftbar").addClass("col-sm-1");
 $( ".middlebar").addClass("col-sm-11");
 
+$( ".leftbar").removeClass("col-lg-2");
+$( ".middlebar").removeClass("col-lg-10");
+$( ".leftbar").addClass("col-lg-1");
+$( ".middlebar").addClass("col-lg-11");
+
 
 
 
@@ -60,6 +69,36 @@ $( ".leftbar .icon" ).click(function(){
 });
 
 
+
+$( "#navbar .iconm" ).click(function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+	
+});
+
+$( "#navbar .iconm" ).click(function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+	
+});
+
+$( "#navbar .iconm" ).click(function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+	
+});
+
+$( "#navbar .iconm" ).click(function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+	
+});
+
+
 $(document).on("click","#middlebar .icon",function(){
 	$.get($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );
@@ -72,9 +111,8 @@ $(document).on("click","#middlebar .connection",function(){
   $( ".middlebar" ).html( data );
 });
 });
-
 $( ".leftbar .icon" ).click(function(){
-	$(".leftbar .icon").removeClass("activem");   
+	$(".leftbar .activem").removeClass("activem");   
 	    $(this).addClass("activem"); 
 	    return false;
 });

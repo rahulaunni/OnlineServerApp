@@ -10,6 +10,7 @@ div.deleteids
   .col-sm-12.cnt
     each bed in beds 
       h2 Edit Patient Details
+      br
       form(role='form' id='register')
                       h4 Personal Details
                       .form-group
@@ -29,8 +30,8 @@ div.deleteids
                       h4 Medications
                       .col-sm-12.medicationlist(id="medicineholder")
                         each med in bed._patient._medication
-                          .medicinedata
-                            .col-sm-11
+                          .medicinedata.row-eq-height
+                            .col-sm-12.pull
                               .col-sm-4
                                 input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}' required readonly)
                                 input.form-control(type='hidden', name="medid", value='#{med._id}')
@@ -52,15 +53,17 @@ div.deleteids
                                       - timid=tim._id;
                                      - }
                                 - if(flag==1)
-                                  .col-sm-1.night.select(data-toggle="on" data-id=timid)=i +':00'
+                                  .col-sm-1.deftime.select(data-toggle="on" data-id=timid)=i +':00'
                                 - else
-                                  .col-sm-1.night(data-toggle="off" data-id=med._id)=i+':00'
+                                  .col-sm-1.deftime(data-toggle="off" data-id=med._id)=i+':00'
                                 - }        
-                            .col-sm-1.remove
-                              span.glyphicon.glyphicon-remove                                      
-                      button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
-                      br 
-                      button.btn.btn-success(id="submit_button" type='submit' style="margin-top:1em;scale:1.4") Update
+                            .col-sm-1.col-md-1.col-lg-1.col-xs-12.remove
+                              span.glyphicon.glyphicon-remove
+                      .col-sm-12                                    
+                         button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
+                    
+                      .col-sm-12 
+                         button.btn.btn-success(id="submit_button" type='submit' style="margin-top:1em;scale:1.4;color:color=#21B698 ") Update
                       &nbsp;
                       .medicinedata-toload(style="display:none")
                           .col-sm-11
@@ -75,30 +78,30 @@ div.deleteids
                               h5 Schedule
                                 span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
                             .col-sm-12.timedata
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 00:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 01:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 02:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 03:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 04:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 05:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 06:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 07:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 08:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 09:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 10:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 11:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 12:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 13:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 14:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 15:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 16:00
-                                .col-sm-1(data-toggle="off" data-id="new1") 17:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 18:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 19:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 20:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 21:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 22:00
-                                .col-sm-1.night(data-toggle="off" data-id="new1") 23:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 00:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 01:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 02:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 03:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 04:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 05:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 06:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 07:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 08:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 09:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 10:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 11:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 12:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 13:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 14:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 15:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 16:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 17:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 18:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 19:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 20:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 21:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 22:00
+                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 23:00
                                
                           .col-sm-1.remove
                             span.glyphicon.glyphicon-remove                            
