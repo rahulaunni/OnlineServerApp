@@ -239,11 +239,38 @@ border-right:1px solid #AAAAAA;
 
 .medicinehold{
   margin-top: .3em;
-  padding-top:5px;
+  padding: 0px;
   background:#F0F3F3;
       border-radius: 4px 0px 0px 4px;
     overflow: hidden;
-    border-left:5px solid #FF0000;
+    border-left:5px solid #2A3F52;
+     flex-wrap: wrap;
+}
+
+.percent{
+  padding:0px;
+  font-size: 80%;
+  display: flex;
+  background: #2A3F52;
+  color: #FFF;
+  justify-content: center;
+  align-items: center;
+}
+
+.acknowledge{
+  background-color: #dfdfdf;
+}
+.acknowledge p{
+  border:none;
+}
+.details{
+    background-color: #dfdfdf;
+    border-right:0px;
+
+}
+.details p{
+  border-right:0px;
+
 }
 
 /* style for patient edit form */
@@ -408,9 +435,9 @@ transition: all 1s;
 }
 .progressbar{
   padding: 0px;
-  height:33px;
-  border-style:solid;
-  border-color: #F0F3F3;
+    background: #2A3F52;
+    border-right: 1px solid #aaa;
+
 }
 .displayen{
   display: block;
@@ -659,6 +686,7 @@ border-top:1px #CCCCCC solid;
   .medicinehold{
     border-radius: 1px solid black;
     padding:0px;
+
   }
   .time{
   margin-top:1px;
