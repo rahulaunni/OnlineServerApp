@@ -325,12 +325,12 @@ io.sockets.on( "connection", function( socket )
     socket.on('join', function(data) {
 
         if(data==='retainsend'){
-        client=mqtt.connect('mqtt://localhost:1883');
-        client.on('connect', function() {
+       var client1=mqtt.connect('mqtt://localhost:1883');
+        client1.on('connect', function() {
           console.log("started");
-          client.subscribe('dripo/#',{ qos: 1 });
+          client1.subscribe('dripo/#',{ qos: 1 });
         });
-       client.on('message', function (topic, payload, packet) {
+       client1.on('message', function (topic, payload, packet) {
        var res = topic.split("/");
        var id = res[1];
         Device.find({'divid':id}).exec(function(err,dev){
@@ -350,6 +350,7 @@ io.sockets.on( "connection", function( socket )
         }
         }
         });
+        client1.end();
         });
 
         console.log(data);
@@ -368,7 +369,7 @@ io.sockets.on( "connection", function( socket )
      // when socket connection publishes a message, forward that message the the mqtt broker
     socket.on('publish', function (data) {
         console.log('Publishing to '+data.topic);
-        client.publish(data.topic,data.payload);
+        client.publish(data.topic,data.payload,{ qos: 1, retain: true });
     });
 
 });
@@ -404,7 +405,7 @@ client.on('message', function (topic, payload, packet) {
 
                     });
             }
-            if(status=='Complete')
+            if(status=='Empty')
             {
                  Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
                     if(err){console.log(err);}

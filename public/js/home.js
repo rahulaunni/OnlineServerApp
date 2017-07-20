@@ -2,22 +2,22 @@ $(function() {
 var socket = io.connect('http://localhost');
       socket.on('connect', function(data) {
        socket.on('mqtt', function(msg) {
-                console.log(msg.topic+' '+msg.payload);
+               // console.log(msg.topic+' '+msg.payload);
                  var dev = msg.topic.split("/");
                  var id = dev[1];
-
                 if(msg.topic=='dripo/'+ id + '/mon')
                 {
                 	var message = msg.payload;
                 	var res = message.split("-");
                 	var medid = res[0];
+                    var timeid = res[1];
                 	var status = res[2];
                 	var rateml = res[3];
                 	var volinfused = res[4];
                 	var remaintime = res[5];
                 	var tvol = res[6];
                 	var progress_width = ((volinfused/tvol)*100);
-                	//console.log(progress_width);
+                    var progress_width_int=Math.trunc(progress_width);
                 	if(status=='start')
                 	{
                 		$('#'+medid).addClass("displaydis");
@@ -28,12 +28,17 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details-volume').html(volinfused);
                         $('#'+medid+'details-time').html(remaintime);
                 		$('#'+medid+'copy').addClass("displayen");
+                        $('#'+medid+'copy2').removeClass("displaydis");
                 	    $('#'+medid+'copy2').removeClass("progress-bar-danger");
                 	    $('#'+medid+'copy2').removeClass("progress-bar-success");
                 	    $('#'+medid+'copy2').removeClass("progress-bar-warning");
                 		$('#'+medid+'copy2').css("width",progress_width+'%');
-                        $('#'+medid+'copy3').html(progress_width+'%');
-                		//add code to diplay information
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'ack').addClass("displaydis");
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'details-timediv').removeClass("backgroundRed");
+
+
 
                 	}
                 	else if(status=='infusing')
@@ -45,12 +50,15 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details-rate').html(rateml);
                         $('#'+medid+'details-volume').html(volinfused);
                         $('#'+medid+'details-time').html(remaintime);
+                        $('#'+medid+'copy2').removeClass("displaydis");
                 		$('#'+medid+'copy2').removeClass("progress-bar-danger");
                 		$('#'+medid+'copy2').css("width",progress_width+'%');
-                		$('#'+medid+'copy3').html(progress_width+'%');
+                		$('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'ack').addClass("displaydis");
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'details-timediv').removeClass("backgroundRed");
                 		if(progress_width >90)
                 		{
-                			$('#'+medid+'copy2').removeClass("progress-bar-info");
                 			$('#'+medid+'copy2').addClass("progress-bar-warning");
 
                 		}
@@ -64,18 +72,13 @@ var socket = io.connect('http://localhost');
                 	else if(status=='stop')
                 	{
 
-                		$('#'+medid).addClass("displaydis");
-                		$('#'+medid+'copy').removeClass("displaydis");
-                        $('#'+medid+'percent').removeClass("displaydis");
-                		$('#'+medid+'copy2').css("width",progress_width+'%');
-                		$('#'+medid+'copy3').html(progress_width+'%');
-                		if(progress_width >95)
-                		{
-                			$('#'+medid+'copy2').removeClass("progress-bar-warning");
-                			$('#'+medid+'copy2').addClass("progress-bar-success");
-
-                		}
-                		//add code to display info
+                		$('#'+medid+'copy').addClass("displaydis");
+                        $('#'+medid+'percent').addClass("displaydis");
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').addClass("displaydis");
+                        $('#'+medid+'copy2').addClass("displaydis");
+                        $('#'+medid).removeClass("displaydis");
+                        socket.emit('publish', {topic:msg.topic,payload:""});
 
                 	}
                 	else if(status=='Block')
@@ -87,8 +90,19 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
-                        // $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'ack-btn').submit(function(e){
+                        e.preventDefault();
+                        console.log("ok");
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        return false; 
+                         });
+
+
 
                 	}
 					else if(status=='Empty')
@@ -99,8 +113,22 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'percent').removeClass("displaydis");
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
-                        $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy2').addClass("progress-bar-success");
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+
+                        $('#'+medid+'ack-btn').click(function(){
+                        $('#'+medid+'copy').addClass("displaydis");
+                        $('#'+medid+'ack').addClass("displaydis");
+                        $('#'+medid).removeClass("displaydis");
+                        $('#'+medid+'percent').addClass("displaydis");
+                        socket.emit('publish', {topic:msg.topic,payload:""});
+                         });
+
 
                 	}
                 	else if(status=='Rate Err')
@@ -112,7 +140,15 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'ack-btn').click(function(){
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                         });
+
 
                 	}
 
@@ -124,8 +160,14 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'percent').removeClass("displaydis");
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
-                        $('#'+medid+'copy2').addClass("progress-bar-success");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy2').addClass("progress-bar-warning");
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'details-ratediv').removeClass("backgroundRed");
+                        $('#'+medid+'ack-btn').click(function(){
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                         });
 
                 	}
 					else if(status=='Block_ACK')
@@ -138,7 +180,11 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+
 
                 	}
 					else if(status=='Empty_ACK')
@@ -151,7 +197,11 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+
 
                 	}
                 	else if(status=='Rate Err_ACK')
@@ -164,7 +214,11 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-danger");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+
 
                 	}
 
@@ -177,10 +231,68 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'copy2').removeClass("progress-bar-warning");
                         $('#'+medid+'copy2').css("width",progress_width+'%');
                         $('#'+medid+'copy2').addClass("progress-bar-success");
-                        $('#'+medid+'copy3').html(progress_width+'%');
+                        $('#'+medid+'copy3').html(progress_width_int+'%');
+                        $('#'+medid+'details').addClass("displaydis");
+                        $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
+
 
                 	}
+                    else if(status=='errackclicked')
+                    {
+                                $('#'+medid).addClass("displaydis");
+                                $('#'+medid+'copy').removeClass("displaydis");
+                                $('#'+medid+'percent').removeClass("displaydis");
+                                $('#'+medid+'details').removeClass("displaydis");
+                                $('#'+medid+'details-rate').html(rateml);
+                                $('#'+medid+'details-volume').html(volinfused);
+                                $('#'+medid+'details-time').html(remaintime);
+                                $('#'+medid+'copy2').removeClass("progress-bar-danger");
+                                $('#'+medid+'copy2').css("width",progress_width+'%');
+                                $('#'+medid+'copy3').html(progress_width_int+'%');
+                                $('#'+medid+'ack').addClass("displaydis");
+                                $('#'+medid+'details-ratediv').addClass("backgroundRed");
+                                if(progress_width >90)
+                                {
+                                    $('#'+medid+'copy2').addClass("progress-bar-warning");
+
+                                }
+                                if(progress_width==100){
+                                    $('#'+medid+'copy2').removeClass("progress-bar-warning");
+                                    $('#'+medid+'copy2').addClass("progress-bar-success");
+                                }
+
+
+                    }
+                    else if(status=='cmpltackclicked')
+                    {
+                                $('#'+medid).addClass("displaydis");
+                                $('#'+medid+'copy').removeClass("displaydis");
+                                $('#'+medid+'percent').removeClass("displaydis");
+                                $('#'+medid+'details').removeClass("displaydis");
+                                $('#'+medid+'details-rate').html(rateml);
+                                $('#'+medid+'details-volume').html(volinfused);
+                                $('#'+medid+'details-time').html(remaintime);
+                                $('#'+medid+'copy2').removeClass("progress-bar-danger");
+                                $('#'+medid+'copy2').css("width",progress_width+'%');
+                                $('#'+medid+'copy3').html(progress_width_int+'%');
+                                $('#'+medid+'ack').addClass("displaydis");
+                                $('#'+medid+'details-timediv').addClass("backgroundRed");
+                                if(progress_width >90)
+                                {
+                                    $('#'+medid+'copy2').addClass("progress-bar-warning");
+
+                                }
+                                if(progress_width==100){
+                                    $('#'+medid+'copy2').removeClass("progress-bar-warning");
+                                    $('#'+medid+'copy2').addClass("progress-bar-success");
+                                }
+
+
+                    }
+                    
                }
+               
                 });
 
         socket.emit('join', 'retainsend');

@@ -256,6 +256,26 @@ border-right:1px solid #AAAAAA;
   justify-content: center;
   align-items: center;
 }
+.ack-btn{
+  display: flex;
+   justify-content: center;
+  align-items: center;
+}
+
+@keyframes alert {
+    0%   {background-color:#dfdfdf;color:#000000;}
+    50%  {background-color:#d9534f;color:#FFFFFF;}
+    100% {background-color:#dfdfdf;color:#000000;}
+}
+
+.backgroundRed{
+   animation-name: alert;
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
+  animation-iteration-count:infinite;
+
+}
+
 
 .acknowledge{
   background-color: #dfdfdf;
@@ -266,6 +286,8 @@ border-right:1px solid #AAAAAA;
 .details{
     background-color: #dfdfdf;
     border-right:0px;
+    padding: 0px;
+    font-size:130%;
 
 }
 .details p{
