@@ -9,17 +9,36 @@ div.col-sm-12.col-md-12.col-lg-12
                                each med in bed._patient._medication
                                 div.col-sm-12.col-md-12.col-lg-12.col-xs-12.medicinehold.row-eq-height
                                    div.col-xs-12.col-sm-4.col-md-4.col-lg-4.medname #{med.name}
-                                   div.col-xs-12.col-sm-4.col-md-4.col-lg-4.schhold.row-eq-height(id='#{med._id}')
+                                   div.col-xs-12.col-sm-8.col-md-8.col-lg-8.schhold.row-eq-height(id='#{med._id}')
                                      each tim in med._timetable
                                         if tim.time > '12'
                                            - var result = parseFloat(tim.time)-parseFloat(12)
                                            div.col-xs-12.col-sm-2.time #{result} PM
                                         else
                                            div.col-xs-12.col-sm-2.time #{tim.time} AM
-                                   h5.col-sm-4 03:00 PM
-                                   div.col-sm-8.progressbar.displaydis(id='#{med._id}'+'copy')
+                                   div.col-xs-12.col-sm-7.col-md-7.col-lg-7.progressbar.displaydis(id='#{med._id}'+'copy')
                                      div.progress-bar.progress-bar-info.progress-bar-striped.active(id='#{med._id}'+'copy2')(role='progressbar',aria-valuemin='0', aria-valuemax='100')
-                                      span(id='#{med._id}'+'copy3')
+                                   div.col-xs-12.col-sm-1.col-md-1.col-lg-1.percent.displaydis(id='#{med._id}'+'percent')
+                                    span(id='#{med._id}'+'copy3') 
+                                   div.col-sm-12.col-md-12.col-lg-12.col-xs-12.acknowledge.displaydis(id='#{med._id}'+'ack') 
+                                      div.col-sm-6.col-md-6.col-lg-6.col-xs-12
+                                        p Err : 
+                                          span(id='#{med._id}'+'ack-errtype')
+                                      div.col-sm-6.col-md-6.col-lg-6.col-xs-12 
+                                          span(id='#{med._id}'+'ack-btn')
+                                   div.col-sm-12.col-md-12.col-lg-12.col-xs-12.details
+                                      .displaydis(id='#{med._id}'+'details') 
+                                        div.col-sm-4.col-md-4.col-lg-4.col-xs-12
+                                          p Rate : 
+                                              span(id='#{med._id}'+'details-rate') 
+                                              span / #{med.rate}
+                                        div.col-sm-4.col-md-4.col-lg-4.col-xs-12
+                                          p Volume : 
+                                             span(id='#{med._id}'+'details-volume')
+                                             span / #{med.tvol}  
+                                        div.col-sm-4.col-md-4.col-lg-4.col-xs-12 
+                                          p Time Remaining : 
+                                              span(id='#{med._id}'+'details-time')  
               div.col-xs-12.col-sm-1.col-lg-1.del
                  span.btn-default.delete.glyphicon.glyphicon-remove
                  span.btn-default.editpatient.glyphicon.glyphicon-pencil(data-url='/editpatient?bed=#{bed._id}')                            
