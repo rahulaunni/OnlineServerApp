@@ -1,6 +1,6 @@
 .col-sm-12.main
   .col-sm-12.tab
-    ul.nav.nav-tabs.ivsetpills
+    ul.nav.nav-pills.ivsetpills
       li
         a.list(data-toggle='pill', data-url='/listpatient') View
       li.active
@@ -24,8 +24,8 @@
                        br
                     h4 Medications
                     .col-sm-12.medicationlist(id="medicineholder")
-                      .medicinedata
-                        .col-sm-11
+                      col-sm-12.col-xs-12.medicinedata
+                        .col-sm-12.pull
                           .col-sm-4
                             input.form-control(type='text', name="mname", placeholder='Medicine name' required)
                           .col-sm-4
@@ -37,30 +37,30 @@
                               span(data-toggle='tooltip', data-placement="top",title='Please enter time details' id="my") &nbsp&nbsp 
                               span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(Select the time for infusing this medicine)
                           .col-sm-12.timedata
-                              .col-sm-1.night(data-toggle="off") 00:00
-                              .col-sm-1.night(data-toggle="off") 01:00
-                              .col-sm-1.night(data-toggle="off") 02:00
-                              .col-sm-1.night(data-toggle="off") 03:00
-                              .col-sm-1.night(data-toggle="off") 04:00
-                              .col-sm-1.night(data-toggle="off") 05:00
-                              .col-sm-1(data-toggle="off") 06:00
-                              .col-sm-1(data-toggle="off") 07:00
-                              .col-sm-1(data-toggle="off") 08:00
-                              .col-sm-1(data-toggle="off") 09:00
-                              .col-sm-1(data-toggle="off") 10:00
-                              .col-sm-1(data-toggle="off") 11:00
-                              .col-sm-1(data-toggle="off") 12:00
-                              .col-sm-1(data-toggle="off") 13:00
-                              .col-sm-1(data-toggle="off") 14:00
-                              .col-sm-1(data-toggle="off") 15:00
-                              .col-sm-1(data-toggle="off") 16:00
-                              .col-sm-1(data-toggle="off") 17:00
-                              .col-sm-1.night(data-toggle="off") 18:00
-                              .col-sm-1.night(data-toggle="off") 19:00
-                              .col-sm-1.night(data-toggle="off") 20:00
-                              .col-sm-1.night(data-toggle="off") 21:00
-                              .col-sm-1.night(data-toggle="off") 22:00
-                              .col-sm-1.night(data-toggle="off") 23:00
+                              .col-sm-1.deftime(data-toggle="off") 00:00
+                              .col-sm-1.deftime(data-toggle="off") 01:00
+                              .col-sm-1.deftime(data-toggle="off") 02:00
+                              .col-sm-1.deftime(data-toggle="off") 03:00
+                              .col-sm-1.deftime(data-toggle="off") 04:00
+                              .col-sm-1.deftime(data-toggle="off") 05:00
+                              .col-sm-1.deftime(data-toggle="off") 06:00
+                              .col-sm-1.deftime(data-toggle="off") 07:00
+                              .col-sm-1.deftime(data-toggle="off") 08:00
+                              .col-sm-1.deftime(data-toggle="off") 09:00
+                              .col-sm-1.deftime(data-toggle="off") 10:00
+                              .col-sm-1.deftime(data-toggle="off") 11:00
+                              .col-sm-1.deftime(data-toggle="off") 12:00
+                              .col-sm-1.deftime(data-toggle="off") 13:00
+                              .col-sm-1.deftime(data-toggle="off") 14:00
+                              .col-sm-1.deftime(data-toggle="off") 15:00
+                              .col-sm-1.deftime(data-toggle="off") 16:00
+                              .col-sm-1.deftime(data-toggle="off") 17:00
+                              .col-sm-1.deftime(data-toggle="off") 18:00
+                              .col-sm-1.deftime(data-toggle="off") 19:00
+                              .col-sm-1.deftime(data-toggle="off") 20:00
+                              .col-sm-1.deftime(data-toggle="off") 21:00
+                              .col-sm-1.deftime(data-toggle="off") 22:00
+                              .col-sm-1.deftime(data-toggle="off") 23:00
                            
                         .col-sm-1.remove
                           span.glyphicon.glyphicon-remove                                      
@@ -80,31 +80,32 @@
                             h5 Schedule
                               span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
                           .col-sm-12.timedata
-                              .col-sm-1.night(data-toggle="off") 00:00
-                              .col-sm-1.night(data-toggle="off") 01:00
-                              .col-sm-1.night(data-toggle="off") 02:00
-                              .col-sm-1.night(data-toggle="off") 03:00
-                              .col-sm-1.night(data-toggle="off") 04:00
-                              .col-sm-1.night(data-toggle="off") 05:00
-                              .col-sm-1(data-toggle="off") 06:00
-                              .col-sm-1(data-toggle="off") 07:00
-                              .col-sm-1(data-toggle="off") 08:00
-                              .col-sm-1(data-toggle="off") 09:00
-                              .col-sm-1(data-toggle="off") 10:00
-                              .col-sm-1(data-toggle="off") 11:00
-                              .col-sm-1(data-toggle="off") 12:00
-                              .col-sm-1(data-toggle="off") 13:00
-                              .col-sm-1(data-toggle="off") 14:00
-                              .col-sm-1(data-toggle="off") 15:00
-                              .col-sm-1(data-toggle="off") 16:00
-                              .col-sm-1(data-toggle="off") 17:00
-                              .col-sm-1.night(data-toggle="off") 18:00
-                              .col-sm-1.night(data-toggle="off") 19:00
-                              .col-sm-1.night(data-toggle="off") 20:00
-                              .col-sm-1.night(data-toggle="off") 21:00
-                              .col-sm-1.night(data-toggle="off") 22:00
-                              .col-sm-1.night(data-toggle="off") 23:00
+                              .col-sm-1.deftime(data-toggle="off") 00:00
+                              .col-sm-1.deftime(data-toggle="off") 01:00
+                              .col-sm-1.deftime(data-toggle="off") 02:00
+                              .col-sm-1.deftime(data-toggle="off") 03:00
+                              .col-sm-1.deftime(data-toggle="off") 04:00
+                              .col-sm-1.deftime(data-toggle="off") 05:00
+                              .col-sm-1.deftime(data-toggle="off") 06:00
+                              .col-sm-1.deftime(data-toggle="off") 07:00
+                              .col-sm-1.deftime(data-toggle="off") 08:00
+                              .col-sm-1.deftime(data-toggle="off") 09:00
+                              .col-sm-1.deftime(data-toggle="off") 10:00
+                              .col-sm-1.deftime(data-toggle="off") 11:00
+                              .col-sm-1.deftime(data-toggle="off") 12:00
+                              .col-sm-1.deftime(data-toggle="off") 13:00
+                              .col-sm-1.deftime(data-toggle="off") 14:00
+                              .col-sm-1.deftime(data-toggle="off") 15:00
+                              .col-sm-1.deftime(data-toggle="off") 16:00
+                              .col-sm-1.deftime(data-toggle="off") 17:00
+                              .col-sm-1.deftime(data-toggle="off") 18:00
+                              .col-sm-1.deftime(data-toggle="off") 19:00
+                              .col-sm-1.deftime(data-toggle="off") 20:00
+                              .col-sm-1.deftime(data-toggle="off") 21:00
+                              .col-sm-1.deftime(data-toggle="off") 22:00
+                              .col-sm-1.deftime(data-toggle="off") 23:00
                            
-                        .col-sm-1.remove
-                          span.glyphicon.glyphicon-remove                            
+                        .col-sm-1.col-xs-12.remove
+                          span.glyphicon.glyphicon-remove  
+                                                    
 script(src='/js/addpatient.js')
