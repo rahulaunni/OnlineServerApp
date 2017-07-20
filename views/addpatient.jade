@@ -25,7 +25,7 @@
                     h4 Medications
                     .col-sm-12.medicationlist(id="medicineholder")
                       col-sm-12.col-xs-12.medicinedata
-                        .col-sm-12.pull
+                        .col-sm-11.col-xs-11.pull
                           .col-sm-4
                             input.form-control(type='text', name="mname", placeholder='Medicine name' required)
                           .col-sm-4
@@ -62,14 +62,14 @@
                               .col-sm-1.deftime(data-toggle="off") 22:00
                               .col-sm-1.deftime(data-toggle="off") 23:00
                            
-                        .col-sm-1.remove
+                        .col-sm-1.remove.p2
                           span.glyphicon.glyphicon-remove                                      
                     button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
                     br 
                     button.btn.btn-success(id="submit_button" type='submit' style="margin-top:1em;scale:1.4") Submit
                     &nbsp;
                     .medicinedata-toload(style="display:none")
-                        .col-sm-11
+                        .col-sm-11.col-xs-11.col-lg-11.pull
                           .col-sm-4
                             input.form-control(type='text', name="mname", placeholder='Medicine name')
                           .col-sm-4
@@ -79,7 +79,7 @@
                           .col-sm-12
                             h5 Schedule
                               span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
-                          .col-sm-12.timedata
+                          .col-sm-12.col-xs.12.col-lg-12.timedata
                               .col-sm-1.deftime(data-toggle="off") 00:00
                               .col-sm-1.deftime(data-toggle="off") 01:00
                               .col-sm-1.deftime(data-toggle="off") 02:00
@@ -105,7 +105,7 @@
                               .col-sm-1.deftime(data-toggle="off") 22:00
                               .col-sm-1.deftime(data-toggle="off") 23:00
                            
-                        .col-sm-1.col-xs-12.remove
+                        .col-sm-1.remove.p2
                           span.glyphicon.glyphicon-remove  
                                                     
 script(src='/js/addpatient.js')

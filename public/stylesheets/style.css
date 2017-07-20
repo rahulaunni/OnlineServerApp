@@ -46,10 +46,11 @@ text-align:center;
 font-size:60%;
 line-height:100%;
 height:100%;
-display: flex;
-align-items: center;
 }
 
+.aj{
+  top:40%;
+}
 .trint{
 transform: translate(150%,0%);
 }
@@ -118,7 +119,20 @@ text-align:right;
 }
 
 .bedadd h4{
-padding-top:10px;
+ padding-top:10px;
+ border-top:0px;
+ 
+}
+
+.adddevice h4{
+ padding-top:10px;
+ border-top:0px;
+ 
+}
+.bedadd{
+
+ height:100%;
+ width:100%;
 }
 
 
@@ -290,7 +304,7 @@ display: flex;
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin:7px;
+    margin:0px;
 }
     
 /* add bed form style */
@@ -298,6 +312,7 @@ display: flex;
 .form-control.bname{
 padding:5px;
 margin-left:0px;
+margin-bottom:10px;
 }
 
 
@@ -331,11 +346,14 @@ border-radius:5px solid #fcfcfc;
 
 /* patient edit page glyphicon and button */
 
-.remove{
+  .remove{
 justify-content:center;
 display:flex;
 align-items:center;
-border-left:1px solid #CCCCCC;
+padding:4%;
+border:none;
+border:1px #CCCCCC solid;
+
 }
 
 .btn{
@@ -459,6 +477,7 @@ margin-top:1em;
 display:flex;
 align-items:center;
 padding:0px;
+
 }
 .b1{
 font-size:20px;
@@ -635,16 +654,33 @@ background:#eee;
 
 .select{
   background-color:#21B698;
-  color:#ffffff;
+  color:#21B698;
 }
 
+/* style for add and submit btn */
+
+.btn.btn-info{
+    color: #fff;
+    background-color: #21B698;
+  
+}
+
+.btn.btn-success{
+   color: #fff;
+    background-color: #21B698;
+    
+}
 
 /* style for add bed */
 
 .null{
  padding-left:0px;
  padding-right:0px;
+ padding-bottom:0px;
+ padding-top:0px;
 }
+
+
 
 /* style for add device */
 
@@ -666,13 +702,21 @@ background:#eee;
 ::-webkit-scrollbar-thumb:hover {
   background-color: #aaa;
 }
-
+   .p{
+ border:1px solid #cccccc;
+ padding:0px;
+ margin:0px;
+     margin-top: 0px;
+    max-width: 24%;
+    height: 40px;
+   
+}
 
 
 @media only screen and (max-width:767px) {
   .row-eq-height{
         display: inline-block;
-  }
+}
  
  .medicineholder{
     border-radius: 1px solid black;
@@ -686,7 +730,22 @@ display:flex;
 align-items:center;
 padding:4%;
 border:none;
-border-top:1px #CCCCCC solid;
+border:1px #CCCCCC solid;
+
+}
+   
+   .p{
+ border:1px solid #cccccc;
+ padding:0px;
+ margin:0px;
+     margin-top: 0px;
+    max-width: 24%;
+    height: 40px;
+   
+}
+
+.p1{
+ border:1px solid #cccccc;
 
 }
 
