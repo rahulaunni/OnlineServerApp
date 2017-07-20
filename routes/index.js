@@ -37,7 +37,7 @@ router.get('/', checkAuthentication, function(req, res) {
 });
 router.get('/home', checkAuthentication, function(req, res) {
         //find timetable and sort in ascending order,there will be duplicates beacause search query is station and user id
-        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':'not_infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
         //storing sorted bed ids into an array
         var arr_bed=[];
