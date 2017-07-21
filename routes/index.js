@@ -62,6 +62,8 @@ router.get('/home', checkAuthentication, function(req, res) {
                     count++; 
                 } 
             }
+        
+
         //find the beds using array of bed ids after eliminating duplicates and populating all reference model for rendering home page 
         Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bedd){
         //saving soreted patient ids for find next infusion time
@@ -71,16 +73,63 @@ router.get('/home', checkAuthentication, function(req, res) {
 
         }
         //code to sort medicines with in a bed
+        var k=0,l=0,min1=0,min2=0;
         for(var lp1=0;lp1<bedd.length;lp1++)
         {
             for(var lp2=0;lp2<bedd[lp1]._patient._medication.length;lp2++)
             {
-               for(var i =0;i<bedd[lp1]._patient._medication.length;i++)
+               for(var i =bedd[lp1]._patient._medication.length-1;i>=0;i--)
                {
-                for(var j =0;j<bedd[lp1]._patient._medication.length;j++)
-                {
-                    if(bedd[lp1]._patient._medication[i]._timetable[0].time<bedd[lp1]._patient._medication[j]._timetable[0].time)            
+                    for(k=0;k<bedd[lp1]._patient._medication[i]._timetable.length;k++)
+                    {
+                        if(bedd[lp1]._patient._medication[i]._timetable[k].infused =="not_infused" )
                         {
+                            min1=k;
+                            break;
+                        }
+
+                        else{
+                            min1="empty";
+                        }
+                                           
+                         }
+                       //  console.log(min1);
+                        if (min1=="empty") {
+
+                            continue;
+                        }
+                for(var j =i-1;j>=0;j--)
+                 {
+
+
+                     for(l=0;l<bedd[lp1]._patient._medication[j]._timetable.length;l++)
+                    {
+                        if(bedd[lp1]._patient._medication[j]._timetable[l].infused =="not_infused" )
+                            {
+                                min2=l;
+                                break;
+
+                            } 
+                            else{
+                                min2="empty";
+                            }
+                        }
+                           
+
+                                    if (min2=="empty") {
+                                    //    console.log(i);
+                                     //   console.log(j);
+                           var temp=bedd[lp1]._patient._medication[i];
+                           bedd[lp1]._patient._medication[i]=bedd[lp1]._patient._medication[j];
+                            bedd[lp1]._patient._medication[j]=temp;
+                          i--;
+                           continue;
+                        }
+                              //  console.log("min2="+min2);
+                           // console.log("min1="+min1);
+                    if(bedd[lp1]._patient._medication[i]._timetable[min1].time<bedd[lp1]._patient._medication[j]._timetable[min2].time)            
+                        {
+
                             var temp=bedd[lp1]._patient._medication[i];
                             bedd[lp1]._patient._medication[i]=bedd[lp1]._patient._medication[j];
                             bedd[lp1]._patient._medication[j]=temp;
@@ -91,6 +140,7 @@ router.get('/home', checkAuthentication, function(req, res) {
             }
 
         }
+    
         //reordering the returened array of object to sorted order
         var bed=[];
         for (var key in arr_bed_new)
@@ -105,31 +155,73 @@ router.get('/home', checkAuthentication, function(req, res) {
             }
 
         }
-        //find and sorting timetable by passing patient id array as search query to get next infusion time
-        Timetable.find({'patient':{$in:arr_pat},'infused':'not_infused'}).sort({time:1}).exec(function(err,timee){
+            //infused bed dispaly
+            Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':'infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,inftim){
             if (err) return console.error(err);
-            //for removing the repeated or duplicate patient referenece from the sorted time           
-            var arr_time_new=[];
-            var n=timee.length;
+            //storing sorted bed ids into an array
+            var arr_infbed=[];
+            for (var key in inftim) {
+                arr_infbed[key]=inftim[key]._bed;
+
+            }
+            //check for the duplicate bed id reference and eliminating it
+            var arr_infbed_new=[];
+            var n=arr_infbed.length;
             var count=0;
-            for(var c=0;c<n;c++)  
+            for(var c=0;c<n;c++)
                 { 
                     for(var d=0;d<count;d++) 
                     { 
-                        if(timee[c].patient.toString()==arr_time_new[d].patient.toString()) 
+                        if(arr_infbed[c].toString()==arr_infbed_new[d].toString()) 
                             break; 
                     } 
                     if(d==count) 
                     { 
-                        arr_time_new[count] = timee[c]; 
+                        arr_infbed_new[count] = arr_infbed[c]; 
                         count++; 
                     } 
                 }
-          //modifying __v property of bed so that it can pass to jade 
-          for(var key in bed){
-            bed[key].__v = arr_time_new[key].time;
-          }  
+            //console.log(arr_infbed_new);
+            Bed.find({'_id': {$in:arr_infbed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,infbedd){
+            //saving soreted patient ids for find next infusion time
+            var arr_infpat=[];
+            for (var key in infbedd) {
+                arr_infpat[key]=infbedd[key]._patient._id;
+
+            }
+            // console.log(infbedd);
+             for(var lp1=0;lp1<infbedd.length;lp1++)
+            {
+                        var infflag=true;
+
+                for(var lp2=0;lp2<infbedd[lp1]._patient._medication.length;lp2++)
+                {
+                   for(var i =infbedd[lp1]._patient._medication.length-1;i>=0;i--)
+                   {
+                        for(k=0;k<infbedd[lp1]._patient._medication[i]._timetable.length;k++)
+                        {
+                            if(infbedd[lp1]._patient._medication[i]._timetable[k].infused =="not_infused"||infbedd[lp1]._patient._medication[i]._timetable[k].infused =="infusing" )
+                            {
+                              infflag=false;
+                            }
+                        }
+                    }
+                }
+                                            // console.log(infflag);
+
+            
+                            if (infflag===true) {
+                                console.log(infbedd[lp1]);
+                                bed.push(infbedd[lp1]);
+
+                                // console.log(infbedd);
+                                // console.log("ok");
+                            }
+                        }
+         
          res.render('home', {user: req.user,beds:bed});
+
+         });
             });
     });
     });
@@ -172,7 +264,7 @@ router.get('/addstation', checkAuthentication, function(req, res) {
                         add_flag: 'select',
                         stations: stat
                     });
-                })
+                });
 
             }
         });
@@ -190,7 +282,7 @@ router.get('/addpatient', checkAuthentication, function(req, res) {
             user: req.user,
             beds: bed
         });
-    })
+    });
 
 });
 router.get('/editpatient',checkAuthentication,function(req,res){

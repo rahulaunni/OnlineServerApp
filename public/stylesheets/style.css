@@ -304,11 +304,18 @@ border-right:1px solid #AAAAAA;
     background-color: #dfdfdf;
     border-right:0px;
     padding: 0px;
-    font-size:130%;
+    font-size:120%;
 
 }
 .details p{
   border-right:0px;
+
+}
+.infused{
+  background-color: #d9534f;
+}
+.not_infused{
+  background-color: #21B698;
 
 }
 
@@ -354,8 +361,8 @@ display:flex;
   justify-content:center;
   font-weight:bolder;
  color:#FFFFFF;
-    background-color: #21B698;
-  margin-left:.5%;
+/*    background-color: #21B698;
+*/  margin-left:.5%;
 border-radius:5px solid #fcfcfc;
   
 }
