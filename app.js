@@ -247,8 +247,7 @@ client.on('message', function(topic, message) {
             var rate=ratee[0].rate;
             var mname=ratee[0].name;
             var pname=ratee[0]._bed._patient.name;
-            //var vol=ratee[0].tvol;
-            var vol=25;
+            var vol=ratee[0].tvol;
             var alert=30;
             var pub_rate=timid+'&'+pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
             console.log(pub_rate);

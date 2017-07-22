@@ -29,20 +29,23 @@ div.col-sm-12.col-md-12.col-lg-12
                                    div.col-sm-12.col-md-12.col-lg-12.col-xs-12.details
                                       .displaydis(id='#{med._id}'+'details') 
                                         div.col-sm-4.col-md-4.col-lg-4.col-xs-12(id='#{med._id}'+'details-ratediv') 
-                                          p Rate : 
+                                          p 
+                                              span.glyphicon.glyphicon-tint(style="font-size:120%")  
                                               span(id='#{med._id}'+'details-rate') 
                                               span / #{med.rate}
                                         div.col-sm-4.col-md-4.col-lg-4.col-xs-12(id='#{med._id}'+'details-volumediv')
-                                          p Volume : 
+                                          p 
+                                             span.glyphicon.glyphicon-arrow-down(style="font-size:120%")   
                                              span(id='#{med._id}'+'details-volume')
-                                             span / #{med.tvol}  
+                                             span / #{med.tvol}ml 
                                         div.col-sm-4.col-md-4.col-lg-4.col-xs-12(id='#{med._id}'+'details-timediv') 
-                                          p Time Remaining : 
+                                          p   
+                                              span.glyphicon.glyphicon-time(style="font-size:120%") 
                                               span(id='#{med._id}'+'details-time') 
                                               span mins 
               div.col-xs-12.col-sm-1.col-lg-1.del
-                 span.btn-default.delete.glyphicon.glyphicon-remove
-                 span.btn-default.editpatient.glyphicon.glyphicon-pencil(data-url='/editpatient?bed=#{bed._id}')                            
+                 span.btn-default.delete.glyphicon.glyphicon-remove.patrmv(id='#{bed._id}'+'remove')
+                 span.btn-default.editpatient.glyphicon.glyphicon-pencil.patedit(data-url='/editpatient?bed=#{bed._id}')(id='#{bed._id}'+'edit')                           
 script(src="/js/home.js")
 
 

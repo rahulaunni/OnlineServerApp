@@ -23,6 +23,8 @@ var socket = io.connect('http://localhost');
                 		$('#'+medid).addClass("displaydis");
                         $('#'+medid+'ack').addClass("displaydis");
                         $('#'+medid+'progressbar').removeClass("progress-bar-danger");
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patrmv').attr("disabled","disabled");
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patedit').attr("disabled","disabled");
 
                 		$('#'+medid+'progressbardiv').removeClass("displaydis");
                         $('#'+medid+'percent').removeClass("displaydis");
@@ -35,6 +37,15 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'percentage').html(progress_width_int+'%');
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
                         $('#'+medid+'details-timediv').removeClass("backgroundRed");
+                        if(progress_width >90)
+                        {
+                            $('#'+medid+'progressbar').addClass("progress-bar-warning");
+
+                        }
+                        if(progress_width==100){
+                            $('#'+medid+'progressbar').removeClass("progress-bar-warning");
+                            $('#'+medid+'progressbar').addClass("progress-bar-success");
+                        }
 
 
 
@@ -43,7 +54,6 @@ var socket = io.connect('http://localhost');
                 	{    
                 		$('#'+medid).addClass("displaydis");
                         $('#'+medid+'ack').addClass("displaydis");
-
                 		$('#'+medid+'progressbardiv').removeClass("displaydis");
                         $('#'+medid+'percent').removeClass("displaydis");
                         $('#'+medid+'details').removeClass("displaydis");
@@ -78,12 +88,20 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'progressbar').addClass("displaydis");
                         $('#'+medid).removeClass("displaydis");
                         socket.emit('publish', {topic:msg.topic,payload:""});
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patrmv').attr("disabled","enabled");
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patedit').attr("disabled","enabled");
+
                         if(progress_width>95)
                         {
                             $('#'+timeid).removeClass("not_infused");
                             $('#'+timeid).addClass("infused");
 
   
+                        }
+                        if(progress_width<95)
+                        {
+                          $('#'+timeid).removeClass("infusing");
+                            $('#'+timeid).addClass("not_infused");  
                         }
 
 
@@ -128,6 +146,8 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
                         
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patrmv').attr("disabled","enabled");
+                        $('#'+medid).parent().parent().parent().children('.del').children('.patedit').attr("disabled","enabled");
 
                         $('#'+medid+'progressbardiv').addClass("displaydis");
                         $('#'+medid+'ack').addClass("displaydis");
