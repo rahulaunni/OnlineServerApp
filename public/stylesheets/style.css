@@ -820,3 +820,9 @@ border:1px #CCCCCC solid;
 .occupied{
   disabled:disabled;
 }
+.middlebar{
+  overflow: show;
+}
+.body{
+  overflow: scroll;
+}
