@@ -306,6 +306,7 @@ router.get('/editpatient',checkAuthentication,function(req,res){
     });
 
 });
+
 router.get('/listpatient',checkAuthentication,function(req,res){
     Patient.find({'_station':req.session.station}).exec(function(err,patient){
         if (err)return console,log(err);
@@ -321,6 +322,17 @@ router.get('/addbed', checkAuthentication, function(req, res) {
     res.render('addbed', {
         user: req.user
     });
+});
+router.get('/editbed',checkAuthentication,function(req,res){
+    Bed.find({'_id':req.query.bed}).exec(function(err,bed){
+        res.render('editbed',{
+            beds:bed
+
+        });
+       
+
+    });
+
 });
 router.get('/listbed',checkAuthentication,function(req,res){
     Bed.find({'_station':req.session.station}).exec(function(err,bed){
@@ -338,6 +350,23 @@ router.get('/addivset', checkAuthentication, function(req, res) {
         user: req.user
     });
 });
+router.get('/editivset',checkAuthentication,function(req,res){
+    Ivset.find({'_id':req.query.ivset}).exec(function(err,ivset){
+        res.render('editivset',{
+            ivsets:ivset
+
+        });
+       
+
+    });
+
+});
+router.post('/editivset', checkAuthentication, function(req, res) {
+    var ivid = ObjectId(req.body.ivid);
+    Ivset.collection.update({'_id':ivid},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf}});
+    res.redirect('/');
+});
+
 router.get('/listivset',checkAuthentication,function(req,res){
     Ivset.find({'sname':req.session.station}).exec(function(err,ivset){
         if (err)return console,log(err);
@@ -380,6 +409,13 @@ router.post('/addbed', checkAuthentication, function(req, res) {
     console.log(i);
     res.redirect('/');
 
+});
+router.post('/editbed', checkAuthentication, function(req, res) {
+    console.log(req.body.bedname);
+    console.log(req.body.bedid);
+    var bedid = ObjectId(req.body.bedid);
+    Bed.collection.update({'_id':bedid},{$set:{bname:req.body.bedname}});
+    res.redirect('/');
 });
 router.post('/addstation', checkAuthentication, function(req, res) {
     var station_to_add = new Station({
@@ -796,7 +832,6 @@ router.post('/addivset', checkAuthentication, function(req, res) {
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
-
 router.post('/register', function(req, res) {
 //check whether the user is already registered    
     Account.find({'username':req.body.username}).exec(function(err, tempp) {
@@ -1029,10 +1064,25 @@ router.get('/adddevice', checkAuthentication, function(req, res) {
             user: req.user
         });
 });
+router.get('/editdevice',checkAuthentication,function(req,res){
+    Device.find({'_id':req.query.device}).exec(function(err,device){
+        res.render('editdevice',{
+            devices:device
+
+        });
+       
+
+    });
+
+});
 router.post('/adddevice', checkAuthentication, function(req, res) {
     Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
-
+router.post('/editdevice', checkAuthentication, function(req, res) {
+    var devid = ObjectId(req.body.id);
+    Device.collection.update({'_id':devid},{$set:{divid:req.body.divid}});
+    res.redirect('/');
+});
 
 module.exports = router;

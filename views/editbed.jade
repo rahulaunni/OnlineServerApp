@@ -1,0 +1,22 @@
+.col-sm-12.main
+  .col-sm-12.tab
+    ul.nav.nav-pills.ivsetpills
+      li
+        a.list(data-toggle='pill', data-url='/listbed') View
+      li.active
+        a.add(data-toggle='pill', data-url='/addbed') Add 
+  .col-sm-12.cnt
+      .bedadd
+        each bed in beds
+          .col-sm-12.col-lg-12.col-xs-12
+            form(role='form' id='register')
+              h4 Edit Bed Name
+              div.addbed
+                .form-group
+                .col-sm-11.col-xs-11.col-lg-11.null
+                  input.form-control.bname(type='text', name="bname", placeholder='Bed name' value='#{bed.  bname}' required)
+                  input.form-control.bedid(type='hidden', name="bedid", value='#{bed._id}')
+          .col-sm-12.col-lg-12.col-xs-12 
+            br
+            button.btn.btn-success(id='submit_bed' type='submit') Submit
+script(src ='/js/editbed.js')

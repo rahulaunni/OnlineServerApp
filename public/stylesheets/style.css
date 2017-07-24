@@ -193,6 +193,8 @@ border-right:1px solid #AAAAAA;
   padding:3em;
   padding-bottom: 4em;
   padding-top: 0;
+  float: none;
+  margin:auto;
 }
 .test{
    position: relative;
@@ -320,6 +322,9 @@ border-right:1px solid #AAAAAA;
 .not_infused{
   background-color: #21B698;
 
+}
+.infusing{
+  background-color: #F2E40A;
 }
 
 /* style for patient edit form */
@@ -525,7 +530,7 @@ align-items:center;
 border-right:1px solid #CCCCCC;
 height:100%;
 line-height:20px;
-padding:10px;
+padding:9px;
 }
 
 .i2{
@@ -535,6 +540,7 @@ align-items:center;
 text-align:center;
 line-height:20px;
 line-height:20px;
+padding:9px;
 }    
 
 /* list patient */
@@ -573,7 +579,7 @@ align-items:center;
 border-right:1px solid #CCCCCC;
 height:100%;
 line-height:20px;
-padding:10px;
+padding:9px;
 }
 .l2{
 justify-content:center;
@@ -607,7 +613,7 @@ align-items:center;
 border-right:1px solid #CCCCCC;
 height:100%;
 line-height:20px;
-padding:10px;
+padding:9px;
 }
 .m2{
 justify-content:center;
@@ -616,6 +622,8 @@ align-items:center;
 text-align:center;
 line-height:20px;
 line-height:20px;
+padding:9px;
+
 }
 
 /* list ivset */
@@ -647,7 +655,7 @@ align-items:center;
 border-right:1px solid #CCCCCC;
 height:100%;
 line-height:20px;
-padding:10px;
+padding:9px;
 }
 .x2{
 justify-content:center;
@@ -656,6 +664,8 @@ align-items:center;
 text-align:center;
 line-height:20px;
 line-height:20px;
+padding:9px;
+
 }
 
 /* medicination styleing */
@@ -781,14 +791,12 @@ border:1px #CCCCCC solid;
 
 }
 
-<<<<<<< HEAD
-=======
+
   .medicinehold{
     border-radius: 1px solid black;
     padding:0px;
 
   }
->>>>>>> 12f3b67c8cd054e8fa974530e7ccee2c728817ff
   .time{
   margin-top:1px;
   padding:0px;
@@ -808,4 +816,7 @@ border:1px #CCCCCC solid;
 }
 .activem{
   background-color: #21B698;
+}
+.occupied{
+  disabled:disabled;
 }

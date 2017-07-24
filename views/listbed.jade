@@ -10,8 +10,6 @@ div.col-sm-12.main
 				div.col-sm-12.col-xs-12.list-bed
 					.col-sm-10.col-xs-8.b1
 						h4 #{bed.bname}
-					.col-sm-1.col-xs-2.i1
-						span.glyphicon.glyphicon-pencil
-					.col-sm-1.col-xs-2.i2
-						span.glyphicon.glyphicon-remove
+					.col-sm-1.col-xs-2.i1.btn-default.glyphicon.glyphicon-pencil.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit')  
+					.col-sm-1.col-xs-2.i2.btn-default.glyphicon.glyphicon-remove(class='#{bed.bedstatus}')
 						

@@ -122,6 +122,23 @@ $(document).on("click","#middlebar .confirm",function(){
 });
 });
 $(document).on("click","#middlebar .editpatient",function(){
+	$(".leftbar .activem").removeClass("activem");   
+	$(".leftbar .addpat").addClass("activem");
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
+$(document).on("click","#middlebar .editbed",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
+$(document).on("click","#middlebar .editdevice",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
+$(document).on("click","#middlebar .editivset",function(){
 	$.get($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );
 });
