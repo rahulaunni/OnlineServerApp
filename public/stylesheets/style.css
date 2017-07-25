@@ -423,6 +423,7 @@ display: inline;
   border-bottom: 1px solid #CCCCCC;
 
 }
+
 .msg{
   text-align: center;
   transition: all 1s;
@@ -753,11 +754,7 @@ background:#eee;
     height: 40px;
    
 }
-.loginbtn{
-  justify-content:center;
-display:flex;
-align-items:center;
-}
+
 
 @media only screen and (max-width:767px) {
   .row-eq-height{

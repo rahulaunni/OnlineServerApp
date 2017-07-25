@@ -116,6 +116,12 @@ $( ".leftbar .icon" ).click(function(){
 	    $(this).addClass("activem"); 
 	    return false;
 });
+$( ".navbar .iconm" ).click(function(){
+	$(".navbar .active").removeClass("active");   
+	    $(this).addClass("active");
+		$(".navbar .navbtn").trigger("click");   
+	    return false;
+});
 $(document).on("click","#middlebar .confirm",function(){
 	$.post($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );

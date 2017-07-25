@@ -23,18 +23,25 @@
 		div.cntin.trint.aj Add IVSet
 	a.btn.btn-danger.glyphicon.glyphicon-off(href='/logout')
 
-nav.navbar.navbar-inverse.navbar-default.hidden-sm.hidden-md.hidden-lg(style="margin:0px")
-	.container-fluid
-		.navbar-header(data-toggle="collapse" data-target="#navbar")
+//- nav.navbar.navbar-inverse.navbar-default.hidden-sm.hidden-md.hidden-lg(style="margin:0px")
+nav.navbar.navbar-fixed-top.navbar-inverse.hidden-sm.hidden-md.hidden-lg(style="margin:0px")(role='navigation')
+	.container
+		.navbar-header
+			button.navbar-toggle.navbtn(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+				span.sr-only Toggle navigation            
+				span.icon-bar           
+				span.icon-bar 
+				span.icon-bar
 			a.navbar-brand(href='#') Dripo Care
-		ul.nav#navbar.navbar-nav.collapse.navbar-collapse
-			li.active.iconm(data-url="/home")
-				a(href="#") Home
-			li.active.iconm(data-url="/addpatient")
-				a(href="#") Additpatient
-			li.active.iconm(data-url="/addbed")
-				a(href="#") Addbed
-			li.active.iconm(data-url="/adddevice")
-				a(href="#") Adddevice
-			li.active.iconm(data-url="/addivset")
-				a(href="#") Addivset
+		.collapse.navbar-collapse#navbar(aria-expanded='true')
+			ul.nav.navbar-nav.navbar-right
+				li.active.iconm(data-url="/home")
+					a(href="#") Home
+				li.iconm(data-url="/addpatient")
+					a(href="#") Additpatient
+				li.iconm(data-url="/addbed")
+					a(href="#") Addbed
+				li.iconm(data-url="/adddevice")
+					a(href="#") Adddevice
+				li.iconm(data-url="/addivset")
+					a(href="#") Addivset
