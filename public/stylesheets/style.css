@@ -433,6 +433,7 @@ display: inline;
   border-bottom: 1px solid #CCCCCC;
 
 }
+
 .msg{
   text-align: center;
   transition: all 1s;
@@ -776,21 +777,7 @@ margin-left:0px;
     height: 40px;
    
 }
-.loginbtn{
-  justify-content:center;
-display:flex;
-align-items:center;
-}
-.pug{
-    position:relative;
-    top: 20px;
-    text-align: center;
 
-}
-.put.lead{
-
-margin-bottom:0px;
-}
 
 
 @media only screen and (max-width:767px) {
