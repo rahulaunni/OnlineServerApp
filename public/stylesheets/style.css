@@ -190,7 +190,7 @@ border-right:1px solid #AAAAAA;
   background: white;
   border-radius: .3em;
   box-shadow: 0px 0px 5px #CCCCCC;
-  padding:3em;
+  padding:1em;
   padding-bottom: 4em;
   padding-top: 0;
   float: none;
@@ -201,13 +201,23 @@ border-right:1px solid #AAAAAA;
   top: 50%;
   transform: translateY(-50%)
 }
-.reg{
+.reg1{
   text-align: center;
   background: white;
   border-radius: .3em;
   box-shadow: 0px 0px 5px #CCCCCC;
   padding-bottom: 4em;
-  padding:10%;
+  margin:0;
+  float: none;
+  margin:auto;
+}
+
+.reg2{
+  text-align: center;
+  background: white;
+  border-radius: .3em;
+  box-shadow: 0px 0px 5px #CCCCCC;
+  padding-bottom: 2em;
   margin:0;
   float: none;
   margin:auto;
@@ -529,6 +539,7 @@ justify-content:center;
 display:flex;
 align-items:center;
 border-right:1px solid #CCCCCC;
+border-bottom:1px solid #cccccc;
 height:100%;
 line-height:20px;
 padding:9px;
@@ -542,6 +553,7 @@ text-align:center;
 line-height:20px;
 line-height:20px;
 padding:9px;
+border-bottom:1px solid #cccccc;
 }    
 
 /* list patient */
@@ -578,6 +590,7 @@ justify-content:center;
 display:flex;
 align-items:center;
 border-right:1px solid #CCCCCC;
+border-bottom:1px solid #cccccc;
 height:100%;
 line-height:20px;
 padding:9px;
@@ -589,6 +602,7 @@ align-items:center;
 text-align:center;
 line-height:20px;
 line-height:20px;
+border-bottom:1px solid #cccccc;
 }
 
 /* list device */
@@ -612,6 +626,7 @@ justify-content:center;
 display:flex;
 align-items:center;
 border-right:1px solid #CCCCCC;
+border-bottom:1px solid #cccccc;
 height:100%;
 line-height:20px;
 padding:9px;
@@ -624,6 +639,7 @@ text-align:center;
 line-height:20px;
 line-height:20px;
 padding:9px;
+border-bottom:1px solid #cccccc;
 
 }
 
@@ -654,6 +670,7 @@ justify-content:center;
 display:flex;
 align-items:center;
 border-right:1px solid #CCCCCC;
+border-bottom:1px solid #cccccc;
 height:100%;
 line-height:20px;
 padding:9px;
@@ -666,6 +683,7 @@ text-align:center;
 line-height:20px;
 line-height:20px;
 padding:9px;
+border-bottom:1px solid #cccccc;
 
 }
 
@@ -712,6 +730,11 @@ background:#eee;
    color: #fff;
     background-color: #21B698;
     
+    
+}
+.btn.btn-default{
+margin-left:0px;
+
 }
 
 /* style for add bed */
@@ -756,6 +779,7 @@ background:#eee;
 }
 
 
+
 @media only screen and (max-width:767px) {
   .row-eq-height{
         display: inline-block;
@@ -766,6 +790,7 @@ background:#eee;
     padding:0px;
     display:flex;
 } 
+ 
   
   .remove{
 justify-content:center;
@@ -785,6 +810,14 @@ border:1px #CCCCCC solid;
     max-width: 24%;
     height: 40px;
    
+}
+.nest{
+border:1px solid #cccccc;
+ padding:0px;
+ margin:0px;
+     margin-top: 0px;
+    max-width: 24%;
+    height: 40px;
 }
 
 .p1{
