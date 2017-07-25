@@ -9,7 +9,7 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 				a.add(data-toggle='pill', data-url='/addbed') Add   
 	.col-sm-12.cnt.col-lg-12.col-xs-12
 			each bed in beds                                          
-				div.col-sm-12.col-lg-12.col-xs-12.list-bed
+				div.col-sm-12.col-lg-12.col-xs-11.list-bed
 					.col-sm-10.col-lg-10.col.col-xs-8.b1
 						h4 #{bed.bname}
 					.col-sm-1.col-lg-1.col-xs-2.i1.btn-default.glyphicon.glyphicon-pencil.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit') 
