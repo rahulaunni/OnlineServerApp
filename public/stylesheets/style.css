@@ -753,7 +753,11 @@ background:#eee;
     height: 40px;
    
 }
-
+.loginbtn{
+  justify-content:center;
+display:flex;
+align-items:center;
+}
 
 @media only screen and (max-width:767px) {
   .row-eq-height{
@@ -799,7 +803,7 @@ border:1px #CCCCCC solid;
   }
   .time{
   margin-top:1px;
-  padding:0px;
+  padding:0px;s
   }
   .infusion{
   display:inline-block;

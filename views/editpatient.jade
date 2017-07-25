@@ -1,3 +1,4 @@
+
 div.deleteids
   each bed in beds
     input.form-control.delbedid(type='hidden', name="delbedid",  value='#{bed._id}')
@@ -6,8 +7,8 @@ div.deleteids
       input.form-control.delmedid(type='hidden', name="delmedid", value='#{med._id}')
       each tim in med._timetable
         input.form-control.deltimeid(type='hidden', name="timeid", value='#{tim._id}')    
-.col-sm-12.main
-  .col-sm-12.cnt
+.col-sm-12.col-lg-12.col-xs-12.main
+  .col-sm-12.col-lg-12.col-xs-12.tab
     each bed in beds 
       h2 Edit Patient Details
       br
