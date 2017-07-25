@@ -7,14 +7,14 @@ html
     link(href='/stylesheets/bootstrap.min.css', rel='stylesheet', media='screen')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-          .col-sm-4
-          .col-sm-4.test
-            .col-sm-12.selectstation
+          .col-sm-12.col-xs-12.col-md-4.col-lg-10
+          .col-sm-12.col-xs-12.col-lg-12.col-md-12.test
+            .col-sm-6.selectstation
               br
               br
               if add_flag == "more"
                 form(role='form',action="/addstation",method="post")
-                  h2 Please add a Nursing Station Name
+                  h3 Please add a Nursing Station Name
                   br
                   .form-group
                   input.form-control(type='text', name="sname", placeholder='Station Name')
@@ -23,11 +23,11 @@ html
               else if add_flag=="newuser"
                 form(role='form',action="/addstation",method="post")
                   h2 Please add a Nursing Station to start with
-                  br
+                  br.hidden-xs
                   .form-group
                   input.form-control(type='text', name="sname", placeholder='Station Name')
                   br
-                  button.btn.btn-success.col-sm-6(type='submit') Add Station
+                  button.btn.btn-success.col-sm-6.col-lg-6(type='submit') Add Station
               else
                 form(role='form',action="/selectstation",method="post")
                   h2 Select a Nursing Station
@@ -36,12 +36,12 @@ html
                   select.form-control(name='statn')
                     each stat in stations
                       option(value='#{stat.id}') #{stat.sname}
+                  br.hidden-xs
                   br
-                  br
-                  .col-sm-6
-                      a.btn.btn-default.col-sm-12(href='/addstation?add_flag=more') Add New Station
-                  .col-sm-6
-                      button.btn.btn-success.col-sm-12(type='submit') Select        
+                  .col-sm-6.col-xs-6.col-lg-6.col-md-6.loginbtn
+                      a.btn.btn-default.col-sm-12.col-lg-12.hidden-col-xs-12(href='/addstation?add_flag=more') Add New Station
+                  .col-sm-6.col-xs-6.col-lg-6.loginbtn
+                      button.btn.btn-success.col-sm-12.col-lg-12.col-xs-12(type='submit') Select        
                 &nbsp;
   script(src='/js/jquery.min.js')
   script(src='/js/bootstrap.min.js')

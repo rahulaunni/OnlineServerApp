@@ -8,16 +8,16 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block content
-      .col-sm-4
-      .col-sm-4.container.test
-        .col-sm-12.reg
+      .col-sm-12.col-lg-12.col-xs-12
+      .col-sm-12.col-lg-12.col-xs-12.container.test
+        .col-sm-6.reg1
           h3 There is an existing user registered with this mail id
-          br
+          br.hidden-xs
           div
-            .col-sm-6      
-                a.btn.btn-primary.col-sm-12(href='/forgot') Forgot Password? 
-            .col-sm-6      
-                a.btn.btn-success.col-sm-12(href='/login') Ok
+            .col-sm-6.col-xs-6.col-lg-6.loginbtn      
+                a.btn.btn-primary.col-sm-12.hidden-col-xs-12.col-lg-12(href='/forgot') Forgot Password? 
+            .col-sm-6.col-xs-6.col-lg-6.loginbtn      
+                a.btn.btn-success.col-sm-12.col-xs-12.col-lg-12(href='/login') Ok
             &nbsp;
 
 

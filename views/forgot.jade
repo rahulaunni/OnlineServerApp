@@ -8,21 +8,22 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block content
-      .col-sm-4
-      .col-sm-4.container.test
-        .col-sm-12.reg
-          h1 Forgot Password
+       .col-sm-12.col-xs-12.col-md-4.col-lg-10
+       .col-sm-12.col-xs-12.col-lg-12.test
+        .col-sm-8.reg2
+          h2 Forgot Password
           p.lead Enter Your Registered Mail ID
-          br
+          br.hidden-xs
           form(role='form', action="/forgot",method="post")
             .form-group
                 input.form-control.col-sm-12(type='text', name="username", placeholder='Enter email' required)
-                br
-                br
-            .col-sm-6
-                a.btn.btn-primary.col-sm-12(href='/login') Cancel      
-            .col-sm-6
-                button.btn.btn-success.col-sm-12(type='submit') Request       
+                br.hidden-xs
+                br.hidden-xs
+                br.hidden-xs
+            .col-sm-6.col-lg-6.col-xs-6.loginbtn
+                a.btn.btn-primary.col-sm-12.col-lg-12.col-xs-12(href='/login') Cancel      
+            .col-sm-6.col-lg-6.col-xs-6.loginbtn
+                button.btn.btn-success.col-sm-12.col-lg-12.col-xs-12(type='submit') Request       
             &nbsp;
 
 
