@@ -14,14 +14,14 @@
             div.addbed
               .form-group
               .col-sm-11.col-xs-11.col-lg-11.null
-                input.form-control.bname(type='text', name="bname", placeholder='Bed name' required)
+                input.form-control.bname.beddname(type='text', name="bname", placeholder='Bed name' required)
                 br    
             button.btn.btn-info(id="add_bed",type="button") Add More Bed
             br
             button.btn.btn-success(id='submit_bed' type='submit') Submit
       .bedtoadd(style="display:none")
-          .col-sm-11.col-xs-11.col-lg-11.null.bname
-            input.form-control.bname(type='text', name="bname", placeholder='Bed name')
+          .col-sm-11.col-xs-11.col-lg-11.null.beddname
+            input.form-control.bname.beddname(type='text', name="bname", placeholder='Bed name')
            br
           .col-sm-1.col-xs-1.col-lg-1.remove.p
             span.glyphicon.glyphicon-remove 
