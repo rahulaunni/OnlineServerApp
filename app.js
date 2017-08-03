@@ -243,14 +243,14 @@ client.on('message', function(topic, message) {
             Timetable.find({'_medication':message,'infused':'not_infused'}).sort({time:1}).exec(function(err,tim){
             if (err) return console.error(err);
             var timid=tim[0]._id;
-            console.log(timid);
+            //console.log(timid);
             var rate=ratee[0].rate;
             var mname=ratee[0].name;
             var pname=ratee[0]._bed._patient.name;
             var vol=ratee[0].tvol;
             var alert=30;
             var pub_rate=timid+'&'+pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
-            console.log(pub_rate);
+            //console.log(pub_rate);
             client.publish('dripo/' + id + '/rate2set',pub_rate,{ qos: 1, retain: false });
         });
         });
@@ -319,14 +319,14 @@ var net = require('net');
 io.sockets.on( "connection", function( socket )
 {
 
-    console.log( "Client Connected.." );
+    //console.log( "Client Connected.." );
 
     socket.on('join', function(data) {
 
         if(data==='retainsend'){
        var client1=mqtt.connect('mqtt://localhost:1883');
         client1.on('connect', function() {
-          console.log("started");
+          //console.log("started");
           client1.subscribe('dripo/#',{ qos: 1 });
         });
        client1.on('message', function (topic, payload, packet) {
@@ -352,22 +352,22 @@ io.sockets.on( "connection", function( socket )
         client1.end();
         });
 
-        console.log(data);
+        //console.log(data);
     }
     else{
-        console.log(data);
+        //console.log(data);
 
     }
     });
      // socket connection indicates what mqtt topic to subscribe to in data.topic
     socket.on('subscribe', function (data) {
-        console.log('Subscribing to '+data.topic);
+        //console.log('Subscribing to '+data.topic);
         socket.join(data.topic);
         client.subscribe(data.topic);
     });
      // when socket connection publishes a message, forward that message the the mqtt broker
     socket.on('publish', function (data) {
-        console.log('Publishing to '+data.topic);
+        //console.log('Publishing to '+data.topic);
         client.publish(data.topic,data.payload,{ qos: 1, retain: true });
     });
 
@@ -415,7 +415,7 @@ client.on('message', function (topic, payload, packet) {
                 if(progress_width<95)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
-                    if(err){console.log(err);}
+                    if(err){console.log("err");}
                     }); 
                 }
                 else
@@ -434,10 +434,7 @@ client.on('message', function (topic, payload, packet) {
                     });
             }
         } 
-        else
-        {
-            console.log("invalid topic for socketio");
-        }
+      
 }
 });
 });

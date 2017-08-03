@@ -1046,6 +1046,15 @@ router.post('/passwordreset', function(req, res) {
 
 });
 
+router.get('/medtobed', checkAuthentication, function(req, res) {
+    console.log(req.query.medid);
+    var medid=ObjectId(req.query.medid);
+    Medication.find({'_id':medid}).populate({path:'_bed',model:'Bed'}).exec(function(err,bed){
+    console.log(bed[0]._bed.bname);
+    res.send(bed[0]._bed.bname);
+});
+});
+
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //This request has change from ProjectServerApp
 router.get('/listdevice',checkAuthentication,function(req,res){

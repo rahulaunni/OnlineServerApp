@@ -56,7 +56,7 @@ $( ".middlebar").addClass("col-lg-11");
 
 $.get( "/home", function( data ) {
   $( ".middlebar" ).html( data );
-    
+
 });
 
 
@@ -64,7 +64,12 @@ $.get( "/home", function( data ) {
 $( ".leftbar .icon" ).click(function(){
 	$.get($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );
+  
 });
+	
+});
+$( ".leftbar .iconhome" ).click(function(){
+$(".alert #notclose").trigger("mouseenter");
 	
 });
 

@@ -193,6 +193,7 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'percentage').html(progress_width_int+'%');
                         $('#'+medid+'details').addClass("displaydis");
                         $('#'+medid+'ack').removeClass("displaydis");
+                        $('#'+medid+'ack-errtype').html(status);
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
                         socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
