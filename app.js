@@ -60,7 +60,8 @@ mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reco
 
     }
 });
-app.use(session({secret: "Shhsssh"}));
+app.use(session({secret: "Shhsssh",resave: true,
+    saveUninitialized: true}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -108,7 +109,6 @@ var Timetable = require('./models/timetable');
 var Device = require('./models/device')
 var Ivset = require('./models/ivset')
 client.on('connect', function() {
-    console.log("mqtt started");
     client.subscribe('dripo/#',{ qos: 1 });
 });
 
@@ -119,7 +119,6 @@ client.on('message', function(topic, message) {
     var id = res[1];
         Device.find({'divid':id}).exec(function(err,dev){
         if (dev==0){
-            console.log(dev);
             //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
         }
         else{ 
@@ -316,7 +315,7 @@ client.on('message', function(topic, message) {
 var socket_io    = require( "socket.io" );
 var io = socket_io();
 app.io = io;
-var sys = require('sys');
+var sys = require('util');
 var net = require('net');
 // socket.io events
 io.sockets.on( "connection", function( socket )
@@ -418,7 +417,7 @@ client.on('message', function (topic, payload, packet) {
                 if(progress_width<95)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
-                    if(err){console.log("err");}
+                    if(err){console.log(err);}
                     }); 
                 }
                 else
@@ -446,7 +445,6 @@ client.on('message', function(topic, message) {
     var res = topic.split("/");
     var id = res[1];
     var purpose=res[2];
-    console.log(purpose);
     if(purpose=='log')
     {            
         var msg = message.toString();

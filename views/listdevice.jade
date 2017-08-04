@@ -1,16 +1,19 @@
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
-div.col-sm-12.col-lg-12.col-xs-12.main
-	.col-sm-12.col-lg-12.col-xs-12.tab
+div.col-sm-12.col-lg-12.col-md12.col-xs-12.main
+	.col-sm-12.col-lg-12.col-md12.col-xs-12.tab
 		ul.nav.nav-pills.ivsetpills
 			li.active
 				a.list(data-toggle='pill', data-url='/listdevice') View
 			li
 				a.add(data-toggle='pill', data-url='/adddevice') Add    
-	.col-sm-12.col-lg-12.col-xs-12.cnt
+	.col-sm-12.col-lg-12.col-md12.col-xs-12.cnt
 		each device in devices
-			div.col-sm-12.col-xs-11.col-lg-12.list-device
-				.col-sm-10.col-xs-8.d1
+			div.col-sm-12.col-md12.col-xs-11.col-lg-12.list-device
+				.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.d1
 					h4 #{device.divid}
-				.col-sm-1.col-xs-2.m1.btn-default.glyphicon.glyphicon-pencil.editdevice(data-url='/editdevice?device=#{device._id}')  
-				.col-sm-1.col-xs-2.m2.btn-default.glyphicon.glyphicon-remove
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.editdevice(data-url='/editdevice?device=#{device._id}')  
+					h4.glyphicon.glyphicon-pencil
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.m2.btn-default
+					h4.glyphicon.glyphicon-remove
+

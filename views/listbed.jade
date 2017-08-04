@@ -1,17 +1,19 @@
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
-div.col-sm-12.col-lg-12.col-xs-12.main
-	.col-sm-12.col-lg-12.col-xs-12.tab
+div.col-sm-12.col-lg-12.col-md-12.col-xs-12.main
+	.col-sm-12.col-lg-12.col-md-12.col-xs-12.tab
 		ul.nav.nav-pills.ivsetpills
 			li.active
 				a.list(data-toggle='pill', data-url='/listbed') View
 			li
 				a.add(data-toggle='pill', data-url='/addbed') Add   
-	.col-sm-12.cnt.col-lg-12.col-xs-12
+	.col-sm-12.cnt.col-lg-12.col-md-12.col-xs-12
 			each bed in beds                                          
-				div.col-sm-12.col-lg-12.col-xs-11.list-bed
-					.col-sm-10.col-lg-10.col.col-xs-8.b1
+				div.col-sm-12.col-lg-12.col-md-12.col-xs-11.list-bed
+					.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.b1
 						h4 #{bed.bname}
-					.col-sm-1.col-lg-1.col-xs-2.i1.btn-default.glyphicon.glyphicon-pencil.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit') 
-					.col-sm-1.col-lg-1.col-xs-2.i2.btn-default.glyphicon.glyphicon-remove(class='#{bed.bedstatus}')
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.i1.btn-default.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit') 
+						h4.glyphicon.glyphicon-pencil
+					.col-sm-1.col-lg-1.col-md-1.col-xs-2.i2.btn-default
+						h4.glyphicon.glyphicon-remove(class='#{bed.bedstatus}')
 

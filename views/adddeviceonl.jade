@@ -1,18 +1,18 @@
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-sm-12.col-lg-12.col-xs-12.main
-	.col-sm-12.col-lg-12.col-xs-12.tab
+	.col-sm-12.col-md-12.col-lg-12.col-xs-12.tab
 		ul.nav.nav-pills.ivsetpills
 			li
 				a.list(data-toggle='pill', data-url='/listdevice') View
 			li.active
 				a.add(data-toggle='pill', data-url='/adddevice') Add       
-	.col-sm-12.col-lg-12.col-xs-12.cnt
+	.col-sm-12.col-md-12.col-lg-12.col-xs-11.cnt
 		form(role='form',action="/adddevice",method="post")
 			adddevice.h4 Add Device
 			h5
 			.form-group
-				input.form-control(type='text', name="divid", placeholder='Device #ID' required)
+			input.form-control(type='text', name="divid", placeholder='Device #ID' required)
 			br
 			button.btn.btn-info(type='submit') Add Device
   

@@ -16,6 +16,8 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 					h4 #{patient.age}
 				div.col-sm-2.col-md-2.col-lg-2.col-xs-2.w1
 					h4 #{patient.weight}
-				div.col-sm-1.col-xs-2.l1.btn-default.glyphicon.glyphicon-pencil.editpatient(data-url='/editpatient?bed=#{patient._bed}')		
-				div.col-sm-1.col-xs-2.i2.btn-default.glyphicon.glyphicon-remove
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.editpatient(data-url='/editpatient?bed=#{patient._bed}')
+					h4.glyphicon.glyphicon-pencil		
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default
+					h4.glyphicon.glyphicon-remove
 

@@ -363,14 +363,6 @@ display: flex;
     
 /* add bed form style */
 
-.beddname{
-padding:5px;
-margin-left:0px;
-margin-bottom:10px;
-}
-
-
-
 .medname{
 display:flex;
     justify-content: center;
@@ -598,12 +590,20 @@ background-color:#f3f3f3;
 
 }
 .l1{
-justify-content:center;
-display:flex;
-align-items:center;
+font-size:20px;
+text-align:center;
 border-right:1px solid #CCCCCC;
 height:100%;
 }
+.l1 h4{
+    height: 100%;
+    width: 100%;
+    font-size: 100%;
+    display: flex;
+    justify-content: center;
+     align-items: center;
+     color:#2A3F52;
+  }
 .l2{
 justify-content:center;
 display:flex;
@@ -869,4 +869,7 @@ border:1px #CCCCCC solid;
 }
 .body{
   overflow: scroll;
+}
+.bedfield{
+  padding-left: 0px;
 }

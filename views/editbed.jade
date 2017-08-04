@@ -1,20 +1,16 @@
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
-.col-sm-12.col-lg-12.col-xs-12.main
-  .col-sm-12.col-lg-12.col-xs-12.cnt
+.col-sm-12.col-lg-12.col-md-12.col-xs-12.main
+  .col-sm-12.col-lg-12.col-md-12.col-xs-11.cnt
       .bedadd
         each bed in beds
-          .col-sm-12.col-lg-12.col-xs-12
             form(role='form' id='register')
               h4 Edit Bed Name
               div.addbed
                 .form-group
-                .col-sm-11.col-xs-11.col-lg-11.null
-                  input.form-control.bname(type='text', name="bname", placeholder='Bed name' value='#{bed.  bname}' required)
-                  input.form-control.bedid(type='hidden', name="bedid", value='#{bed._id}')
-          .col-sm-12.col-lg-12.col-xs-12 
+                input.form-control.bname(type='text', name="bname", placeholder='Bed name' value='#{bed.  bname}' required)
+                input.form-control.bedid(type='hidden', name="bedid", value='#{bed._id}') 
             br
             button.btn.btn-success(id='submit_bed' type='submit') Submit
-
 script(src ='/js/editbed.js')
 

@@ -1,20 +1,22 @@
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
 .col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
-div.col-sm-12.col-lg-12.col-xs-12.main
-	.col-sm-12.col-lg-12.col-xs-12.tab
+div.col-sm-12.col-lg-12.col-md-12.col-xs-12.main
+	.col-sm-12.col-lg-12.col-md-12.col-xs-12.tab
 		ul.nav.nav-pills.ivsetpills
 			li.active
 				a.list(data-toggle='pill', data-url='/listivset') View
 			li
 				a.add(data-toggle='pill', data-url='/addivset') Add 
-	.col-sm-12.col-lg-12.col-xs-12.cnt
+	.col-sm-12.col-lg-12.col-md-12.col-xs-12.cnt
 		each ivset in ivsets
-			div.col-sm-12.col-xs-11.list-ivset
-				div.col-sm-5.col-xs-4.iv1
+			div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-ivset
+				div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv1
 					h4 #{ivset.ivname}
-				div.col-sm-5.col-xs-4.iv2
+				div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv2
 					h4 #{ivset.ivdpf}
-				.col-sm-1.col-xs-2.x1.btn-default.glyphicon.glyphicon-pencil.editivset(data-url='/editivset?ivset=#{ivset._id}')  
-				.col-sm-1.col-xs-2.x2.btn-default.glyphicon.glyphicon-remove
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.x1.btn-default.editivset(data-url='/editivset?ivset=#{ivset._id}')  
+					h4.glyphicon.glyphicon-pencil
+				.col-sm-1.col-md-1.col-lg-1.col-xs-2.x2.btn-default
+					h4.glyphicon.glyphicon-remove
 
  
