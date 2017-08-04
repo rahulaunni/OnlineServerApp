@@ -170,6 +170,11 @@ background:white;
     margin-top: 0px;
     
 }
+.medicinedata2{
+    border: 1px solid #cccccc;
+    margin-top: 0px;
+    
+}
 .main{
     padding: 3px;
     margin: 15px;
@@ -392,6 +397,12 @@ border-radius:5px solid #fcfcfc;
  display:flex;
  padding:0px;
 }
+.medicinedata2{
+ border-radius:1px solid black;
+ display:flex;
+ padding:0px;
+}
+
 
 /* patient edit page glyphicon and button */
 
@@ -563,7 +574,6 @@ margin-top:1em;
 display:flex;
 align-items:center;
 padding:0px;
-position:absolute;
 
 }    
 .n1{
@@ -784,6 +794,7 @@ left:-31px;
     display:flex;
 } 
 
+
 .deftime{
 background:#eee;
 }
@@ -817,7 +828,10 @@ border:1px #CCCCCC solid;
     height: 40px;
 
 }
-
+.select{
+  background-color:#21B698;
+  color:black;
+}
 
   .medicinehold{
     border-radius: 1px solid black;
@@ -841,6 +855,9 @@ border:1px #CCCCCC solid;
   padding:3%;
   }
 }
+
+
+
 .activem{
   background-color: #21B698;
 }

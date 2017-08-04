@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var http = require("http");
 var app = express();
 var ObjectId = require('mongodb').ObjectID;
+var fs = require('fs');
 
 
 // view engine setup
@@ -55,6 +56,8 @@ mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reco
     else
     {
         console.log("mongodb connection success");
+        // fs.appendFileSync("Logfiles/file.txt", 'My Text \n', "UTF-8",{'flags': 'a+'});
+
     }
 });
 app.use(session({secret: "Shhsssh"}));
@@ -105,7 +108,7 @@ var Timetable = require('./models/timetable');
 var Device = require('./models/device')
 var Ivset = require('./models/ivset')
 client.on('connect', function() {
-    console.log("started");
+    console.log("mqtt started");
     client.subscribe('dripo/#',{ qos: 1 });
 });
 
@@ -437,5 +440,31 @@ client.on('message', function (topic, payload, packet) {
       
 }
 });
+});
+//test log code****************************************************************************
+client.on('message', function(topic, message) {
+    var res = topic.split("/");
+    var id = res[1];
+    var purpose=res[2];
+    console.log(purpose);
+    if(purpose=='log')
+    {            
+        var msg = message.toString();
+        var ress = msg.split("-");
+        var medid = ress[0];
+        var meddpf=ress[1];
+        var dcount=ress[2];
+        var etime=ress[3];
+        var srate=ress[4];
+        var ivol=ress[5];
+        Medication.find({_id:medid}).exec(function(err,med){
+        var medname=med[0].name;
+        var medrate=med[0].rate;
+        var medtvol=med[0].tvol;
+        fs.appendFileSync("Logfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt", dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
+    });
+
+    }
+
 });
 module.exports = app;

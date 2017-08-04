@@ -8,44 +8,44 @@ div.deleteids
       input.form-control.delmedid(type='hidden', name="delmedid", value='#{med._id}')
       each tim in med._timetable
         input.form-control.deltimeid(type='hidden', name="timeid", value='#{tim._id}')    
-.col-sm-12.col-lg-12.col-xs-12.main
-  .col-sm-12.col-lg-12.col-xs-12.tab
+.col-sm-12.col-md-12.col-lg-12.col-xs-12.main
+  .col-sm-12.col-lg-12.col-xs-12.col-md-12.cnt
     each bed in beds 
       h2 Edit Patient Details
       br
       form(role='form' id='register')
                       h4 Personal Details
                       .form-group
-                      .col-sm-4.col-xs-4.dark
+                      .col-sm-4.col-md-4.col-lg-4.col-xs-12.dark
                         input.form-control(type='text', name="pname", placeholder='Name' value='#{bed._patient.name}' required)
                         input.form-control(type='hidden', name="pid",  value='#{bed._patient._id}' required)
-                      .col-sm-4.col-xs-4.dark
+                      .col-sm-4.col-md-4.col-lg-4.col-xs-12.dark
                         input.form-control(type='Number', name="pwt", placeholder='Weight' value='#{bed._patient.weight}' required)
-                      .col-sm-4.col-xs-4.dark
+                      .col-sm-4.col-md-4.col-lg-4.col-xs-12.dark
                         input.form-control(type='Number', name="page", placeholder='age' value='#{bed._patient.age}' required)
                         br
-                      .col-sm-12.col-xs-12.dark
+                      .col-sm-12.col-md-12.col-lg-12.col-xs-12.dark
                         select.form-control(name='bedid' required)
                           each bedlist in bedlists
                             option(value='#{bedlist._id}') #{bedlist.bname}
                          br
                       h4 Medications
-                      .col-sm-12.col-xs-11.medicationlist(id="medicineholder")
+                      .col-sm-12.col-md-12.col-lg-12.col-xs-11.medicationlist(id="medicineholder")
                         each med in bed._patient._medication
                           .medicinedata.row-eq-height
-                            .col-sm-12.col-xs-12.pull
-                              .col-sm-4.col-xs-4.lock
+                            .col-sm-12.col-md-12.col-lg-12.col-xs-12.pull
+                              .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                                 input.form-control(type='text', name="mname", placeholder='Medicine name' value='#{med.name}' required readonly)
                                 input.form-control(type='hidden', name="medid", value='#{med._id}')
-                              .col-sm-4.col-xs-4.lock
+                              .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                                 input.form-control(type='Number', name="mrate", placeholder='ml/hr' value='#{med.rate}' required)
-                              .col-sm-4.col-xs-4.lock
+                              .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                                 input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml' value='#{med.tvol}' required)
-                              .col-sm-12.col-xs-10.timid
+                              .col-sm-12.col-md-12.col-lg-12.col-xs-10.timid
                                 h5 Schedule
                                   span(data-toggle='tooltip', data-placement="top",title='Please enter time details' id="my") &nbsp&nbsp 
                                   span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
-                              .col-sm-12.col-xs-12.timedata
+                              .col-sm-12.col-md-12.col-lg-12.col-xs-12.timedata
                                 - for (var i = 0; i < 24; ++i) {
                                   - var flag=0
                                   - var timid;
@@ -55,57 +55,57 @@ div.deleteids
                                       - timid=tim._id;
                                      - }
                                 - if(flag==1)
-                                  .col-sm-1.col-xs-12.deftime.select(data-toggle="on" data-id=timid)=i +':00'
+                                  .col-sm-1.col-md-1.col-lg-1.col-xs-12.deftime.select(data-toggle="on" data-id=timid)=i +':00'
                                 - else
-                                  .col-sm-1.col-xs-12.deftime(data-toggle="off" data-id=med._id)=i+':00'
+                                  .col-sm-1.col-md-1.col-lg-1.col-xs-12.deftime(data-toggle="off" data-id=med._id)=i+':00'
                                 - }        
-                            .col-sm-1.col-xs-12.remove
+                            .col-sm-1.col-md-1.col-lg-1.col-xs-12.remove
                               span.glyphicon.glyphicon-remove
-                      .col-sm-12.col-xs-12                                    
+                      .col-sm-12.col-md-12.col-lg-12.col-xs-12                                    
                          button.btn.btn-info(id="add_med",type="button") Add More Medicine                    
                     
-                      .col-sm-12.col-xs-12 
+                      .col-sm-12.col-md-12.col-lg-12.col-xs-12 
                          button.btn.btn-success(id="submit_button" type='submit' style="margin-top:1em;scale:1.4;color:color=#21B698 ") Update
                          &nbsp;
                       .medicinedata-toload(style="display:none")
-                          .col-sm-11.col-xs-12.pull
-                            .col-sm-4.col-xs-4.lock
+                          .col-sm-11col-md-11.col-lg-11.col-xs-12.pull
+                            .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                               input.form-control(type='text', name="mname", placeholder='Medicine name')
                               input.form-control(type='hidden', name="medid", value='new')
-                            .col-sm-4.col-xs-4.lock
+                            .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                               input.form-control(type='Number', name="mrate", placeholder='ml/hr')
-                            .col-sm-4.col-xs-4.lock
+                            .col-sm-4.col-md-4.col-lg-4.col-xs-12.lock
                               input.form-control(type='Number', name="tvol", placeholder='Total Vol in ml')   
-                            .col-sm-12.col-xs-12
+                            .col-sm-12.col-md-12.col-lg-12.col-xs-12
                               h5 Schedule
                                 span(style="color:#BBBBBB;font-size:80%") &nbsp&nbsp(select the time for infusing this medicine)
-                            .col-sm-12.col-xs-12.timedata
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 00:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 01:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 02:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 03:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 04:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 05:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 06:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 07:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 08:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 09:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 10:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 11:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 12:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 13:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 14:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 15:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 16:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 17:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 18:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 19:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 20:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 21:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 22:00
-                                .col-sm-1.deftime(data-toggle="off" data-id="new1") 23:00
+                            .col-sm-12col-md-12.col-lg-12.col-xs-12.timedata
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 00:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 01:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 02:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 03:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 04:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 05:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 06:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 07:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 08:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 09:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 10:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 11:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 12:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 13:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 14:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 15:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 16:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 17:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 18:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 19:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 20:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 21:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 22:00
+                                .col-md-1.col-lg-1.col-xs-12.col-sm-1.deftime(data-toggle="off" data-id="new1") 23:00
                                
-                           .col-sm-1.col-xs-1.remove
+                           .col-sm-1.col-md-1.col-lg-1.col-xs-1.remove
                              span.glyphicon.glyphicon-remove                           
                         
     script(src='/js/editpatient.js')

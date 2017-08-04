@@ -7,14 +7,14 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 				a.list(data-toggle='pill', data-url='/listpatient') View
 			li
 				a.add(data-toggle='pill', data-url='/addpatient') Add 
-	.col-sm-12.col-lg-12.col-xs-12.cnt
+	.col-sm-12.col-lg-12.col-md-12.col-xs-12.cnt
 		each patient in patients 
-			div.col-sm-11.col-xs-11.list-patient
-				div.col-sm-5.col-xs-12.n1
+			div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-patient
+				div.col-sm-6.col-md-6.col-lg-6.col-xs-12.n1
 					h4 #{patient.name}
-				div.col-sm-4.col-xs-2.a1
+				div.col-sm-2.col-md-2.col-lg-2.col-xs-2.a1
 					h4 #{patient.age}
-				div.col-sm-3.col-xs-2.w1
+				div.col-sm-2.col-md-2.col-lg-2.col-xs-2.w1
 					h4 #{patient.weight}
 				div.col-sm-1.col-xs-2.l1.btn-default.glyphicon.glyphicon-pencil.editpatient(data-url='/editpatient?bed=#{patient._bed}')		
 				div.col-sm-1.col-xs-2.i2.btn-default.glyphicon.glyphicon-remove
