@@ -56,7 +56,7 @@ mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reco
     else
     {
         console.log("mongodb connection success");
-        // fs.appendFileSync("Logfiles/file.txt", 'My Text \n', "UTF-8",{'flags': 'a+'});
+        console.log((new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds()+':'+(new Date).getMilliseconds());
 
     }
 });
@@ -455,11 +455,12 @@ client.on('message', function(topic, message) {
         var etime=ress[3];
         var srate=ress[4];
         var ivol=ress[5];
+        var time=(new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds()+':'+(new Date).getMilliseconds();
         Medication.find({_id:medid}).exec(function(err,med){
         var medname=med[0].name;
         var medrate=med[0].rate;
         var medtvol=med[0].tvol;
-        fs.appendFileSync("Logfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt", dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
+        fs.appendFileSync("Logfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
     });
 
     }

@@ -6,7 +6,6 @@ var Bed = require('../models/bed');
 var Patient = require('../models/patient');
 var Medication = require('../models/medication');
 var Timetable = require('../models/timetable');
-
 var Device = require('../models/device');
 var Ivset = require('../models/ivset');
 var Tempaccount = require('../models/tempaccount');
