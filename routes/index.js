@@ -34,6 +34,7 @@ router.get('/', checkAuthentication, function(req, res) {
         user: req.user
     });
 });
+
 router.get('/home', checkAuthentication, function(req, res) {
         //find timetable and sort in ascending order,there will be duplicates beacause search query is station and user id
         Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
@@ -232,10 +233,12 @@ router.get('/register', function(req, res) {
    
     res.render('register', {});
 });
+
 router.get('/forgot', function(req, res) {
    
     res.render('forgot', {});
 });
+
 router.get('/addstation', checkAuthentication, function(req, res) {
     //console.log(req.query.add_flag);
     if (req.query.add_flag == 'more') {
@@ -272,6 +275,7 @@ router.get('/addstation', checkAuthentication, function(req, res) {
 
 
 });
+
 router.get('/addpatient', checkAuthentication, function(req, res) {
 
     Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).populate('_station').exec(function(err, bed) {
@@ -284,6 +288,7 @@ router.get('/addpatient', checkAuthentication, function(req, res) {
     });
 
 });
+
 router.get('/editpatient',checkAuthentication,function(req,res){
     Bed.find({'_id':req.query.bed}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bed){
         if (err)return console,log(err);
@@ -317,11 +322,13 @@ router.get('/listpatient',checkAuthentication,function(req,res){
     });
 
 });
+
 router.get('/addbed', checkAuthentication, function(req, res) {
     res.render('addbed', {
         user: req.user
     });
 });
+
 router.get('/editbed',checkAuthentication,function(req,res){
     Bed.find({'_id':req.query.bed}).exec(function(err,bed){
         res.render('editbed',{
@@ -333,6 +340,7 @@ router.get('/editbed',checkAuthentication,function(req,res){
     });
 
 });
+
 router.get('/listbed',checkAuthentication,function(req,res){
     Bed.find({'_station':req.session.station}).exec(function(err,bed){
         if (err)return console,log(err);
@@ -344,11 +352,13 @@ router.get('/listbed',checkAuthentication,function(req,res){
     });
 
 });
+
 router.get('/addivset', checkAuthentication, function(req, res) {
     res.render('addivset', {
         user: req.user
     });
 });
+
 router.get('/editivset',checkAuthentication,function(req,res){
     Ivset.find({'_id':req.query.ivset}).exec(function(err,ivset){
         res.render('editivset',{
@@ -360,6 +370,7 @@ router.get('/editivset',checkAuthentication,function(req,res){
     });
 
 });
+
 router.post('/editivset', checkAuthentication, function(req, res) {
     var ivid = ObjectId(req.body.ivid);
     Ivset.collection.update({'_id':ivid},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf}});
@@ -377,10 +388,12 @@ router.get('/listivset',checkAuthentication,function(req,res){
     });
 
 });
+
 router.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
+
 router.get('/login', function(req, res) {
     res.render('login', {
         user: req.user
@@ -409,6 +422,7 @@ router.post('/addbed', checkAuthentication, function(req, res) {
     res.redirect('/');
 
 });
+
 router.post('/editbed', checkAuthentication, function(req, res) {
     console.log(req.body.bedname);
     console.log(req.body.bedid);
@@ -416,6 +430,7 @@ router.post('/editbed', checkAuthentication, function(req, res) {
     Bed.collection.update({'_id':bedid},{$set:{bname:req.body.bedname}});
     res.redirect('/');
 });
+
 router.post('/addstation', checkAuthentication, function(req, res) {
     var station_to_add = new Station({
         sname: req.body.sname,
@@ -428,6 +443,7 @@ router.post('/addstation', checkAuthentication, function(req, res) {
         res.redirect('/');
     });
 });
+
 router.post('/selectstation', checkAuthentication, function(req, res) {
     Station.findOne({
         '_id': req.body.statn
@@ -532,6 +548,7 @@ console.log(req.body);
     });
 
 });
+
 router.post('/updatepatient',checkAuthentication, function(req,res){
     //get the array of medication ids and time ids to be deleted passing values from editpatient.js 
     var delete_medication=[];
@@ -831,6 +848,7 @@ router.post('/addivset', checkAuthentication, function(req, res) {
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
+
 router.post('/register', function(req, res) {
 //check whether the user is already registered    
     Account.find({'username':req.body.username}).exec(function(err, tempp) {
@@ -1083,10 +1101,12 @@ router.get('/editdevice',checkAuthentication,function(req,res){
     });
 
 });
+
 router.post('/adddevice', checkAuthentication, function(req, res) {
     Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
+
 router.post('/editdevice', checkAuthentication, function(req, res) {
     var devid = ObjectId(req.body.id);
     Device.collection.update({'_id':devid},{$set:{divid:req.body.divid}});
