@@ -47,7 +47,14 @@ div.col-sm-12.col-md-12.col-lg-12.col-xs-12
                                               span mins 
               div.col-xs-12.col-sm-1.col-lg-1.col-md-1.del
                  span.btn-default.delete.glyphicon.glyphicon-remove.patrmv(id='#{bed._id}'+'remove')
-                 span.btn-default.editpatient.glyphicon.glyphicon-pencil.patedit(data-url='/editpatient?bed=#{bed._id}')(id='#{bed._id}'+'edit')                           
+                 span.btn-default.editpatient.glyphicon.glyphicon-pencil.patedit(data-url='/editpatient?bed=#{bed._id}')(id='#{bed._id}'+'edit')
+
+              div.msg#msg(style="display:none")
+                h4.col-sm-6 Are you sure you want to delete
+                div.col-sm-2
+                  button.btn.btn-danger.confirm(type='submit' data-url='/deletebed?bed=#{bed._id}') Delete
+                div.col-sm-2
+                  button.btn.btn-success.cancel(type='submit') Cancel                           
 script(src="/js/home.js")
 
 

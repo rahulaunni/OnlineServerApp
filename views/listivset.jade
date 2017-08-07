@@ -9,14 +9,31 @@ div.col-sm-12.col-lg-12.col-md-12.col-xs-12.main
 				a.add(data-toggle='pill', data-url='/addivset') Add 
 	.col-sm-12.col-lg-12.col-md-12.col-xs-12.cnt
 		each ivset in ivsets
-			div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-ivset
-				div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv1
-					h4 #{ivset.ivname}
-				div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv2
-					h4 #{ivset.ivdpf}
-				.col-sm-1.col-md-1.col-lg-1.col-xs-2.x1.btn-default.editivset(data-url='/editivset?ivset=#{ivset._id}')  
-					h4.glyphicon.glyphicon-pencil
-				.col-sm-1.col-md-1.col-lg-1.col-xs-2.x2.btn-default
-					h4.glyphicon.glyphicon-remove
+			div.ivsetlistandivsetcnfrm
+				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-ivset.ivsetlist
+					div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv1
+						h4 #{ivset.ivname}
+					div.col-sm-5.col-lg-5.col-md-5.col.col-xs-8.iv2
+						h4 #{ivset.ivdpf}
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.x1.btn-default.editivset(data-url='/editivset?ivset=#{ivset._id}')  
+						h4.glyphicon.glyphicon-pencil
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.x2.btn-default.removeivset
+						h4.glyphicon.glyphicon-remove
+				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.delete-ivset.deleteconfirmationdropdown.displaydis
+					div.col-md-6.col-lg-6.hidden-xs.hidden-sm
+						h4 Deleting a ivset will permanently remove it from your database
+					div.col-xs-12.col-sm-4.hidden-md.hidden-lg
+						h4 Delete ivset?
+					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs.keepivsetdetails(style="padding-top:2px")
+						button.btn.btn-success(type="button") No,Keep ivset 
+					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs(style="padding-top:2px")
+						button.btn.btn-danger.deleteivsetconfirmbtn(type='submit' data-url='/deleteivset?ivset=#{ivset._id}') Yes,Remove ivset
+					div.col-xs-6.hidden-md.hidden-sm.hidden-lg.keepivsetdetails(style="padding-bottom:2px")
+						button.btn.btn-success(type="button") Cancel
+					div.col-xs-6.hidden-md.hidden-sm.hidden-lg(style="padding-bottom:2px")
+						button.btn.btn-danger.deleteivsetconfirmbtn(type='submit' data-url='/deleteivset?ivset=#{ivset._id}') 	Delete
+
+script(src='/js/listivset.js')
+
 
  

@@ -8,12 +8,47 @@ div.col-sm-12.col-lg-12.col-md-12.col-xs-12.main
 			li
 				a.add(data-toggle='pill', data-url='/addbed') Add   
 	.col-sm-12.cnt.col-lg-12.col-md-12.col-xs-12
-			each bed in beds                                          
-				div.col-sm-12.col-lg-12.col-md-12.col-xs-11.list-bed
-					.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.b1
-						h4 #{bed.bname}
-					.col-sm-1.col-md-1.col-lg-1.col-xs-2.i1.btn-default.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit') 
-						h4.glyphicon.glyphicon-pencil
-					.col-sm-1.col-lg-1.col-md-1.col-xs-2.i2.btn-default
-						h4.glyphicon.glyphicon-remove(class='#{bed.bedstatus}')
+			each bed in beds
+				div.bedlistandbedcnfrm(style="color:green") 
+					div.col-sm-12.col-lg-12.col-md-12.col-xs-11.list-bed.bedlist
+						.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.b1
+							h4 #{bed.bname}
+						.col-sm-1.col-md-1.col-lg-1.col-xs-2.i1.btn-default.editbed(data-url='/editbed?bed=#{bed._id}')(id='#{bed._id}'+'edit') 
+							h4.glyphicon.glyphicon-pencil
+						.col-sm-1.col-lg-1.col-md-1.col-xs-2.i2.btn-default.removebed(class='#{bed.bedstatus}')
+							h4.glyphicon.glyphicon-remove
+					div.col-sm-12.col-md-12.col-lg-12.col-xs-11.delete-bed.deleteconfirmationdropdown.displaydis
+						div.col-md-6.col-lg-6.hidden-xs.hidden-sm
+							h4 Deleting a Bed will permanently remove it from your database
+						div.col-xs-12.col-sm-4.hidden-md.hidden-lg
+							h4 Delete Bed?
+						div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs.keepbeddetails(style="padding-top:2px")
+							button.btn.btn-success(type="button") No,Keep Bed 
+						div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs(style="padding-top:2px")
+							button.btn.btn-danger.deletebedconfirmbtn(type='submit' data-url='/deletebed?bed=#{bed._id}') 	Yes,Remove Bed
+						div.col-xs-6.hidden-md.hidden-sm.hidden-lg.keepbeddetails(style="padding-bottom:2px")
+							button.btn.btn-success(type="button") Cancel
+						div.col-xs-6.hidden-md.hidden-sm.hidden-lg(style="padding-bottom:2px")
+							button.btn.btn-danger.deletebedconfirmbtn(type='submit' data-url='/deletebed?bed=#{bed._id}') 	Delete
+			each obed in obeds
+				div.obedlistandobedcnfrm(style="color:gray")
+					div.col-sm-12.col-lg-12.col-md-12.col-xs-11.list-bed.bedlist
+						.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.b1
+							h4 #{obed.bname}
+						.col-sm-1.col-md-1.col-lg-1.col-xs-2.i1.btn-default.editbed(data-url='/editbed?bed=#{obed._id}')(id='#{obed._id}'+'edit') 
+							h4.glyphicon.glyphicon-pencil
+						.col-sm-1.col-lg-1.col-md-1.col-xs-2.i2.btn-default.occupiedbed(class='#{obed.bedstatus}')
+							h4.glyphicon.glyphicon-remove
+					div.col-sm-12.col-md-12.col-lg-12.col-xs-11.occupiedbed-warning.displaydis.deleteconfirmationdropdown
+						div.col-md-6.col-lg-6.hidden-xs.hidden-sm
+							h4 Bed is occupied, Operation not allowed.
+						div.col-xs-12.col-sm-6.hidden-md.hidden-lg
+							h4 Bed is Occupied!
+						div.col-md-3.col-sm-6.col-lg-3.col-xs-6.hidden-xs.keepbeddetails(style="padding-top:2px")
+							button.btn.btn-success(type="button") Cancel 
+						div.col-xs-12.hidden-md.hidden-sm.hidden-lg.keepbeddetails(style="padding-bottom:2px")
+							button.btn.btn-success(type="button") Cancel
+
+					
+script(src='/js/listbed.js')
 

@@ -312,14 +312,18 @@ router.get('/editpatient',checkAuthentication,function(req,res){
 });
 
 router.get('/listpatient',checkAuthentication,function(req,res){
-    Patient.find({'_station':req.session.station}).exec(function(err,patient){
+    Patient.find({'_station':req.session.station,'patientstatus':'active'}).exec(function(err,activepatient){
+        if (err)return console,log(err);
+        Patient.find({'_station':req.session.station,'patientstatus':'inactive'}).exec(function(err,inactivepatient){
         if (err)return console,log(err);
         res.render('listpatient',{
             user: req.user,
-            patients:patient
+            activepatients:activepatient,
+            inactivepatients:inactivepatient
         });
 
     });
+});
 
 });
 
@@ -342,15 +346,25 @@ router.get('/editbed',checkAuthentication,function(req,res){
 });
 
 router.get('/listbed',checkAuthentication,function(req,res){
-    Bed.find({'_station':req.session.station}).exec(function(err,bed){
+    Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).exec(function(err,bed){
         if (err)return console,log(err);
+    Bed.find({'_station':req.session.station,'bedstatus':'occupied'}).exec(function(err,obed){
+
         res.render('listbed',{
             user: req.user,
-            beds:bed
+            beds:bed,
+            obeds:obed
         });
+    });
 
     });
 
+});
+router.post('/deletebed',checkAuthentication,function(req,res){
+    console.log(req.query.bed);
+    var bedid=ObjectId(req.query.bed);
+    Bed.collection.remove({_id:bedid});
+    res.redirect('/listbed');    
 });
 
 router.get('/addivset', checkAuthentication, function(req, res) {
@@ -387,6 +401,11 @@ router.get('/listivset',checkAuthentication,function(req,res){
 
     });
 
+});
+router.post('/deleteivset',checkAuthentication,function(req,res){
+    var ivsetid=ObjectId(req.query.ivset);
+    Ivset.collection.remove({_id:ivsetid});
+    res.redirect('/listivset');    
 });
 
 router.get('/logout', function(req, res) {
@@ -955,7 +974,7 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/addstation?add_flag=null');
 });
 
-router.post('/deletebed', checkAuthentication, function(req, res) {
+router.post('/deletepatient', checkAuthentication, function(req, res) {
     var bedid=ObjectId(req.query.bed);
     Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
     });
@@ -1111,6 +1130,12 @@ router.post('/editdevice', checkAuthentication, function(req, res) {
     var devid = ObjectId(req.body.id);
     Device.collection.update({'_id':devid},{$set:{divid:req.body.divid}});
     res.redirect('/');
+});
+router.post('/deletedevice',checkAuthentication,function(req,res){
+    console.log(req.query.device);
+    var deviceid=ObjectId(req.query.device);
+    Device.collection.remove({_id:deviceid});
+    res.redirect('/listdevice');    
 });
 
 module.exports = router;
