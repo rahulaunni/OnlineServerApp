@@ -50,6 +50,18 @@ server.on('listening', onListening);
 // secureServer.listen(httpsPort);
 // secureServer.on('error', onError);
 // secureServer.on('listening', onListening);
+
+/**
+configure http to https
+*/
+app.use(function(req, res, next) {
+    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+        res.redirect('https://' + req.get('Host') + req.url);
+    }
+    else
+        next();
+});
+
 /**
  * Normalize a port into a number, string, or false.
  */
