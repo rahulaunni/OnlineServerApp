@@ -55,7 +55,7 @@ server.on('listening', onListening);
 configure http to https
 */
 app.use(function(req, res, next) {
-    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+    if((!req.secure) && (req.get('x-forwarded-proto') == 'http')) {
         res.redirect('https://' + req.get('Host') + req.url);
     }
     else
