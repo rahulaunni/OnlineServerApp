@@ -440,17 +440,28 @@ display: inline;
 }
 
 .msg{
+  display: flex;
+  justify-content: center;
   text-align: center;
   transition: all 1s;
-  width:100%;
+  /*width:100%;*/
   position: relative;
-  height:0;
+  /*height:0;*/
   top:-100%;
   overflow: hidden;
   background-color: #F0F3F3;
   color:#e71f63;
 }
-.msg div,.msg h4{
+ .msg h4,button
+ {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width:100%;
+}
+
+/*.msg div,.msg h4{
 height: 0px;
 overflow: visible;
 position: relative;
@@ -464,7 +475,7 @@ margin: 0px;
 .msg div button{
   width:100%;
   font-weight: bold;
-}
+}*/
 .holder{
   transition: all 1s;
   height: 100%;

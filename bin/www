@@ -17,15 +17,15 @@ app.set('port', port);
 /*
 create https instance
 */
-var https = require('https');
-var httpsPort = 443;
-var fs = require('fs');
-// Setup HTTPS
-var options = {
-  key: fs.readFileSync('sslcertificate/private.key'),
-  cert: fs.readFileSync('sslcertificate/certificate.pem')
-};
-var secureServer = https.createServer(options, app);
+// var https = require('https');
+// var httpsPort = 443;
+// var fs = require('fs');
+// // Setup HTTPS
+// var options = {
+//   key: fs.readFileSync('sslcertificate/private.key'),
+//   cert: fs.readFileSync('sslcertificate/certificate.pem')
+// };
+// var secureServer = https.createServer(options, app);
 
 
 /**

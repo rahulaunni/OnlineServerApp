@@ -296,3 +296,29 @@ var socket = io.connect('http://localhost');
       }); 
 
 });
+
+
+
+
+$(document).on("click","#middlebar .patrmv",function(){
+$(this).parent().parent().children('.msg').removeClass("displaydis");
+$(this).parent().parent().children('.medicines').addClass("displaydis");
+$(this).parent().parent().children('.del').addClass("displaydis");
+
+// $(this).parent().parent().children('.msg').addClass('addposmodal');
+// $(this).parent().parent().addClass('addposcn');
+});
+
+
+
+$(document).on("click","#middlebar .patrmvcancel",function(){
+$(this).parent().parent().parent().children('.medicines').removeClass("displaydis");
+$(this).parent().parent().parent().children('.msg').addClass("displaydis");
+$(this).parent().parent().parent().children('.del').removeClass("displaydis");
+});
+
+$(document).on("click","#middlebar .patrmvconfirm",function(){
+    $.post($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
