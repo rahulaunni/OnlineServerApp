@@ -444,15 +444,15 @@ display: inline;
   justify-content: center;
   text-align: center;
   transition: all 1s;
-  /*width:100%;*/
+  width:100%;
   position: relative;
-  /*height:0;*/
+  height:0;
   top:-100%;
   overflow: hidden;
   background-color: #F0F3F3;
   color:#e71f63;
 }
- .msg h4,button
+ .msg div, .msg h4
  {
   display: flex;
   justify-content: center;
@@ -461,7 +461,7 @@ display: inline;
   width:100%;
 }
 
-/*.msg div,.msg h4{
+.msg div,.msg h4{
 height: 0px;
 overflow: visible;
 position: relative;
@@ -475,7 +475,7 @@ margin: 0px;
 .msg div button{
   width:100%;
   font-weight: bold;
-}*/
+}
 .holder{
   transition: all 1s;
   height: 100%;
@@ -898,7 +898,24 @@ border:1px #CCCCCC solid;
 .deleteconfirmationdropdown button{
   margin:0px;
 }
-/*style for bedlist page separation for occupied and unoccupied bed*/
-.bedlistandbedcnfrm{
-  border-bottom: : 2px solid #cccccc;
+/*style for Home page delete confirmation*/
+.cnfrmmsg{
+	justify-content: center;
+	text-align: center;
+	vertical-align: center;
+	transition: all 1s;
+	position: relative;
+	top:-100%;
+	overflow: hidden;
+	background-color: #F0F3F3;
+	color:#e71f63;
+
+
+}
+.cnfrmmsg div{
+	display:flex;
+	justify-content: center;
+	/*flex-direction: column;*/
+	text-align: center;
+
 }

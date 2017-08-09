@@ -115,6 +115,7 @@ var Bed = require('./models/bed');
 var Patient = require('./models/patient');
 var Medication = require('./models/medication');
 var Timetable = require('./models/timetable');
+var Infusionhistory = require('./models/infusionhistory');
 var Device = require('./models/device')
 var Ivset = require('./models/ivset')
 client.on('connect', function() {
@@ -392,6 +393,8 @@ client.on('message', function (topic, payload, packet) {
             //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
         }
         else{
+        var stationid=dev[0].sname;
+        var userid=dev[0].uid;
         if(topic=='dripo/'+ id + '/mon')
         {
             io.sockets.emit('mqtt',{'topic':topic.toString(),'payload':payload.toString()});
@@ -405,25 +408,38 @@ client.on('message', function (topic, payload, packet) {
             var remaintime = ress[5];
             var tvol = ress[6];
             var progress_width = ((volinfused/tvol)*100);
+            var infdate= new Date();
+            var inftime=(new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds();
             //database operations while infusion
+
             if(status=='start')
             {        
-                //Timetable.collection.update({_id:timeid},{$set:{infused:'infusing'}},{upsert:false});
-
+                //on start change timetable status to infusing
                  Timetable.update({_id:timeid},{$set:{infused:"infusing"}},function(err,bed){
                     if(err){console.log(err);}
-
                     });
+                 //create an infusion history collection and add date and time of infusion
+                Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inf){
+                if (inf==0){
+                Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
+                Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inff){
+                Medication.collection.update({_id:ObjectId(medid)},{$push:{_infusionhistory:inff[0]._id}});
+            });
+                }
+            });
+
             }
             if(status=='Empty')
             {
                  Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
                     if(err){console.log(err);}
                     });
+                 Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infendtime:inftime,inftvol:volinfused}});
+
             }  
             if(status=='stop')
             {   
-                if(progress_width<95)
+                if(progress_width<90)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
                     if(err){console.log(err);}
@@ -434,15 +450,16 @@ client.on('message', function (topic, payload, packet) {
                     Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
                        if(err){console.log(err);}
                       });
+                    Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infendtime:inftime,inftvol:volinfused}});
+
 
                 }
                 
             }  
-            if(status=='Block_ACK'||status=='Rate Err_ACK'||status=='Empty_ACK')
+            if(status=='Block'||status=='Rate Err')
             {
-                Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
-                    if(err){console.log(err);}
-                    });
+                Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$push:{inferr:{errtype:status,errtime:inftime}}});
+
             }
         } 
       

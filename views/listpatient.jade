@@ -19,17 +19,8 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 						h4 #{activepatient.weight}
 					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.editpatient(data-url='/editpatient?bed=#{activepatient._bed}')
 						h4.glyphicon.glyphicon-pencil		
-					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.activepatient
-						h4.glyphicon.glyphicon-remove
-				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.activepatient-warning.displaydis.deleteconfirmationdropdown
-					div.col-md-6.col-lg-6.hidden-xs.hidden-sm
-						h4 Patient is active, Operation not allowed.
-					div.col-xs-12.col-sm-6.hidden-md.hidden-lg
-						h4 Patient is active!
-					div.col-md-3.col-sm-6.col-lg-3.col-xs-6.hidden-xs.keeppatientdetails(style="padding-top:2px")
-						button.btn.btn-success(type="button") Cancel 
-					div.col-xs-12.hidden-md.hidden-sm.hidden-lg.keeppatientdetails(style="padding-bottom:2px")
-						button.btn.btn-success(type="button") Cancel
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.viewpatient(data-url='/viewpatient?patient=#{activepatient._id}')
+						h4.glyphicon.glyphicon-eye-open
 		each inactivepatient in inactivepatients
 			div.patlistandpatcnfrm(style="color:gray") 
 				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-patient.patlist
@@ -41,21 +32,8 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 						h4 #{inactivepatient.weight}
 					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.inactivepatient
 						h4.glyphicon.glyphicon-pencil		
-					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.removepatient
-						h4.glyphicon.glyphicon-remove
-				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.delete-patient.deleteconfirmationdropdown.displaydis
-					div.col-md-6.col-lg-6.hidden-xs.hidden-sm
-						h4 Deleting a Patient will permanently remove it from your database
-					div.col-xs-12.col-sm-4.hidden-md.hidden-lg
-						h4 Delete Patient?
-					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs.keeppatientdetails(style="padding-top:2px")
-						button.btn.btn-success(type="button",data-dismiss='modal') No,Keep Patient Details
-					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs(style="padding-top:2px")
-						button.btn.btn-danger.deletepatientconfirmbtn(type='submit' data-url='/removepatient?patient=#{inactivepatient._id}') 	Yes,Remove Patient Detail
-					div.col-xs-6.hidden-md.hidden-sm.hidden-lg.keeppatientdetails(style="padding-bottom:2px")
-						button.btn.btn-success(type="button",data-dismiss='modal') Cancel
-					div.col-xs-6.hidden-md.hidden-sm.hidden-lg(style="padding-bottom:2px")
-						button.btn.btn-danger.deletepatientconfirmbtn(type='submit' data-url='/removepatient?patient=#{inactivepatient._id}') 	Delete
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.viewpatient(data-url='/viewpatient?patient=#{inactivepatient._id}')
+						h4.glyphicon.glyphicon-eye-open
 				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.inactivepatient-warning.displaydis.deleteconfirmationdropdown
 					div.col-md-6.col-lg-6.hidden-xs.hidden-sm
 						h4 Patient is inactive, Operation not allowed.

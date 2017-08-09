@@ -1,0 +1,68 @@
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+.col-sm-12.col-lg-12.col-xs-12.main
+	.col-sm-12.col-lg-12.col-xs-12.col-md-12.tab      
+	.col-sm-12.col-lg-12.col-xs-11.col-md-12.cnt
+		each patient in patients
+			div.col-sm-12.col-md-12.col-lg-12.col-xs-12
+				h2 Patient details
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 Name 
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 : #{patient.name}
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 Age 
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 : #{patient.age}
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 Weight 
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 : #{patient.weight}
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 Admitted On
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 : #{patient.admittedon}
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 Discharged On
+			div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+				h4 : #{patient.dischargedon}
+			each med in patient._medication
+				div.col-sm-12.col-md-12.col-lg-12.col-xs-12
+					h2 Medication Details
+				div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+					h4 Medicine Name
+				div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+					h3 : #{med.name}
+				each inf in med._infusionhistory
+					div.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						h2 Infusion Details of #{med.name}
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 Infusion date
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 #{inf.infdate}
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 Infusion Starting Time
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 #{inf.infstarttime}
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 Infusion Ending Time
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 #{inf.infendtime}
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 Total Volume Infused
+					div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+						h4 #{inf.inftvol}
+					div.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						h3 Error Details 
+					each inferr in inf.inferr
+						div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+							h4 #{inferr.errtime}
+						div.col-sm-6.col-md-6.col-lg-6.col-xs-6
+							h4 #{inferr.errtype}
+
+
+					
+
+
+
+

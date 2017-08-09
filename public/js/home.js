@@ -301,7 +301,7 @@ var socket = io.connect('http://localhost');
 
 
 $(document).on("click","#middlebar .patrmv",function(){
-$(this).parent().parent().children('.msg').removeClass("displaydis");
+$(this).parent().parent().children('.cnfrmmsg').removeClass("displaydis");
 $(this).parent().parent().children('.medicines').addClass("displaydis");
 $(this).parent().parent().children('.del').addClass("displaydis");
 
@@ -313,7 +313,7 @@ $(this).parent().parent().children('.del').addClass("displaydis");
 
 $(document).on("click","#middlebar .patrmvcancel",function(){
 $(this).parent().parent().parent().children('.medicines').removeClass("displaydis");
-$(this).parent().parent().parent().children('.msg').addClass("displaydis");
+$(this).parent().parent().parent().children('.cnfrmmsg').addClass("displaydis");
 $(this).parent().parent().parent().children('.del').removeClass("displaydis");
 });
 

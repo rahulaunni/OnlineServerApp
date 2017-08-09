@@ -327,6 +327,20 @@ router.get('/listpatient',checkAuthentication,function(req,res){
 
 });
 
+router.get('/viewpatient',checkAuthentication,function(req,res){
+    var patid=ObjectId(req.query.patient);
+    Patient.find({'_id':patid}).populate({path:'_medication',model:'Medication',populate:{path:'_infusionhistory',model:'Infusionhistory'}}).exec(function(err,patient){
+        if (err)return console,log(err);
+        res.render('viewpatient',{
+            user: req.user,
+            patients:patient
+        });
+
+});
+
+});
+
+
 router.get('/addbed', checkAuthentication, function(req, res) {
     res.render('addbed', {
         user: req.user
@@ -485,6 +499,7 @@ console.log(req.body);
         name: req.body.patient.name,
         age: req.body.patient.age,
         patientstatus:'active',
+        admittedon:new Date(),
         weight: req.body.patient.weight,
         _bed: req.body.bed,
         _station:req.session.station
@@ -974,13 +989,15 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/addstation?add_flag=null');
 });
 
-router.post('/deletepatient', checkAuthentication, function(req, res) {
+router.post('/removepatient', checkAuthentication, function(req, res) {
     var bedid=ObjectId(req.query.bed);
+    console.log(bedid);
     Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
     });
     Bed.update({_id:req.query.bed},{$set:{bedstatus:"unoccupied"}},function(err,bed){
     });
-    Patient.collection.update({'_bed':bedid},{$set:{patientstatus:"inactive"},$unset:{_bed:""}});
+    var date = new Date();
+    Patient.collection.update({'_bed':bedid},{$set:{patientstatus:"inactive",dischargedon:date},$unset:{_bed:""}});
     Medication.collection.updateMany({'_bed':bedid},{$unset:{_bed:""}});
     Timetable.collection.remove({bed:req.query.bed});
     res.redirect('/');    
