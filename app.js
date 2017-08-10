@@ -35,17 +35,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// redirect all http to https
+app.use(function(req, res, next) {
+    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'http')) {
+        console.log("redirecting to https");
+        res.redirect('https://' + req.get('Host') + req.url);
+    }
+    else
+        next();
+});
 app.use('/', routes);
-//redirect all http to https
-// app.use(function(req, res, next) {
-//     if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'http')) {
-//         console.log("redirecting to https");
-//         res.redirect('https://' + req.get('Host') + req.url);
-//     }
-//     else
-//         next();
-// });
+
 
 // passport config
 var Account = require('./models/account');
