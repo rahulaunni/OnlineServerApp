@@ -37,10 +37,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // redirect all http to https
 app.use(function(req, res, next) {
+
+console.log(req.get('x-forwarded-proto'));
+console.log(req.protocol);
+});
+app.use(function(req, res, next) {
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
         console.log(req.get('x-forwarded-proto'));
+        console.log(req.protocol);
     } else {
         next();     
     }
