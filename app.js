@@ -36,11 +36,13 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // redirect all http to https
-app.get('*', function(req, res, next) {
+app.use(function(req, res, next) {
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
-    if (req.get('x-forwarded-proto') != "https") {
+    if (req.protocol != "https") {
         res.set('x-forwarded-proto', 'https');
-        res.redirect('https://' + req.get('host') + req.url);
+        res.redirect('https://' + req.hostname + req.url);
+        console.log('https://' + req.hostname + req.url);
+
     } else {
         next();     
     }
