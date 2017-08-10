@@ -36,14 +36,20 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // redirect all http to https
-app.use(function(req, res, next) {
-    if((!req.secure) && (req.get('x-forwarded-proto') !== 'http')) {
-        console.log("redirecting to https");
-        res.redirect('https://' + req.hostname + req.url);
-    }
-    else
-        next();
-});
+// app.use(function(req, res, next) {
+//     if((!req.secure) && (req.get('x-forwarded-proto') !== 'http')) {
+//         console.log("redirecting to https");
+//         res.redirect('https://' + req.hostname + req.url);
+//         console.log('https://' + req.hostname + req.url));
+//     }
+//     else
+//         next();
+// });
+if(req.headers["x-forwarded-proto"] === "https"){
+  // OK, continue
+  return next();
+};
+res.redirect('https://'+req.hostname+req.url);
 app.use('/', routes);
 
 
