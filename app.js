@@ -36,28 +36,8 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(function(req, res, next) {
-    // if(req.get(X-Forwarded-Proto) === 'http') {
-        console.log(req);
-        console.log(req.get('x-forwarded-proto'));
-        console.log(req.protocol);
-        // res.redirect('https://' + req.get('Host') + req.url);
-    app.use('/', routes);
-
-//     } else {
-//         next();     
-//     }
-});
 app.use('/', routes);
-// app.use(function(req, res, next) {
-//     if((req.get('x-forwarded-proto') !== 'http')) {
-//         console.log("redirecting to https");
-//         res.redirect('https://' + req.hostname + req.url);
-//         console.log('https://' + req.hostname + req.url);
-//     }
-//     else
-//         next();
-// });
+
 
 
 
