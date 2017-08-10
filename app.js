@@ -37,14 +37,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(function(req, res, next) {
-    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+    if(req.get('X-Forwarded-Proto') === 'http') {
+        console.log(req.get('X-Forwarded-Proto'));
+        console.log(req.protocol);
         res.redirect('https://' + req.get('Host') + req.url);
     
     } else {
-        app.use('/', routes);
         next();     
     }
 });
+app.use('/', routes);
 // app.use(function(req, res, next) {
 //     if((req.get('x-forwarded-proto') !== 'http')) {
 //         console.log("redirecting to https");
