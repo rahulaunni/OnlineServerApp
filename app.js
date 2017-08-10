@@ -35,19 +35,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// redirect all http to https
-app.use(function(req, res, next) {
 
-console.log(req.get('x-forwarded-proto'));
-console.log(req.protocol);
-});
 app.use(function(req, res, next) {
-//http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
-    if (req.get('x-forwarded-proto') != "https") {
-        res.set('x-forwarded-proto', 'https');
-        console.log(req.get('x-forwarded-proto'));
-        console.log(req.protocol);
+    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+        res.redirect('https://' + req.get('Host') + req.url);
+    
     } else {
+        app.use('/', routes);
         next();     
     }
 });
@@ -61,7 +55,6 @@ app.use(function(req, res, next) {
 //         next();
 // });
 
-app.use('/', routes);
 
 
 // passport config
