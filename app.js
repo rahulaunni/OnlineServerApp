@@ -37,14 +37,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(function(req, res, next) {
-    if(req.get('X-Forwarded-Proto') === 'http') {
+    // if(req.get(X-Forwarded-Proto) === 'http') {
         console.log(req.get('X-Forwarded-Proto'));
         console.log(req.protocol);
-        res.redirect('https://' + req.get('Host') + req.url);
+        // res.redirect('https://' + req.get('Host') + req.url);
     
-    } else {
-        next();     
-    }
+//     } else {
+//         next();     
+//     }
 });
 app.use('/', routes);
 // app.use(function(req, res, next) {
