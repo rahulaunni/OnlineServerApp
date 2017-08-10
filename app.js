@@ -37,9 +37,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // redirect all http to https
 app.use(function(req, res, next) {
-    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'http')) {
+    if((!req.secure) && (req.get('x-forwarded-proto') !== 'http')) {
         console.log("redirecting to https");
-        res.redirect('https://' + req.get('Host') + req.url);
+        res.redirect('https://' + req.hostname + req.url);
     }
     else
         next();
