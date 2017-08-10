@@ -38,10 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
     // if(req.get(X-Forwarded-Proto) === 'http') {
-        console.log(req.get('X-Forwarded-Proto'));
+        console.log(req);
+        console.log(req.get('x-forwarded-proto'));
         console.log(req.protocol);
         // res.redirect('https://' + req.get('Host') + req.url);
-    
+    app.use('/', routes);
+
 //     } else {
 //         next();     
 //     }
