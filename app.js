@@ -33,16 +33,6 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use (function (req, res, next) {
-     var schema = (req.headers['x-forwarded-proto'] || '').toLowerCase();
-     if (schema === 'https') {
-       next();
-     } else {
-       res.redirect('https://' + req.headers.host + req.url);
-     }
-   });
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 
