@@ -8,11 +8,16 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 			li
 				a.add(data-toggle='pill', data-url='/addpatient') Add 
 	.col-sm-12.col-lg-12.col-md-12.col-xs-12.cnt
+		.col-sm-10.col-lg-10.col-md-10.col-xs-11
+			input.form-control(type='text', name="search_query", placeholder='Search Patient')
+			br
+		.col-sm-2.col-lg-2.col-md-2.col-xs-11
+			button.btn.btn-info(style="margin-top:0px")(id="search",type="button") Search
 		each activepatient in activepatients
 			div.patlistandpatcnfrm(style="color:green") 
 				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-patient.patlist
 					div.col-sm-6.col-md-6.col-lg-6.col-xs-12.n1
-						h4 #{activepatient.name}
+						h4.spname #{activepatient.name}
 					div.col-sm-2.col-md-2.col-lg-2.col-xs-2.a1
 						h4 #{activepatient.age}
 					div.col-sm-2.col-md-2.col-lg-2.col-xs-2.w1
@@ -25,7 +30,7 @@ div.col-sm-12.col-lg-12.col-xs-12.main
 			div.patlistandpatcnfrm(style="color:gray") 
 				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.list-patient.patlist
 					div.col-sm-6.col-md-6.col-lg-6.col-xs-12.n1
-						h4 #{inactivepatient.name}
+						h4.spname #{inactivepatient.name}
 					div.col-sm-2.col-md-2.col-lg-2.col-xs-2.a1
 						h4 #{inactivepatient.age}
 					div.col-sm-2.col-md-2.col-lg-2.col-xs-2.w1
