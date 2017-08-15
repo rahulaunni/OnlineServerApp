@@ -1,5 +1,5 @@
 $(function() {   
-var socket = io.connect('http://localhost');
+var socket = io.connect('https://localhost');
       socket.on('connect', function(data) {
        socket.on('mqtt', function(msg) {
                console.log(msg.topic+' '+msg.payload);
