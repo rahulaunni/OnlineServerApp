@@ -329,7 +329,7 @@ var sys = require('util');
 var net = require('net');
 io.set('match origin protocol', true);
 // socket.io events
-// io.sockets.on( "connection", function( socket )
+io.sockets.on( "connection", function( socket )
 {
 
     //console.log( "Client Connected.." );
