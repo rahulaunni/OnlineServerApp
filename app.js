@@ -327,7 +327,7 @@ var io = socket_io();
 app.io = io;
 var sys = require('util');
 var net = require('net');
-io.set('match origin protocol', true);
+// io.set('match origin protocol', true);
 // socket.io events
 io.sockets.on( "connection", function( socket )
 {
