@@ -14,7 +14,7 @@ var http = require("http");
 var app = express();
 var ObjectId = require('mongodb').ObjectID;
 var fs = require('fs');
-
+var cron = require('node-cron');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -102,8 +102,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
 
 // mqtt part*******************************************************************************************************************
 
@@ -467,6 +465,41 @@ client.on('message', function (topic, payload, packet) {
 }
 });
 });
+//cron-Job********************************************************************************************************************
+//infused medicine back to not_infused
+cron.schedule('* */1 * * *', function(){
+  Timetable.find({'infused':'infused'}).exec(function(err,tim){
+    var time_ids=[];
+    for(var key in tim)
+    {
+        var timediff=tim[key].time-(new Date).getHours();
+        if(timediff == 12||timediff == -12)
+        {
+
+            time_ids.push(tim[key]._id);
+        }     
+    } 
+    Timetable.collection.updateMany({'_id': {$in:time_ids}},{$set:{infused:"not_infused"}},function(err,bed){
+        if(err){console.log(err)}
+    });
+
+  });
+
+});
+//alert if not_infused in time
+// io.sockets.on('connection', function(socket){
+//  socket.on('hello', function(data) {
+//           console.log(data);     
+//       });
+// cron.schedule('* */1 * * * *', function(){
+// console.log('running a task every minute');                    
+//     console.log("client connected");
+//   // io.socket.emit('request'); 
+// socket.emit('messages', 'Hello from server');
+ 
+// });
+// });
+
 //test log code****************************************************************************
 client.on('message', function(topic, message) {
     var res = topic.split("/");

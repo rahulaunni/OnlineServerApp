@@ -317,8 +317,54 @@ $(this).parent().parent().parent().children('.cnfrmmsg').addClass("displaydis");
 $(this).parent().parent().parent().children('.del').removeClass("displaydis");
 });
 
+
+$(document).on("click","#middlebar .infconfirm",function(){
+$(this).parent().parent().parent().children('.medicines').removeClass("displaydis");
+$(this).parent().parent().parent().children('.infusionalert').addClass("displaydis");
+$(this).parent().parent().parent().children('.del').removeClass("displaydis");
+});
+
 $(document).on("click","#middlebar .patrmvconfirm",function(){
     $.post($(this).attr("data-url"), function( data ) {
   $( ".middlebar" ).html( data );
 });
 });
+//This part of code is notify the user about upcoming infusion
+//function is fired in every 1 min
+//checking for infusion in 55th min of every hour
+window.setInterval(function(){ // Set interval for checking
+    var date = new Date(); // Create a Date object to find out what time it is
+    if(date.getMinutes() ==55){ // Check the time
+        var nexthour=date.getHours()+1;
+        var nexthour_formated;
+        if(nexthour<12)
+        {
+            nexthour_formated=nexthour+' '+'AM';
+        }
+        else if(nexthour===12)
+        {
+            nexthour_formated=nexthour+' '+'PM';
+        }
+        else
+        {
+            nexthour_formated=(nexthour-12)+' '+'PM';
+        }
+        console.log(nexthour_formated);
+        $("#middlebar .not_infused").each(function () {
+            var $this = $(this);
+            var time=$this.text();
+            if(time.indexOf(nexthour_formated) !== -1)
+            {
+                console.log($this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children());
+                var medicinename=$this.closest('#middlebar .not_infused').parent().parent().children('.medname').text();
+                console.log(medicinename);
+                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.medicines').addClass("displaydis");
+                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').removeClass("displaydis");
+                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.del').addClass("displaydis");
+                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children('.alertdetailsmedname').html(medicinename);
+                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children('.alertdetailstime').html(time);
+
+            }
+        });
+    }
+}, 60000); 

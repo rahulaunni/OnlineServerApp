@@ -211,20 +211,19 @@ router.get('/home', checkAuthentication, function(req, res) {
 
             
                             if (infflag===true) {
-                                console.log(infbedd[lp1]);
                                 bed.push(infbedd[lp1]);
 
                                 // console.log(infbedd);
                                 // console.log("ok");
                             }
                         }
-         
+     
          res.render('home', {user: req.user,beds:bed});
 
          });
             });
     });
-    });
+});
 
 });
 
@@ -1107,7 +1106,24 @@ router.get('/medtobed', checkAuthentication, function(req, res) {
     res.send(bed[0]._bed.bname);
 });
 });
-
+//this route is from notification.js to check is there any infusion in next hour 
+//route will be called in 55th min of every hour
+router.get('/infusionalert', checkAuthentication, function(req, res) {
+    console.log("called infusion alert");
+    Timetable.find({'station':req.session.station,'infused':'not_infused'}).exec(function(err,tim){
+        console.log(tim);
+        var date=new Date();
+        var hour=date.getHours()+1;
+        for(var key in tim)
+        {
+            if(tim[key].time==hour)
+            {
+                res.send('alert');
+                break;
+            }
+        }
+});
+});
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //This request has change from ProjectServerApp
 router.get('/listdevice',checkAuthentication,function(req,res){
