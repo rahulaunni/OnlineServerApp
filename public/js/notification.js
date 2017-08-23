@@ -94,7 +94,7 @@ var socket = io.connect('http://localhost');
 //infusion alert for user if they using other page 
 window.setInterval(function(){ // Set interval for checking
      var date = new Date(); // Create a Date object to find out what time it is
-    if(date.getMinutes() ==55){ 
+    if(date.getMinutes() >55){ 
     if($(".leftbar .iconhome").hasClass("activem"))
                         {
                             console.log("nothing");

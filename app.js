@@ -104,9 +104,9 @@ app.use(function(err, req, res, next) {
 });
 
 // mqtt part*******************************************************************************************************************
-
-var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:1883')
+//importing models necessary for mqtt part
+var mqtt = require('mqtt');
+var client = mqtt.connect('mqtt://localhost:1883');
 var Station = require('./models/stations');
 var Account = require('./models/account');
 var Bed = require('./models/bed');
@@ -114,25 +114,30 @@ var Patient = require('./models/patient');
 var Medication = require('./models/medication');
 var Timetable = require('./models/timetable');
 var Infusionhistory = require('./models/infusionhistory');
-var Device = require('./models/device')
-var Ivset = require('./models/ivset')
+var Device = require('./models/device');
+var Ivset = require('./models/ivset');
+//subscribing to topic dripo/ on connect
 client.on('connect', function() {
     client.subscribe('dripo/#',{ qos: 1 });
 });
 
-
+//function fired on recieving a message from device in topic dripo/
 client.on('message', function(topic, message) {
-
+    //spliting the topic to get the device id stored it in id
     var res = topic.split("/");
     var id = res[1];
+        //Searching database for device
         Device.find({'divid':id}).exec(function(err,dev){
+        //if device is not found no-operations
         if (dev==0){
-            //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
+            // console.log("invalid device!");
         }
+        //if device found do this part
         else{ 
+        //managing bed req from device and send bed ids of next 5 beds
         if(res[2]=='bed_req'){
             if(message == "bed"){
-                    Timetable.find({'station':dev[0].sname,'userid':dev[0].uid,'infused':'not_infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+                    Timetable.find({'station':dev[0].sname,'userid':dev[0].uid,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
                     if (err) return console.error(err);
                     var arr_bed=[];
                     for (var key in tim) {
@@ -191,11 +196,40 @@ client.on('message', function(topic, message) {
           }
         else if(res[2]== 'med_req'){
             var bed_id=message.toString();
-            Timetable.find({'bed':bed_id,'infused':'not_infused'}).sort({time:1}).populate({path:'_medication',model:'Medication'}).exec(function(err,tim){
+            Timetable.find({'bed':bed_id,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).populate({path:'_medication',model:'Medication'}).exec(function(err,tim){
                 if (err) return console.error(err);
+                //returned time objects are in sorted order
+                var date=new Date();
+                var hour=date.getHours();
+                var currenttime;
+                for(var loop1=0;loop1<tim.length;loop1++)
+                {
+                    if(tim[loop1].time ==hour)
+                    {
+                        currenttime=loop1;
+                        break;
+                    }
+                    else if(tim[loop1].time > hour)
+                    {
+                        currenttime=loop1;
+                        break;
+                    }
+                }
+                var prevtime=[];
+                for(var loop2=0;loop2<currenttime;loop2++)
+                {
+                    prevtime.push(tim[loop2]);
+                }
+                var upcomingtime=[];
+                for(var loop3=currenttime;loop3<tim.length;loop3++)
+                {
+                    upcomingtime.push(tim[loop3]);
+                }
+                var sorted_wrt_current_time=upcomingtime.concat(prevtime);
+
                 var arr_med=[];
-                for (var key in tim) {
-                    arr_med[key]=tim[key]._medication._id;
+                for (var key in sorted_wrt_current_time) {
+                    arr_med[key]=sorted_wrt_current_time[key]._medication._id;
 
                 }
                 var arr_med_new=[];
@@ -250,9 +284,36 @@ client.on('message', function(topic, message) {
        else if (res[2]== 'rate_req'){
           Medication.find({'_id':message}).populate({path:'_bed',model:'Bed',populate:{path:'_patient',model:'Patient'}}).exec(function(err,ratee){
             if (err) return console.error(err);
-            Timetable.find({'_medication':message,'infused':'not_infused'}).sort({time:1}).exec(function(err,tim){
+            Timetable.find({'_medication':message,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).exec(function(err,tim){
             if (err) return console.error(err);
-            var timid=tim[0]._id;
+            var date=new Date();
+            var hour=date.getHours();
+            var timid;
+            for(var key in tim)
+            {
+                if(tim[key].time==hour)
+                {
+                    timid=tim[key]._id;
+                    break;
+
+                }
+                else if(tim[key].time==(hour-1))
+                {
+                    timid=tim[key]._id;
+                    break;
+
+                }
+                else if(tim[key].time==(hour+1))
+                {
+                    timid=tim[key]._id;
+                    break;
+
+                }
+                else
+                {
+                    timid=tim[0]._id;
+                }
+            }
             //console.log(timid);
             var rate=ratee[0].rate;
             var mname=ratee[0].name;
@@ -408,7 +469,7 @@ client.on('message', function (topic, payload, packet) {
             var tvol = ress[6];
             var progress_width = ((volinfused/tvol)*100);
             var infdate= new Date();
-            var inftime=(new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds();
+            var inftime=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds();
             //database operations while infusion
 
             if(status=='start')
@@ -466,13 +527,14 @@ client.on('message', function (topic, payload, packet) {
 });
 });
 //cron-Job********************************************************************************************************************
-//infused medicine back to not_infused
-cron.schedule('* */1 * * *', function(){
-  Timetable.find({'infused':'infused'}).exec(function(err,tim){
+//infused and skipped timetable of medicine back to not_infused
+cron.schedule('1 0-23 * * *', function(){
+  Timetable.find({'infused':{ $in:['infused','skipped']}}).exec(function(err,tim){
+    if(err){console.log(err);}
     var time_ids=[];
     for(var key in tim)
     {
-        var timediff=tim[key].time-(new Date).getHours();
+        var timediff=tim[key].time-(new Date()).getHours();
         if(timediff == 12||timediff == -12)
         {
 
@@ -480,27 +542,39 @@ cron.schedule('* */1 * * *', function(){
         }     
     } 
     Timetable.collection.updateMany({'_id': {$in:time_ids}},{$set:{infused:"not_infused"}},function(err,bed){
-        if(err){console.log(err)}
+        if(err){console.log(err);}
     });
 
   });
 
 });
-//alert if not_infused in time
-// io.sockets.on('connection', function(socket){
-//  socket.on('hello', function(data) {
-//           console.log(data);     
-//       });
-// cron.schedule('* */1 * * * *', function(){
-// console.log('running a task every minute');                    
-//     console.log("client connected");
-//   // io.socket.emit('request'); 
-// socket.emit('messages', 'Hello from server');
- 
-// });
-// });
+//In the first min of every hour infused flag of the timetable collection with spresent hour is set to alerted(Red Color in UI)
+cron.schedule('1 0-23 * * *', function(){
+    console.log("test");
+    var date= new Date();
+    var hour=date.getHours();
+  Timetable.collection.updateMany({'time':hour,'infused':'not_infused'},{$set:{infused:"alerted"}},function(err,tim){
+    if(err){console.log(err);}
+  });
+});
 
-//test log code****************************************************************************
+//Skip Infusions which are alerted and not infused
+cron.schedule('1 0-23 * * *', function(){
+    var date= new Date();
+    var hour;
+    if(date.getHours()===0)
+    {
+        hour=23;
+    }
+    else
+    {
+        hour=date.getHours()-1;
+    }
+  Timetable.collection.updateMany({'time':hour,'infused':'alerted'},{$set:{infused:"skipped"}},function(err,tim){
+    if(err){console.log(err);}
+  });
+});
+//test log code***********************************************************************************************************
 client.on('message', function(topic, message) {
     var res = topic.split("/");
     var id = res[1];
@@ -515,7 +589,7 @@ client.on('message', function(topic, message) {
         var etime=ress[3];
         var srate=ress[4];
         var ivol=ress[5];
-        var time=(new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds()+':'+(new Date).getMilliseconds();
+        var time=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds()+':'+(new Date()).getMilliseconds();
         Medication.find({_id:medid}).exec(function(err,med){
         var medname=med[0].name;
         var medrate=med[0].rate;

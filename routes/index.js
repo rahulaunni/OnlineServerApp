@@ -37,12 +37,39 @@ router.get('/', checkAuthentication, function(req, res) {
 
 router.get('/home', checkAuthentication, function(req, res) {
         //find timetable and sort in ascending order,there will be duplicates beacause search query is station and user id
-        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing','alerted']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
+        var date=new Date();
+        var hour=date.getHours();
+        var currenttime;
+        for(var loop1=0;loop1<tim.length;loop1++)
+        {
+            if(tim[loop1].time ==hour)
+            {
+                currenttime=loop1;
+                break;
+            }
+            else if(tim[loop1].time > hour)
+            {
+                currenttime=loop1;
+                break;
+            }
+        }
+        var prevtime=[];
+        for(var loop2=0;loop2<currenttime;loop2++)
+        {
+            prevtime.push(tim[loop2]);
+        }
+        var upcomingtime=[];
+        for(var loop3=currenttime;loop3<tim.length;loop3++)
+        {
+            upcomingtime.push(tim[loop3]);
+        }
+        var sorted_wrt_current_time=upcomingtime.concat(prevtime);
         //storing sorted bed ids into an array
         var arr_bed=[];
-        for (var key in tim) {
-            arr_bed[key]=tim[key]._bed;
+        for (var key in sorted_wrt_current_time) {
+            arr_bed[key]=sorted_wrt_current_time[key]._bed;
 
         }
         //check for the duplicate bed id reference and eliminating it
@@ -66,6 +93,7 @@ router.get('/home', checkAuthentication, function(req, res) {
 
         //find the beds using array of bed ids after eliminating duplicates and populating all reference model for rendering home page 
         Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bedd){
+        // console.log(JSON.stringify(bedd[0]));
         //saving soreted patient ids for find next infusion time
         var arr_pat=[];
         for (var key in bedd) {
@@ -82,7 +110,7 @@ router.get('/home', checkAuthentication, function(req, res) {
                {
                     for(k=0;k<bedd[lp1]._patient._medication[i]._timetable.length;k++)
                     {
-                        if(bedd[lp1]._patient._medication[i]._timetable[k].infused =="not_infused" )
+                        if(bedd[lp1]._patient._medication[i]._timetable[k].infused =="not_infused"||bedd[lp1]._patient._medication[i]._timetable[k].infused =="alerted" )
                         {
                             min1=k;
                             break;
@@ -104,7 +132,7 @@ router.get('/home', checkAuthentication, function(req, res) {
 
                      for(l=0;l<bedd[lp1]._patient._medication[j]._timetable.length;l++)
                     {
-                        if(bedd[lp1]._patient._medication[j]._timetable[l].infused =="not_infused" )
+                        if(bedd[lp1]._patient._medication[j]._timetable[l].infused =="not_infused"||bedd[lp1]._patient._medication[j]._timetable[l].infused =="alerted" )
                             {
                                 min2=l;
                                 break;
@@ -1123,6 +1151,11 @@ router.get('/infusionalert', checkAuthentication, function(req, res) {
             }
         }
 });
+});
+router.post('/infusionalertack', checkAuthentication, function(req, res) {
+    var timeid=ObjectId(req.query.timeid);
+    Timetable.collection.update({'_id':timeid},{$set:{infused:"alerted"}});
+    
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //This request has change from ProjectServerApp

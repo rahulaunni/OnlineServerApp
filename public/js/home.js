@@ -318,10 +318,19 @@ $(this).parent().parent().parent().children('.del').removeClass("displaydis");
 });
 
 
-$(document).on("click","#middlebar .infconfirm",function(){
-$(this).parent().parent().parent().children('.medicines').removeClass("displaydis");
+$(document).on("click","#middlebar .infconfirm",function(){                
+console.log($(this).parent().parent().parent().children('.schhold').children('.nextinfusiontime').first('.not_infused'));
+var timeid=$(this).parent().parent().parent().children('.schhold').children('.nextinfusiontime').attr('id');
+$(this).parent().parent().parent().children('.schhold').children('#'+timeid).removeClass("not_infused");
+$(this).parent().parent().parent().children('.schhold').children('#'+timeid).addClass("alerted");
+console.log(timeid);
+$(this).attr('data-url','/infusionalertack?timeid='+timeid);
+console.log($(this).attr('data-url'));
+$.post($(this).attr("data-url"), function( data ) {
+$( ".middlebar" ).html( data );
+});
+$(this).parent().parent().parent().children('.schhold').removeClass("displaydis");
 $(this).parent().parent().parent().children('.infusionalert').addClass("displaydis");
-$(this).parent().parent().parent().children('.del').removeClass("displaydis");
 });
 
 $(document).on("click","#middlebar .patrmvconfirm",function(){
@@ -330,11 +339,12 @@ $(document).on("click","#middlebar .patrmvconfirm",function(){
 });
 });
 //This part of code is notify the user about upcoming infusion
-//function is fired in every 1 min
+//function is fired in every 1 min   
 //checking for infusion in 55th min of every hour
+$(function() {   
 window.setInterval(function(){ // Set interval for checking
     var date = new Date(); // Create a Date object to find out what time it is
-    if(date.getMinutes() ==55){ // Check the time
+    if(date.getMinutes() >55){ // Check the time
         var nexthour=date.getHours()+1;
         var nexthour_formated;
         if(nexthour<12)
@@ -349,22 +359,29 @@ window.setInterval(function(){ // Set interval for checking
         {
             nexthour_formated=(nexthour-12)+' '+'PM';
         }
-        console.log(nexthour_formated);
         $("#middlebar .not_infused").each(function () {
             var $this = $(this);
             var time=$this.text();
-            if(time.indexOf(nexthour_formated) !== -1)
+            if(time.indexOf(nexthour_formated) === 0||time.indexOf(nexthour_formated) === 1)
             {
-                console.log($this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children());
-                var medicinename=$this.closest('#middlebar .not_infused').parent().parent().children('.medname').text();
-                console.log(medicinename);
-                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.medicines').addClass("displaydis");
-                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').removeClass("displaydis");
-                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.del').addClass("displaydis");
-                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children('.alertdetailsmedname').html(medicinename);
-                $this.closest('#middlebar .not_infused').parent().parent().parent().parent().children('.infusionalert').children('.infalertmsg').children('.alertdetailstime').html(time);
+                // console.log($this.closest('#middlebar .not_infused').parent().parent().children('.infusionalert'));
+                $this.closest('#middlebar .not_infused').addClass("nextinfusiontime");
+                $this.closest('#middlebar .not_infused').parent().parent().children('.schhold').addClass("displaydis");
+                $this.closest('#middlebar .not_infused').parent().parent().children('.infusionalert').removeClass("displaydis");
 
             }
         });
     }
-}, 60000); 
+}, 1000); 
+});
+//to sync browser with database changes
+$(function() {   
+window.setInterval(function(){ // Set interval for checking
+    var date = new Date(); // Create a Date object to find out what time it is
+    if(date.getMinutes() ==1||date.getMinutes() ==1)
+    {
+        console.log("msg");
+        location.reload();
+    }
+    },60000);
+    }); 

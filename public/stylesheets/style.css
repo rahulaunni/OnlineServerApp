@@ -334,7 +334,8 @@ border-right:1px solid #AAAAAA;
 
 }
 .infused{
-  background-color: #d9534f;
+  background-color: gray;
+  color:#21B698;
 }
 .not_infused{
   background-color: #21B698;
@@ -342,6 +343,17 @@ border-right:1px solid #AAAAAA;
 }
 .infusing{
   background-color: #F2E40A;
+}
+.alerted{
+  background-color:#e71f63; 
+}
+.skipped{
+  background-color: gray;
+  color::#e71f63;  
+}
+.skipped div{
+  
+  color::#e71f63;  
 }
 
 /* style for patient edit form */
