@@ -549,8 +549,7 @@ cron.schedule('1 0-23 * * *', function(){
 
 });
 //In the first min of every hour infused flag of the timetable collection with spresent hour is set to alerted(Red Color in UI)
-cron.schedule('1 0-23 * * *', function(){
-    console.log("test");
+cron.schedule('1-59 0-23 * * *', function(){
     var date= new Date();
     var hour=date.getHours();
   Timetable.collection.updateMany({'time':hour,'infused':'not_infused'},{$set:{infused:"alerted"}},function(err,tim){

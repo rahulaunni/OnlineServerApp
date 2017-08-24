@@ -54,6 +54,9 @@ router.get('/home', checkAuthentication, function(req, res) {
                 currenttime=loop1;
                 break;
             }
+            else{
+                currenttime=0;
+            }
         }
         var prevtime=[];
         for(var loop2=0;loop2<currenttime;loop2++)
@@ -90,7 +93,6 @@ router.get('/home', checkAuthentication, function(req, res) {
                 } 
             }
         
-
         //find the beds using array of bed ids after eliminating duplicates and populating all reference model for rendering home page 
         Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bedd){
         // console.log(JSON.stringify(bedd[0]));
@@ -862,9 +864,15 @@ Medication.collection.insert(med, onInsert);
             } else{
                 var bulkmed=Medication.collection.initializeOrderedBulkOp();
                 //remove medication on delete medicine
+                // if(delmedids.length > 0)
+                // delmedids.forEach(function(currentValue,index,array){
+                // bulkmed.find({'_id': currentValue}).remove();
+                // });
+                //change bed reference to delbed field
                 if(delmedids.length > 0)
                 delmedids.forEach(function(currentValue,index,array){
-                bulkmed.find({'_id': currentValue}).remove();
+                bulkmed.find({'_id': currentValue}).update({$set:{_delbed:newbedid}});
+                bulkmed.find({'_id': currentValue}).update({$unset:{_bed:" "}});
                 });
                 //remove timetable reference in medication when user deletes a time
                 if(medidd.length > 0)
@@ -1018,7 +1026,38 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
 
 router.post('/removepatient', checkAuthentication, function(req, res) {
     var bedid=ObjectId(req.query.bed);
-    console.log(bedid);
+    var patid;
+    //to get patid search in bed
+    Bed.find({'_id':bedid}).exec(function (err,bed) {
+        patid=bed[0]._patient;
+    //to link back the medicines removed from patient , search for all medicines that was previously linked with current bed
+    //stores the medids of removed medicines in removedmedids
+    Medication.find({'_delbed':bedid}).exec(function (err,med) {
+        var removedmedids=[];
+        for(var key in med)
+        {
+            removedmedids.push(ObjectId(med[key]._id));
+        }
+    //if there is atleast one medicine removed previously from patient link back that medicine for patient history
+    if(removedmedids.length>0)
+    {
+        for (var key1 in removedmedids){
+        Patient.collection.update({'_id':patid},{$push:{_medication:removedmedids[key1]}},{upsert:false});
+        }
+    Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
+    });
+    Bed.update({_id:req.query.bed},{$set:{bedstatus:"unoccupied"}},function(err,bed){
+    });
+    var date = new Date();
+    Patient.collection.update({'_id':patid},{$set:{patientstatus:"inactive",dischargedon:date},$unset:{_bed:""}});
+    Medication.collection.updateMany({'_bed':bedid},{$unset:{_bed:""}});
+    Timetable.collection.remove({bed:req.query.bed});
+    Medication.collection.updateMany({'_delbed':bedid},{$unset:{_delbed:""}});
+    console.log("just before redirect");
+    res.redirect('/');
+    }
+    //if there is no medicine removal do normal operations of unlinking and removing respective collection
+    else{
     Bed.update({_id:req.query.bed},{$unset:{_patient:""}},function(err,bed){
     });
     Bed.update({_id:req.query.bed},{$set:{bedstatus:"unoccupied"}},function(err,bed){
@@ -1027,7 +1066,11 @@ router.post('/removepatient', checkAuthentication, function(req, res) {
     Patient.collection.update({'_bed':bedid},{$set:{patientstatus:"inactive",dischargedon:date},$unset:{_bed:""}});
     Medication.collection.updateMany({'_bed':bedid},{$unset:{_bed:""}});
     Timetable.collection.remove({bed:req.query.bed});
-    res.redirect('/');    
+    res.redirect('/');
+    }
+});
+    });
+   
 });
 //forgot password
 router.post('/forgot', function(req, res) {
