@@ -37,15 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', routes);
-//redirect all http to https
-// app.use(function(req, res, next) {
-//     if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'http')) {
-//         console.log("redirecting to https");
-//         res.redirect('https://' + req.get('Host') + req.url);
-//     }
-//     else
-//         next();
-// });
+
 
 // passport config
 var Account = require('./models/account');
@@ -134,21 +126,59 @@ client.on('message', function(topic, message) {
         }
         //if device found do this part
         else{ 
-        //managing bed req from device and send bed ids of next 5 beds
+        //managing bed req from device and send bed ids of next 5 beds to be infused
         if(res[2]=='bed_req'){
             if(message == "bed"){
+                    //search for all the timeids inside station which are not_infused or alerted and sort it in ascending order
                     Timetable.find({'station':dev[0].sname,'userid':dev[0].uid,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
                     if (err) return console.error(err);
+                    //arrange the returned object based on the current time
+                    var date=new Date();
+                    var hour=date.getHours();
+                    var currenttime;
+                    //currenttime holds the starting index of array which has the current or upcoming time 
+                    for(var loop1=0;loop1<tim.length;loop1++)
+                    {
+                        if(tim[loop1].time ==hour)
+                        {
+                            currenttime=loop1;
+                            break;
+                        }
+                        else if(tim[loop1].time > hour)
+                        {
+                            currenttime=loop1;
+                            break;
+                        }
+                        else{
+                            currenttime=0;
+
+                        }
+                    }
+                    //spliting the array to before and after current time
+                    var prevtime=[];
+                    for(var loop2=0;loop2<currenttime;loop2++)
+                    {
+                        prevtime.push(tim[loop2]);
+                    }
+                    var upcomingtime=[];
+                    for(var loop3=currenttime;loop3<tim.length;loop3++)
+                    {
+                        upcomingtime.push(tim[loop3]);
+                    }
+                    //concat the splited array
+                    var sorted_wrt_current_time=upcomingtime.concat(prevtime);
+
+                    //stores the bed id in arr_bed
                     var arr_bed=[];
-                    for (var key in tim) {
-                        arr_bed[key]=tim[key]._bed;
+                    for (var key in sorted_wrt_current_time) {
+                        arr_bed[key]=sorted_wrt_current_time[key]._bed;
 
                     }
-
+                    //For removing duplicate bed ids  since the arr_bed has the same bed ids repeated
                     var arr_bed_new=[];
                     var n=arr_bed.length;
                     var count=0;
-                    for(var c=0;c<n;c++) //For removing duplicate bed ids 
+                    for(var c=0;c<n;c++) 
                         { 
                             for(var d=0;d<count;d++) 
                             { 
@@ -161,8 +191,9 @@ client.on('message', function(topic, message) {
                                 count++; 
                             } 
                         } 
+                    //search the bed collection by passing the arr_bed_new array as query
                     Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable'}}}).exec(function(err,bedd){
-                    // reordering to sorted order
+                    // reordering to sorted order;since this will return the obj as in the order i9n DB, we have to reorder it
                     var bed=[];
                     for (var key in arr_bed_new)
                     {
@@ -176,7 +207,7 @@ client.on('message', function(topic, message) {
                         }
 
                     }
-                    // For publishing Bed Name from database
+                    // For publishing Bed Name from database; making it in suitable format to send it to device
                         var pub_bedd=[];
                         for (var key in bed)
                         {
@@ -194,11 +225,15 @@ client.on('message', function(topic, message) {
                 });
             }
           }
+        //if the device made a med_req handle it and send the medicines in that bed
         else if(res[2]== 'med_req'){
+            //the message from the device has the bedid of selected bed
             var bed_id=message.toString();
+            //for sending the medicines in the order of their infusion sort it wrt to time
             Timetable.find({'bed':bed_id,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).populate({path:'_medication',model:'Medication'}).exec(function(err,tim){
                 if (err) return console.error(err);
                 //returned time objects are in sorted order
+                //in the array of object find the index where the current time is
                 var date=new Date();
                 var hour=date.getHours();
                 var currenttime;
@@ -214,7 +249,13 @@ client.on('message', function(topic, message) {
                         currenttime=loop1;
                         break;
                     }
+                    else
+                    {
+                        currenttime=0;
+                        break;
+                    }
                 }
+                //spilt the array into two parts that is before time and after current time
                 var prevtime=[];
                 for(var loop2=0;loop2<currenttime;loop2++)
                 {
@@ -225,6 +266,7 @@ client.on('message', function(topic, message) {
                 {
                     upcomingtime.push(tim[loop3]);
                 }
+                //re-arrange the array according to time
                 var sorted_wrt_current_time=upcomingtime.concat(prevtime);
 
                 var arr_med=[];
@@ -232,10 +274,11 @@ client.on('message', function(topic, message) {
                     arr_med[key]=sorted_wrt_current_time[key]._medication._id;
 
                 }
+                //For removing duplicate med ids 
                 var arr_med_new=[];
                 var n=arr_med.length;
                 var count=0;
-                for(var c=0;c<n;c++) //For removing duplicate med ids 
+                for(var c=0;c<n;c++) 
                     { 
                         for(var d=0;d<count;d++) 
                         { 
@@ -248,6 +291,7 @@ client.on('message', function(topic, message) {
                             count++; 
                         } 
                     } 
+                //search in the medication data base by giving the arr_med_new array as query
                 Medication.find({'_id': {$in:arr_med_new}}).exec(function(err,medd){
                     if (err) return console.error(err);
                     var med=[];
@@ -263,7 +307,7 @@ client.on('message', function(topic, message) {
                         }
 
                     }
-                    // For publishing Bed Name from database
+                    // For publishing Bed Name from database, formating it and sending to device
                         var pub_medd=[];
                         for (var key in med)
                         {
@@ -280,12 +324,15 @@ client.on('message', function(topic, message) {
 
             
         }
-
+        //handles the rate_req from the device
        else if (res[2]== 'rate_req'){
+        //message from the device has the medid of selected medicine
           Medication.find({'_id':message}).populate({path:'_bed',model:'Bed',populate:{path:'_patient',model:'Patient'}}).exec(function(err,ratee){
             if (err) return console.error(err);
+            //we have to send the corresponding timeid in reply to this
             Timetable.find({'_medication':message,'infused':{ $in:['not_infused','alerted']}}).sort({time:1}).exec(function(err,tim){
             if (err) return console.error(err);
+            //compare each tim.time with the current time to send the appropriate timeids
             var date=new Date();
             var hour=date.getHours();
             var timid;
@@ -314,14 +361,13 @@ client.on('message', function(topic, message) {
                     timid=tim[0]._id;
                 }
             }
-            //console.log(timid);
+            //formating the messages to publish to device
             var rate=ratee[0].rate;
             var mname=ratee[0].name;
             var pname=ratee[0]._bed._patient.name;
             var vol=ratee[0].tvol;
             var alert=30;
             var pub_rate=timid+'&'+pname+'&'+mname+'&'+vol+'&'+rate+'&'+alert+'&';
-            //console.log(pub_rate);
             client.publish('dripo/' + id + '/rate2set',pub_rate,{ qos: 1, retain: false });
         });
         });
@@ -335,7 +381,7 @@ client.on('message', function(topic, message) {
                         console.log(err);
                     }
                     else{
-                        //for sending only relavant dfs
+                        //for sending only relavant dfs the calculations are made based on the device's limitation to detect (upto 300dpm)
                         var df=[];
                         for(var key in dfs)
                         {
@@ -386,33 +432,30 @@ var io = socket_io();
 app.io = io;
 var sys = require('util');
 var net = require('net');
-// io.set('match origin protocol', true);
-// socket.io events
+//socket io event on connect fires when an socketconnection made from client side
 io.sockets.on( "connection", function( socket )
 {
-
-    //console.log( "Client Connected.." );
-
     socket.on('join', function(data) {
-
+        //on homepage.js when the page reloads data is send as'retainsend' enables the sockets working even in page reload
         if(data==='retainsend'){
-       var client1=mqtt.connect('mqtt://localhost:1883');
+        var client1=mqtt.connect('mqtt://localhost:1883');
         client1.on('connect', function() {
-          //console.log("started");
-          client1.subscribe('dripo/#',{ qos: 1 });
+        //subscribe to the dripo  topic to send the message from device to the client(browser) end via websocket 
+        client1.subscribe('dripo/#',{ qos: 1 });
         });
+        //on reciveing the message check whether the device is there in DB as done before
        client1.on('message', function (topic, payload, packet) {
        var res = topic.split("/");
        var id = res[1];
         Device.find({'divid':id}).exec(function(err,dev){
         if (dev==0){
-            //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
         }
+        //if device is found in DB emit that message to the browser via socket.io
         else{
+        //check if the topic is correct #/mon is the topic for monitoring purpose
         if(topic=='dripo/'+ id + '/mon')
         {
             io.sockets.emit('mqtt',{'topic':topic.toString(),'payload':payload.toString()});
-            //Mqttmessage.collection.update({divid:res[1]},{$set:{divid:res[1],topic:topic,payload:payload.toString()}},{upsert:true})
 
         } 
         else
@@ -444,10 +487,12 @@ io.sockets.on( "connection", function( socket )
     });
 
 });
+//This part is the data base operations carried out while montotoring an infusion
 // listen to messages coming from the mqtt broker
 client.on('message', function (topic, payload, packet) {
      var res = topic.split("/");
     var id = res[1];
+        //check the authenticity of the device as before
         Device.find({'divid':id}).exec(function(err,dev){
         if (dev==0){
             //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
@@ -455,6 +500,7 @@ client.on('message', function (topic, payload, packet) {
         else{
         var stationid=dev[0].sname;
         var userid=dev[0].uid;
+        //check for the topic and if true; split the message and stores into different variables for ease of operation
         if(topic=='dripo/'+ id + '/mon')
         {
             io.sockets.emit('mqtt',{'topic':topic.toString(),'payload':payload.toString()});
@@ -470,7 +516,6 @@ client.on('message', function (topic, payload, packet) {
             var progress_width = ((volinfused/tvol)*100);
             var infdate= new Date();
             var inftime=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds();
-            //database operations while infusion
 
             if(status=='start')
             {        
@@ -479,10 +524,14 @@ client.on('message', function (topic, payload, packet) {
                     if(err){console.log(err);}
                     });
                  //create an infusion history collection and add date and time of infusion
+                 //checking whether is there already a infusion history file associated with the timetable
+                 //*******************review needed**************************************//
                 Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inf){
                 if (inf==0){
+                //if not create a new infusionhistory
                 Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
                 Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inff){
+                //link that infusion history file with the medication
                 Medication.collection.update({_id:ObjectId(medid)},{$push:{_infusionhistory:inff[0]._id}});
             });
                 }
@@ -490,21 +539,26 @@ client.on('message', function (topic, payload, packet) {
 
             }
             if(status=='Empty')
-            {
+            {    
+                //Empty is infusion completion status message; change the infused flag to "infused"
                  Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
                     if(err){console.log(err);}
                     });
+                 //add the infusion ending time in infusion history file
                  Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infendtime:inftime,inftvol:volinfused}});
 
             }  
             if(status=='stop')
             {   
+                //checking whether the infusion is below 90% if it is below 90% system assumes that the infusion is not complete and in DB the flag is set from 
+                //infusing to not_infused
                 if(progress_width<90)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
                     if(err){console.log(err);}
                     }); 
                 }
+                //if infusion is > 90% the DB set as infused and in infusionhistory file it is recored as the ending time of infusion 
                 else
                 {
                     Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
@@ -516,6 +570,7 @@ client.on('message', function (topic, payload, packet) {
                 }
                 
             }  
+            //the errors are recorded in the infusion history file for future reviewing
             if(status=='Block'||status=='Rate Err')
             {
                 Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$push:{inferr:{errtype:status,errtime:inftime}}});

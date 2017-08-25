@@ -14,12 +14,12 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var wifi = require('node-wifi');
 var request=require('request');
-const wifiPassword = require('wifi-password');
-const wifiName = require('wifi-name');
+var wifiPassword = require('wifi-password');
+var wifiName = require('wifi-name');
 var ip = require('ip');
 var ObjectId = require('mongodb').ObjectID;
 var nodemailer = require("nodemailer");
-
+//checking for the authentication and if not login redirects to /login page
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
         next();
@@ -27,21 +27,22 @@ function checkAuthentication(req, res, next) {
         res.redirect("/login");
     }
 }
-
+//loading the index page which has the leftbar menu and middlebar, index page has all the scripts loaded in it and act as a skelton for entire app
 router.get('/', checkAuthentication, function(req, res) {
-
     res.render('index', {
         user: req.user
     });
 });
-
+//before rendering the page we have to sort the bed to list according to the time of its next infusion, the operations are to get that orders data
 router.get('/home', checkAuthentication, function(req, res) {
-        //find timetable and sort in ascending order,there will be duplicates beacause search query is station and user id
+        //find timetable and sort in ascending order,there will be duplicates because multiple timetable collection has same bed reference
         Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing','alerted']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
         var date=new Date();
         var hour=date.getHours();
+        //re-arrange the sorted time object based on the current time split it into two array before and after current time and combine it later
         var currenttime;
+        //this part is to find the starting index of current time if any  eg: [1 2  3 4 5 ] if current hour is 4 index will be 3   
         for(var loop1=0;loop1<tim.length;loop1++)
         {
             if(tim[loop1].time ==hour)
@@ -56,18 +57,22 @@ router.get('/home', checkAuthentication, function(req, res) {
             }
             else{
                 currenttime=0;
+
             }
         }
+        //spliting the time object into before current time that is from 0 to currenttime eg: [1 2 3]
         var prevtime=[];
         for(var loop2=0;loop2<currenttime;loop2++)
         {
             prevtime.push(tim[loop2]);
         }
         var upcomingtime=[];
+        //spliting the time object into on/after the time that is from currenttime to end eg:[4 5]
         for(var loop3=currenttime;loop3<tim.length;loop3++)
         {
             upcomingtime.push(tim[loop3]);
         }
+        //combing the splited array in correct order based on time eg: [4 5 1 2 3]
         var sorted_wrt_current_time=upcomingtime.concat(prevtime);
         //storing sorted bed ids into an array
         var arr_bed=[];
@@ -96,7 +101,7 @@ router.get('/home', checkAuthentication, function(req, res) {
         //find the beds using array of bed ids after eliminating duplicates and populating all reference model for rendering home page 
         Bed.find({'_id': {$in:arr_bed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bedd){
         // console.log(JSON.stringify(bedd[0]));
-        //saving soreted patient ids for find next infusion time
+        //saving sorted patient ids for find next infusion time
         var arr_pat=[];
         for (var key in bedd) {
             arr_pat[key]=bedd[key]._patient._id;
@@ -258,8 +263,7 @@ router.get('/home', checkAuthentication, function(req, res) {
 });
 
 
-router.get('/register', function(req, res) {
-   
+router.get('/register', function(req, res) {   
     res.render('register', {});
 });
 
@@ -306,7 +310,7 @@ router.get('/addstation', checkAuthentication, function(req, res) {
 });
 
 router.get('/addpatient', checkAuthentication, function(req, res) {
-
+    //to give option to select bed while adding bed
     Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).populate('_station').exec(function(err, bed) {
         if (err) return console.error(err);
         // console.log(bed);    
@@ -319,8 +323,10 @@ router.get('/addpatient', checkAuthentication, function(req, res) {
 });
 
 router.get('/editpatient',checkAuthentication,function(req,res){
+    //pass the current details to the page for rending
     Bed.find({'_id':req.query.bed}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bed){
         if (err)return console,log(err);
+            //pass all the unoccupied bed if user wants to change the bed
             Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).exec(function(err,bedlist){
                 Bed.find({'_id':req.query.bed}).exec(function(err,bedd){
                     var thisbed=bedd[0]; 
@@ -341,6 +347,7 @@ router.get('/editpatient',checkAuthentication,function(req,res){
 });
 
 router.get('/listpatient',checkAuthentication,function(req,res){
+    //search all the patient associated with the station and send for page rendering
     Patient.find({'_station':req.session.station,'patientstatus':'active'}).exec(function(err,activepatient){
         if (err)return console,log(err);
         Patient.find({'_station':req.session.station,'patientstatus':'inactive'}).exec(function(err,inactivepatient){
@@ -357,6 +364,7 @@ router.get('/listpatient',checkAuthentication,function(req,res){
 });
 
 router.get('/viewpatient',checkAuthentication,function(req,res){
+    //from the query grab the patient id and search it in DB and send to page
     var patid=ObjectId(req.query.patient);
     Patient.find({'_id':patid}).populate({path:'_medication',model:'Medication',populate:{path:'_infusionhistory',model:'Infusionhistory'}}).exec(function(err,patient){
         if (err)return console,log(err);
