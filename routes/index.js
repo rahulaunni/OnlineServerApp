@@ -190,7 +190,7 @@ router.get('/home', checkAuthentication, function(req, res) {
             }
 
         }
-            //infused bed dispaly
+            //to fetch the details of bed which all the timetables are infused
             Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':'infused'}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,inftim){
             if (err) return console.error(err);
             //storing sorted bed ids into an array
@@ -216,7 +216,7 @@ router.get('/home', checkAuthentication, function(req, res) {
                         count++; 
                     } 
                 }
-            //console.log(arr_infbed_new);
+            
             Bed.find({'_id': {$in:arr_infbed_new}}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,infbedd){
             //saving soreted patient ids for find next infusion time
             var arr_infpat=[];
@@ -224,7 +224,7 @@ router.get('/home', checkAuthentication, function(req, res) {
                 arr_infpat[key]=infbedd[key]._patient._id;
 
             }
-            // console.log(infbedd);
+            // sorting the medicnes according to the time for all infused condition
              for(var lp1=0;lp1<infbedd.length;lp1++)
             {
                         var infflag=true;
@@ -242,14 +242,12 @@ router.get('/home', checkAuthentication, function(req, res) {
                         }
                     }
                 }
-                                            // console.log(infflag);
+                                            
 
             
                             if (infflag===true) {
                                 bed.push(infbedd[lp1]);
 
-                                // console.log(infbedd);
-                                // console.log("ok");
                             }
                         }
      
@@ -262,18 +260,20 @@ router.get('/home', checkAuthentication, function(req, res) {
 
 });
 
-
+//route to render register page
 router.get('/register', function(req, res) {   
     res.render('register', {});
 });
 
+//route to render forgot password page
 router.get('/forgot', function(req, res) {
    
     res.render('forgot', {});
 });
 
+//route to render add/select station page
 router.get('/addstation', checkAuthentication, function(req, res) {
-    //console.log(req.query.add_flag);
+    //rendering the add station page based on the condition if new user render add new station ; for existing user render select station
     if (req.query.add_flag == 'more') {
         res.render('addstation', {
             user: req.user,
@@ -290,7 +290,6 @@ router.get('/addstation', checkAuthentication, function(req, res) {
                     add_flag: 'newuser'
                 });
             } else {
-                //  console.log(req.body.stations);
 
                 Station.find({'uid':req.user.id}).exec(function(err, stat) {
                     if (err) return console.error(err);
@@ -309,6 +308,7 @@ router.get('/addstation', checkAuthentication, function(req, res) {
 
 });
 
+//route to render addpatient page
 router.get('/addpatient', checkAuthentication, function(req, res) {
     //to give option to select bed while adding bed
     Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).populate('_station').exec(function(err, bed) {
@@ -322,6 +322,7 @@ router.get('/addpatient', checkAuthentication, function(req, res) {
 
 });
 
+//route to render editpatient page
 router.get('/editpatient',checkAuthentication,function(req,res){
     //pass the current details to the page for rending
     Bed.find({'_id':req.query.bed}).populate({path:'_patient',model:'Patient',populate:{path:'_medication',model:'Medication',populate:{path:'_timetable',model:'Timetable',options:{ sort: { 'time': 1 }}}}}).exec(function(err,bed){
@@ -346,6 +347,7 @@ router.get('/editpatient',checkAuthentication,function(req,res){
 
 });
 
+//route to render list of patient page
 router.get('/listpatient',checkAuthentication,function(req,res){
     //search all the patient associated with the station and send for page rendering
     Patient.find({'_station':req.session.station,'patientstatus':'active'}).exec(function(err,activepatient){
@@ -363,8 +365,9 @@ router.get('/listpatient',checkAuthentication,function(req,res){
 
 });
 
+//route to render patientdetails page
 router.get('/viewpatient',checkAuthentication,function(req,res){
-    //from the query grab the patient id and search it in DB and send to page
+    //from the query grab the patient id and search it in DB and send to page, populate infusion history collection for infusion details
     var patid=ObjectId(req.query.patient);
     Patient.find({'_id':patid}).populate({path:'_medication',model:'Medication',populate:{path:'_infusionhistory',model:'Infusionhistory'}}).exec(function(err,patient){
         if (err)return console,log(err);
@@ -377,14 +380,16 @@ router.get('/viewpatient',checkAuthentication,function(req,res){
 
 });
 
-
+//route to render add bed page
 router.get('/addbed', checkAuthentication, function(req, res) {
     res.render('addbed', {
         user: req.user
     });
 });
 
+//route to render edit a bed page which enables user to change the bed name
 router.get('/editbed',checkAuthentication,function(req,res){
+    //from the query grab the bed id and find it, send it
     Bed.find({'_id':req.query.bed}).exec(function(err,bed){
         res.render('editbed',{
             beds:bed
@@ -396,9 +401,12 @@ router.get('/editbed',checkAuthentication,function(req,res){
 
 });
 
+//routr to render list of all bed linked to that station
 router.get('/listbed',checkAuthentication,function(req,res){
+    //search all the unoccupied bed associated with the station and send
     Bed.find({'_station':req.session.station,'bedstatus':'unoccupied'}).exec(function(err,bed){
         if (err)return console,log(err);
+    //send all the occupied bed
     Bed.find({'_station':req.session.station,'bedstatus':'occupied'}).exec(function(err,obed){
 
         res.render('listbed',{
@@ -411,20 +419,27 @@ router.get('/listbed',checkAuthentication,function(req,res){
     });
 
 });
+
+//post route to delete the bed from DB
 router.post('/deletebed',checkAuthentication,function(req,res){
+    //route is called to delete an unocuupied bed
     console.log(req.query.bed);
     var bedid=ObjectId(req.query.bed);
+    //grab the bed id from query and remove it from data base
     Bed.collection.remove({_id:bedid});
     res.redirect('/listbed');    
 });
 
+//route to render add IV-set page
 router.get('/addivset', checkAuthentication, function(req, res) {
     res.render('addivset', {
         user: req.user
     });
 });
 
+//route for rendering edit IV set 
 router.get('/editivset',checkAuthentication,function(req,res){
+    //grab the ivset id in query and send details to page for rendering
     Ivset.find({'_id':req.query.ivset}).exec(function(err,ivset){
         res.render('editivset',{
             ivsets:ivset
@@ -436,12 +451,16 @@ router.get('/editivset',checkAuthentication,function(req,res){
 
 });
 
+//route to store the edited changes of IV set into DB
 router.post('/editivset', checkAuthentication, function(req, res) {
+    //query has the id of ivset
     var ivid = ObjectId(req.body.ivid);
+    //update the changed field
     Ivset.collection.update({'_id':ivid},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf}});
     res.redirect('/');
 });
 
+//route to render all the IV set linked with the station
 router.get('/listivset',checkAuthentication,function(req,res){
     Ivset.find({'sname':req.session.station}).exec(function(err,ivset){
         if (err)return console,log(err);
@@ -453,17 +472,22 @@ router.get('/listivset',checkAuthentication,function(req,res){
     });
 
 });
+
+// post route to delete the IV-set from DB
 router.post('/deleteivset',checkAuthentication,function(req,res){
     var ivsetid=ObjectId(req.query.ivset);
+    //grab the id from query and delete it from DB
     Ivset.collection.remove({_id:ivsetid});
     res.redirect('/listivset');    
 });
 
+//route for logout
 router.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
 
+//route to render the login page
 router.get('/login', function(req, res) {
     res.render('login', {
         user: req.user
@@ -471,37 +495,43 @@ router.get('/login', function(req, res) {
 });
 
 
-
+//post route to create a Bed Collection in DB
 router.post('/addbed', checkAuthentication, function(req, res) {
+    //req.body.bedname is an array which has the  user defined names for bed, store it in an array for ease of operation
     console.log(req.body.bedname);
     var bedarr=[];
-    for (var key in req.body.bedname) {
+    for (var key in req.body.bedname)
+    {
         bedarr[key]=req.body.bedname[key];
     }
-    for(var i=0;i<bedarr.length;i++){
+    //grab each element in that array and create an object with properties defined for Bed Model in Bed.js
+    for(var i=0;i<bedarr.length;i++)
+    {
     var bed_to_add = new Bed({
         bname: bedarr[i],
         bedstatus:'unoccupied',
         _station: req.session.station
     });
+    //save it in DB
     bed_to_add.save(function(err, bed_to_add) {
         if (err) return console.error(err);
     });
     }
-    console.log(i);
-    res.redirect('/');
+    res.redirect('/addpatient');
 
 });
 
+//post route for edit bed to save the changes to corresponding Bed collection
 router.post('/editbed', checkAuthentication, function(req, res) {
-    console.log(req.body.bedname);
-    console.log(req.body.bedid);
+    //grab the bed id from req.body.bedid and change the bed name according to the new data available in req.body.#
     var bedid = ObjectId(req.body.bedid);
     Bed.collection.update({'_id':bedid},{$set:{bname:req.body.bedname}});
     res.redirect('/');
 });
 
+//post route for add-station . Create a station collection
 router.post('/addstation', checkAuthentication, function(req, res) {
+    //grab the details from req.body.# and save it as a new collection
     var station_to_add = new Station({
         sname: req.body.sname,
         uid: req.user.id,
@@ -513,6 +543,7 @@ router.post('/addstation', checkAuthentication, function(req, res) {
         res.redirect('/');
     });
 });
+
 
 router.post('/selectstation', checkAuthentication, function(req, res) {
     Station.findOne({
@@ -527,101 +558,107 @@ router.post('/selectstation', checkAuthentication, function(req, res) {
 });
 
 
+//post route for adding patient. This will create a Patient, Medication and Timetable collections and all the referencing and cross refercing is defined here
 router.post('/addpatient', checkAuthentication, function(req, res) {
-console.log(req.body);
-
-
-// ADDING PATIENT
-        var patient= new Patient({
-        name: req.body.patient.name,
-        age: req.body.patient.age,
-        patientstatus:'active',
-        admittedon:new Date(),
-        weight: req.body.patient.weight,
-        _bed: req.body.bed,
-        _station:req.session.station
-        });
-       patient.save(function(err, patient_to_add) {
-        if (err) return console.error(err);
-            
-            // get medications
+    //create a new patient by using the data available in req.body.#
+    var patient= new Patient({
+    name: req.body.patient.name,
+    age: req.body.patient.age,
+    patientstatus:'active',
+    admittedon:new Date(),
+    weight: req.body.patient.weight,
+    _bed: req.body.bed,
+    _station:req.session.station
+    });
+    //save the new patient collection
+    patient.save(function(err, patient_to_add) {
+        if (err){return console.error(err);}
+            // change the property of corresponding Bed where the patient is admitted
+            //ref patient in the Bed and changed bed status to ''occupied
             Bed.findOne({ _id: req.body.bed}, function (err, doc){
               doc._patient = patient;
               doc.bedstatus = 'occupied';
               doc.save();
-            });         
+            }); 
+            //req.body.medications is an array of object which has all the data like medicine name, rate, total volume etc
+            //eg [{name:***,rate:**,tvol:***}....{}....{name:###,rate:###,tvol:###}] 
+            //data is structered like this for the ease of operation, this is done in the addpatient.js script from the client side       
             var med=[{}];
             for (var key in req.body.medications) {
-                var medin={};
-                medin._bed=mongoose.Types.ObjectId(req.body.bed),
-                medin._station=req.session.station,
-                medin.name=req.body.medications[key].name,
-                medin.rate=req.body.medications[key].rate,
-                medin.tvol=req.body.medications[key].tvol,
-
-                med[key]=medin;
-                }
-                
+            var medin={};
+            medin._bed=mongoose.Types.ObjectId(req.body.bed),
+            medin._station=req.session.station,
+            medin.name=req.body.medications[key].name,
+            medin.rate=req.body.medications[key].rate,
+            medin.tvol=req.body.medications[key].tvol,
+            med[key]=medin;
+            } 
+            //created an array of object med with all details and inserting it into the database  
             Medication.collection.insert(med, onInsert);
+                function onInsert(err,docs)
+                {
+                if (err) {console.log(err);
+                } 
+                else 
+                {
+                    //giving ref of medication to the patient, that is medication id is ref as an array in patient collection
+                    for (var key in med){
+                    Patient.collection.update({_id:patient._id},{$push:{_medication:med[key]._id}},{upsert:false});
+                    }
 
-                function onInsert(err,docs) {
-                if (err) {
-       
-                } else {
-                        // console.log('med value');
-                        // console.log(med[0]._id);
-                        for (var key in med){
-                        Patient.collection.update({_id:patient._id},{$push:{_medication:med[key]._id}},{upsert:false})
-                        // add timings of medicine to timings collection
+                    //docs.ops has the data available and req.body.medications[].time has all the time associated with that medicine
+                    tim=[{}];
+                    var cn=0;
+                    docs.ops.forEach(function callback(currentValue, index, array) {
+                        var arrin=req.body.medications[index].time;
+                        //creating an array of object based on the time data
+                        for(var j=0;j<arrin.length;j++)
+                        {
+                             var timin={};
+                             timin._bed=req.body.bed;
+                             timin.bed=req.body.bed;
+                             timin.patient=patient._id.toString();
+                             timin._medication=currentValue._id;
+                             timin.station=req.session.station;
+                             timin.infused="not_infused";
+                             timin.userid=req.user.id;
+                             timin.time=arrin[j];
+                             tim[cn]=timin;
+                             cn++;
                         }
-
-
-                        tim=[{}];
-                        var cn=0;
-                        docs.ops.forEach(function callback(currentValue, index, array) {
-                            
-                             var arrin=req.body.medications[index].time;
-                             for(var j=0;j<arrin.length;j++){
-                                 var timin={};
-                                 timin._bed=req.body.bed;
-                                 timin.bed=req.body.bed;
-                                 timin.patient=patient._id.toString();
-                                 timin._medication=currentValue._id;
-                                 timin.station=req.session.station;
-                                 timin.infused="not_infused";
-                                 timin.userid=req.user.id;
-                                 timin.time=arrin[j];
-                                 tim[cn]=timin;
-                                 cn++;
-                                 }
-                                                    
-                        });
-                        
-                        Timetable.collection.insert(tim, onInsert);
-                
-                                function onInsert(err,times) {
-                                    if (err) {
-                                    } else {
-                                    for (var key in med) 
-                                    {
-                                        for (var key2 in tim)
-                                            if(med[key]._id===tim[key2]._medication)
-                                    Medication.collection.update({_id:med[key]._id},{$push:{_timetable:tim[key2]._id}},{upsert:false})
-                                    }
-                                    res.redirect('/');
-                                    }
+                                                
+                    });
+                    //inserting the timetable and creating timetable collection corresponding to each time    
+                    Timetable.collection.insert(tim, onInsert);
+                            function onInsert(err,times) {
+                                if (err)
+                                {
+                                    console.log(err);
+                                } 
+                                else 
+                                {
+                                //linking the timetable collections to the medication
+                                for (var key in med) 
+                                {
+                                    for (var key2 in tim)
+                                    if(med[key]._id===tim[key2]._medication)
+                                    Medication.collection.update({_id:med[key]._id},{$push:{_timetable:tim[key2]._id}},{upsert:false});
                                 }
+                                res.redirect('/');
+                                }
+                            }
 
                     }
                 }
-        
 
     });
 
 });
 
+
+//post route for the update patient dependency:- editpatient.js 
 router.post('/updatepatient',checkAuthentication, function(req,res){
-    //get the array of medication ids and time ids to be deleted passing values from editpatient.js 
+    //from the request we get all the medicine ids and timeids which already exist and stores it in two array for ease of operation
     var delete_medication=[];
     for (var key in req.body.delete_medications) {
         delete_medication[key]=ObjectId(req.body.delete_medications[key]);
@@ -630,26 +667,27 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
     for (var key in req.body.delete_timedata) {
         delete_timedata[key]=ObjectId(req.body.delete_timedata[key]);
     }
+    //grab the patient id ,prev bed id and present bed id(if there is bed change otherwise it will be same)
     var patid = ObjectId(req.body.patient.pid);
     var bedid = ObjectId(req.body.delbed);
     var newbedid = ObjectId(req.body.bed);
-
+    //updating  the basic details of patient name ,age & weight
     Patient.collection.update({'_id':patid},{$set:{name:req.body.patient.name,age:req.body.patient.age,weight:req.body.patient.weight,_bed:req.body.bed}});
+    //checking for a bed change
     if(req.body.delbed == req.body.bed)
     {
        console.log("no bed change");
     }
+    //if bed change do the following operation unset current bed patient refernce, add ref to new bed, set new bed ref in corresponding medication and timetable collection
     else{
            Bed.collection.update({'_id':bedid},{$unset:{_patient:""}});
            Bed.collection.update({'_id':bedid},{$set:{bedstatus:"unoccupied"}});
            Bed.collection.update({'_id':newbedid},{$set:{_patient:patid,bedstatus:"occupied"}});
            Timetable.collection.updateMany({'bed':req.body.delbed},{$set:{bed:req.body.bed,_bed:req.body.bed}});
            Medication.collection.updateMany({'_bed':bedid},{$set:{_bed:req.body.bed}});
-                            
-
-
        } 
-    //saving the updated medication data
+    //updating the basic details of medicine (medname rate tvol) which already exist
+    //for the newly added medicine req.body.medication.medid ="new" so checking that enables this operation performed only in already existing medicines
     for(var lp3=0;lp3<req.body.medications.length;lp3++)
     {
      if(req.body.medications[lp3].medid != "new")
@@ -661,6 +699,8 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
     } 
 
 //delmedids returns the medicine ids for deletion----if user deleted a medicine
+//comparing the two array and finding the element not present in already existing array
+//eg: already exist med ids: [#eee,#aaa,#ccc,#zzz] and new med ids: [#eee,#aaa,new]; med ids to remove: [#ccc,#zzz]
    var medids=[];
    for(var key in req.body.medications)
    {
@@ -684,8 +724,8 @@ router.post('/updatepatient',checkAuthentication, function(req,res){
     }
   
    }
+//do operations only if atleast one medids is send from client script
 var doop=(typeof(medids[0])).toString();
-console.log(delmedids);
 if(doop != 'undefined')
 {
 //deltimeids array has all the timeids of existing medicine to be deleted from database---user removes a time
@@ -698,14 +738,14 @@ if(doop != 'undefined')
             timeidss.push(req.body.medications[lp4].timeid[lp5]);
         }
     }
-    //formating passed timeids
+    //formating passed timeids due to a extra quotes at begining and end slice the first and last character
     var timeids=[];
     for(var lp8=0;lp8<timeidss.length;lp8++)
     {
         var result = timeidss[lp8].slice(1, -1);
         timeids.push(result);
     }
-    //comparing all passed ids with existing ids and find the timeids for deletion
+    //comparing all passed ids with existing ids and find the timeids for deletion; similar to finding the medicine ids for deletion
     var deltimeids=[];
     for(var lp6=0;lp6<delete_timedata.length;lp6++)
     {
@@ -723,9 +763,9 @@ if(doop != 'undefined')
     }
   
    } 
-console.log(deltimeids);
 
 //tim returns new time to be added to existing medicine
+//finding the new time by checking the timeid for the new time medicine id is send instead of timeid
   var newtime,newtimedata,tim=[{}],existmedid;
    for(var lp10 in req.body.medications)
    {
@@ -765,9 +805,9 @@ console.log(deltimeids);
         }
 
    } 
-   //to eliminate first element which is an empty object
+//to eliminate first element which is an empty object
    tim.shift();
-   console.log(tim);
+//this part is similar to the add medicine part
 //new med details in med array
    var med=[{}];
    var arrin1=[];
@@ -786,9 +826,6 @@ console.log(deltimeids);
       }
      }  
      med.shift();
-     console.log(med);
-     console.log(arrin1);
-
      var medidd=[];
       for(var lp9=0;lp9<req.body.medications.length;lp9++)
       {
@@ -849,6 +886,7 @@ Medication.collection.insert(med, onInsert);
         }
     }
  }    
+ //finally after adding the newly added medicines (if any?) the following are the bulk DB operations
     var bulktime = Timetable.collection.initializeOrderedBulkOp();
     //remove all timetables when a medicine is deleted
     if(delmedids.length > 0)
@@ -917,20 +955,19 @@ res.redirect('/');
 
 });
 
-
-
-
+//route for posting add iv set
 router.post('/addivset', checkAuthentication, function(req, res) {
     console.log(req.body);
     Ivset.collection.update({ivdpf:req.body.ivdpf},{$set:{ivname:req.body.ivname,ivdpf:req.body.ivdpf,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
 
+//route for posting and verifying register details
 router.post('/register', function(req, res) {
 //check whether the user is already registered    
     Account.find({'username':req.body.username}).exec(function(err, tempp) {
     if(tempp.length !==0){
-        res.render('errusralreadyexist');
+        res.render('errusralreadyexist'); //warning user already exist
     }
 //if new user    
     else
@@ -969,6 +1006,8 @@ router.post('/register', function(req, res) {
         res.render('reglinksend',{mailid:req.body.username,msg1:"A link has been send to",msg2:"Verify the link and complete the registration"});
        }
 });
+
+
 router.get('/verify',function(req,res){
     //search whether the user is available in temp collection
     Tempaccount.find({'username':req.query.uid}).exec(function(err,tmp){
@@ -1028,10 +1067,12 @@ router.get('/verify',function(req,res){
     });
 });
 
+//route for posting login details
 router.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/addstation?add_flag=null');
 });
 
+//route for remove patient from bed
 router.post('/removepatient', checkAuthentication, function(req, res) {
     var bedid=ObjectId(req.query.bed);
     var patid;
@@ -1080,6 +1121,8 @@ router.post('/removepatient', checkAuthentication, function(req, res) {
     });
    
 });
+
+
 //forgot password
 router.post('/forgot', function(req, res) {
     //check whether there is a user
@@ -1122,6 +1165,8 @@ router.post('/forgot', function(req, res) {
     }
 });
 });
+
+
 router.get('/reset',function(req,res){
     //search for temp account and for link exipiration
     Tempaccount.find({'username':req.query.uid}).exec(function(err,tmp){
