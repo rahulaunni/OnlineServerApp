@@ -1205,6 +1205,7 @@ router.get('/reset',function(req,res){
    
 });
 
+//route for posting password reset content
 router.post('/passwordreset', function(req, res) {
     Account.findByUsername(req.body.username).then(function(sanitizedUser) {
             if (sanitizedUser) {
@@ -1222,6 +1223,7 @@ router.post('/passwordreset', function(req, res) {
 
 });
 
+//ajax request from notification.js query has the medid and route will return corresponding bedname (to display in the error notification)
 router.get('/medtobed', checkAuthentication, function(req, res) {
     console.log(req.query.medid);
     var medid=ObjectId(req.query.medid);
@@ -1230,6 +1232,7 @@ router.get('/medtobed', checkAuthentication, function(req, res) {
     res.send(bed[0]._bed.bname);
 });
 });
+
 //this route is from notification.js to check is there any infusion in next hour 
 //route will be called in 55th min of every hour
 router.get('/infusionalert', checkAuthentication, function(req, res) {
@@ -1248,13 +1251,15 @@ router.get('/infusionalert', checkAuthentication, function(req, res) {
         }
 });
 });
+
+//route called on acknowledging infusion alert, query has the timeid, route will set its infused flag to alerted (red color in UI)
 router.post('/infusionalertack', checkAuthentication, function(req, res) {
     var timeid=ObjectId(req.query.timeid);
     Timetable.collection.update({'_id':timeid},{$set:{infused:"alerted"}});
     
 });
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-//This request has change from ProjectServerApp
+
+//route to render list of device search all device linked with the station
 router.get('/listdevice',checkAuthentication,function(req,res){
     Device.find({'sname':req.session.station}).exec(function(err,device){
         if (err)return console,log(err);
@@ -1266,11 +1271,15 @@ router.get('/listdevice',checkAuthentication,function(req,res){
     });
 
 });
+
+//route to render add device page
 router.get('/adddevice', checkAuthentication, function(req, res) {
         res.render('adddeviceonl', {
             user: req.user
         });
 });
+
+//route for render edit device , query has the device id find and send the details
 router.get('/editdevice',checkAuthentication,function(req,res){
     Device.find({'_id':req.query.device}).exec(function(err,device){
         res.render('editdevice',{
@@ -1283,16 +1292,20 @@ router.get('/editdevice',checkAuthentication,function(req,res){
 
 });
 
+//route for posting add device details
 router.post('/adddevice', checkAuthentication, function(req, res) {
     Device.collection.update({divid:req.body.divid},{$set:{divid:req.body.divid,uid:req.user.id,sname:req.session.station}},{upsert:true})
     res.redirect('/');
 });
 
+//route for posting edit device
 router.post('/editdevice', checkAuthentication, function(req, res) {
     var devid = ObjectId(req.body.id);
     Device.collection.update({'_id':devid},{$set:{divid:req.body.divid}});
     res.redirect('/');
 });
+
+//route for deleting a device from database, qury has the device id
 router.post('/deletedevice',checkAuthentication,function(req,res){
     console.log(req.query.device);
     var deviceid=ObjectId(req.query.device);
