@@ -36,7 +36,7 @@ router.get('/', checkAuthentication, function(req, res) {
 //before rendering the page we have to sort the bed to list according to the time of its next infusion, the operations are to get that orders data
 router.get('/home', checkAuthentication, function(req, res) {
         //find timetable and sort in ascending order,there will be duplicates because multiple timetable collection has same bed reference
-        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing','alerted']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
+        Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing','alerted','skipped']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
         var date=new Date();
         var hour=date.getHours();

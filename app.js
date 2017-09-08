@@ -57,6 +57,12 @@ mongoose.connect('mongodb://localhost/dripov2',{ server: {reconnectTries:30,reco
     else
     {
         console.log("mongodb connection success");
+        var dateObj = new Date();
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+        newdate = day + "/" + month + "/" + year;
+        console.log(newdate);
         console.log((new Date).getHours()+':'+(new Date).getMinutes()+':'+(new Date).getSeconds()+':'+(new Date).getMilliseconds());
 
     }
@@ -500,6 +506,14 @@ client.on('message', function (topic, payload, packet) {
         else{
         var stationid=dev[0].sname;
         var userid=dev[0].uid;
+        var user_name,station_name;
+        Account.find({'_id':ObjectId(userid)}).exec(function (err,user) {
+            user_name=user[0].username;
+        });
+        Station.find({'_id':ObjectId(stationid)}).exec(function (err,station) {
+            station_name=station[0].sname;
+        });
+
         //check for the topic and if true; split the message and stores into different variables for ease of operation
         if(topic=='dripo/'+ id + '/mon')
         {
@@ -516,9 +530,14 @@ client.on('message', function (topic, payload, packet) {
             var progress_width = ((volinfused/tvol)*100);
             var infdate= new Date();
             var inftime=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds();
-
+            var dateObj = new Date();
+            var month = dateObj.getUTCMonth() + 1; //months from 1-12
+            var day = dateObj.getUTCDate();
+            var year = dateObj.getUTCFullYear();
+            var newdate = day + "/" + month + "/" + year;
+            var filenamebeg=day + "-" + month + "-" + year;
             if(status=='start')
-            {        
+            {       
                 //on start change timetable status to infusing
                  Timetable.update({_id:timeid},{$set:{infused:"infusing"}},function(err,bed){
                     if(err){console.log(err);}
@@ -526,16 +545,26 @@ client.on('message', function (topic, payload, packet) {
                  //create an infusion history collection and add date and time of infusion
                  //checking whether is there already a infusion history file associated with the timetable
                  //*******************review needed**************************************//
-                Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inf){
+                Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inf){
                 if (inf==0){
                 //if not create a new infusionhistory
-                Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
-                Infusionhistory.find({'_timetable':ObjectId(timeid)}).exec(function(err,inff){
+                Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$set:{date:newdate,infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
+                Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inff){
+                console.log(inff);
                 //link that infusion history file with the medication
                 Medication.collection.update({_id:ObjectId(medid)},{$push:{_infusionhistory:inff[0]._id}});
-            });
+                });
+                //infusion history log file creation
+                fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
                 }
             });
+
+            }
+            if(status=='infusing')
+            {
+                //store rate and infusedvolume in db to plot rate vs infusedvol
+                Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$push:{plotrate:rateml,plotinfvol:volinfused}});
+                fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
 
             }
             if(status=='Empty')
@@ -545,7 +574,10 @@ client.on('message', function (topic, payload, packet) {
                     if(err){console.log(err);}
                     });
                  //add the infusion ending time in infusion history file
-                 Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infendtime:inftime,inftvol:volinfused}});
+                 Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$set:{infendtime:inftime,inftvol:volinfused}});
+                 Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$push:{plotrate:rateml,plotinfvol:volinfused}});
+                 fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
+
 
             }  
             if(status=='stop')
@@ -557,6 +589,8 @@ client.on('message', function (topic, payload, packet) {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
                     if(err){console.log(err);}
                     }); 
+                     
+
                 }
                 //if infusion is > 90% the DB set as infused and in infusionhistory file it is recored as the ending time of infusion 
                 else
@@ -564,8 +598,9 @@ client.on('message', function (topic, payload, packet) {
                     Timetable.update({_id:timeid},{$set:{infused:"infused"}},function(err,bed){
                        if(err){console.log(err);}
                       });
-                    Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$set:{infendtime:inftime,inftvol:volinfused}});
-
+                    Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$set:{infendtime:inftime,inftvol:volinfused}});
+                    Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$push:{plotrate:rateml,plotinfvol:volinfused}});
+                   fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
 
                 }
                 
@@ -573,7 +608,8 @@ client.on('message', function (topic, payload, packet) {
             //the errors are recorded in the infusion history file for future reviewing
             if(status=='Block'||status=='Rate Err')
             {
-                Infusionhistory.collection.update({_timetable:ObjectId(timeid)},{$push:{inferr:{errtype:status,errtime:inftime}}});
+                Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$push:{inferr:{errtype:status,errtime:inftime}}});
+                fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
 
             }
         } 
