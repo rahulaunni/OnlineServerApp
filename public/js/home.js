@@ -1,5 +1,5 @@
 $(function() {   
-var socket = io.connect();
+var socket = io.connect('http://dripo.care');
       socket.on('connect', function(data) {
        socket.on('mqtt', function(msg) {
                console.log(msg.topic+' '+msg.payload);
