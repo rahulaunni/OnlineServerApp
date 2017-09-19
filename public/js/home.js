@@ -1,5 +1,5 @@
 $(function() {   
-var socket = io.connect('http://13.126.206.145');
+var socket = io.connect('http://localhost');
       socket.on('connect', function(data) {
        socket.on('mqtt', function(msg) {
                console.log(msg.topic+' '+msg.payload);
@@ -122,7 +122,6 @@ var socket = io.connect('http://13.126.206.145');
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
             
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
-                        console.log("ok");
                         socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
                          });
 
@@ -319,13 +318,13 @@ $(this).parent().parent().parent().children('.del').removeClass("displaydis");
 
 
 $(document).on("click","#middlebar .infconfirm",function(){                
-console.log($(this).parent().parent().parent().children('.schhold').children('.nextinfusiontime').first('.not_infused'));
+// console.log($(this).parent().parent().parent().children('.schhold').children('.nextinfusiontime').first('.not_infused'));
 var timeid=$(this).parent().parent().parent().children('.schhold').children('.nextinfusiontime').attr('id');
 $(this).parent().parent().parent().children('.schhold').children('#'+timeid).removeClass("not_infused");
 $(this).parent().parent().parent().children('.schhold').children('#'+timeid).addClass("alerted");
-console.log(timeid);
+// console.log(timeid);
 $(this).attr('data-url','/infusionalertack?timeid='+timeid);
-console.log($(this).attr('data-url'));
+// console.log($(this).attr('data-url'));
 $.post($(this).attr("data-url"), function( data ) {
 $( ".middlebar" ).html( data );
 });
@@ -380,7 +379,7 @@ window.setInterval(function(){ // Set interval for checking
     var date = new Date(); // Create a Date object to find out what time it is
     if(date.getMinutes() ==1||date.getMinutes() ==1)
     {
-        console.log("msg");
+        // console.log("msg");
         location.reload();
     }
     },60000);
