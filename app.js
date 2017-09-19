@@ -527,6 +527,7 @@ client.on('message', function (topic, payload, packet) {
             var volinfused = ress[4];
             var remaintime = ress[5];
             var tvol = ress[6];
+            var meddpf=ress[7];
             var progress_width = ((volinfused/tvol)*100);
             var infdate= new Date();
             var inftime=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds();
@@ -556,6 +557,7 @@ client.on('message', function (topic, payload, packet) {
                 });
                 //infusion history log file creation
                 fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+rateml+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
                 }
             });
 
@@ -584,12 +586,12 @@ client.on('message', function (topic, payload, packet) {
             {   
                 //checking whether the infusion is below 90% if it is below 90% system assumes that the infusion is not complete and in DB the flag is set from 
                 //infusing to not_infused
+                fs.appendFileSync("TestLogfiles/"+"R"+rateml+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
                 if(progress_width<90)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
                     if(err){console.log(err);}
                     }); 
-                     
 
                 }
                 //if infusion is > 90% the DB set as infused and in infusionhistory file it is recored as the ending time of infusion 
@@ -684,7 +686,7 @@ client.on('message', function(topic, message) {
         var medname=med[0].name;
         var medrate=med[0].rate;
         var medtvol=med[0].tvol;
-        fs.appendFileSync("Logfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
+        fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
     });
 
     }
