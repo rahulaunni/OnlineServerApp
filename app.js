@@ -559,7 +559,7 @@ client.on('message', function (topic, payload, packet) {
                 var medrate=med[0].rate;
                 //infusion history log file creation
                 fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
-                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
                 });
                 }
             });
@@ -590,8 +590,9 @@ client.on('message', function (topic, payload, packet) {
                 //checking whether the infusion is below 90% if it is below 90% system assumes that the infusion is not complete and in DB the flag is set from 
                 //infusing to not_infused
                 Medication.find({_id:medid}).exec(function(err,med){
+                if(err){console.log("err");}
                 var medrate=med[0].rate;
-                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
                 });
                 if(progress_width<90)
                 {
@@ -682,17 +683,18 @@ client.on('message', function(topic, message) {
         var msg = message.toString();
         var ress = msg.split("-");
         var medid = ress[0];
-        var meddpf=ress[1];
-        var dcount=ress[2];
-        var etime=ress[3];
-        var srate=ress[4];
-        var ivol=ress[5];
+        var timeid = ress[1];
+        var meddpf=ress[2];
+        var dcount=ress[3];
+        var etime=ress[4];
+        var srate=ress[5];
+        var ivol=ress[6];
         var time=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds()+':'+(new Date()).getMilliseconds();
         Medication.find({_id:medid}).exec(function(err,med){
         var medname=med[0].name;
         var medrate=med[0].rate;
         var medtvol=med[0].tvol;
-        fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+medid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
+        fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+timeid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
     });
 
     }
