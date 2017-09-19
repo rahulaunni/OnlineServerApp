@@ -555,9 +555,12 @@ client.on('message', function (topic, payload, packet) {
                 //link that infusion history file with the medication
                 Medication.collection.update({_id:ObjectId(medid)},{$push:{_infusionhistory:inff[0]._id}});
                 });
+                Medication.find({_id:medid}).exec(function(err,med){
+                var medrate=med[0].rate;
                 //infusion history log file creation
                 fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
-                fs.appendFileSync("TestLogfiles/"+"R"+rateml+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
+                });
                 }
             });
 
@@ -586,7 +589,10 @@ client.on('message', function (topic, payload, packet) {
             {   
                 //checking whether the infusion is below 90% if it is below 90% system assumes that the infusion is not complete and in DB the flag is set from 
                 //infusing to not_infused
-                fs.appendFileSync("TestLogfiles/"+"R"+rateml+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
+                Medication.find({_id:medid}).exec(function(err,med){
+                var medrate=med[0].rate;
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+medid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
+                });
                 if(progress_width<90)
                 {
                      Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
