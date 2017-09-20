@@ -593,6 +593,9 @@ client.on('message', function (topic, payload, packet) {
             {   
                 //checking whether the infusion is below 90% if it is below 90% system assumes that the infusion is not complete and in DB the flag is set from 
                 //infusing to not_infused
+                //check if medid is there coz empty meassage will be send by client after stop to get rid of retained messages
+                if(medid != 0)
+                {
                 Medication.find({_id:ObjectId(medid)}).exec(function(err,med){
                 if(err){console.log("err");}
                 var medrate=med[0].rate;
@@ -616,6 +619,7 @@ client.on('message', function (topic, payload, packet) {
                    fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
 
                 }
+            }
                 
             }  
             //the errors are recorded in the infusion history file for future reviewing
@@ -694,13 +698,17 @@ client.on('message', function(topic, message) {
         var srate=ress[5];
         var ivol=ress[6];
         var time=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds()+':'+(new Date()).getMilliseconds();
+        if(medid != 0)
+        {
         Medication.find({_id:medid}).exec(function(err,med){
+        console.log(med);
+        if(err){console.log(err);}
         var medname=med[0].name;
         var medrate=med[0].rate;
         var medtvol=med[0].tvol;
         fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+timeid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
-    });
-
+        });
+        }
     }
 
 });
