@@ -513,7 +513,8 @@ client.on('message', function (topic, payload, packet) {
         Station.find({'_id':ObjectId(stationid)}).exec(function (err,station) {
             station_name=station[0].sname;
         });
-
+        // console.log(user_name);
+        // console.log(station_name);
         //check for the topic and if true; split the message and stores into different variables for ease of operation
         if(topic=='dripo/'+ id + '/mon')
         {
@@ -701,7 +702,6 @@ client.on('message', function(topic, message) {
         if(medid != 0)
         {
         Medication.find({_id:medid}).exec(function(err,med){
-        console.log(med);
         if(err){console.log(err);}
         var medname=med[0].name;
         var medrate=med[0].rate;
