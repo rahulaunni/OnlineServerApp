@@ -1,4 +1,5 @@
-$(function() {   
+$(function() {  
+//do the operation while client get a mqtt message in topic 'dripo'/<id>/mon 
 var socket = io.connect('http://localhost');
       socket.on('connect', function(data) {
        socket.on('mqtt', function(msg) {
