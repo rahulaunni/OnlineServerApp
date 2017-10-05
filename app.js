@@ -554,13 +554,15 @@ client.on('message', function (topic, payload, packet) {
                  //checking whether is there already a infusion history file associated with the timetable
                  //*******************review needed**************************************//
                 Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inf){
-                if (inf==0){
+                if (inf==0){s
                 //if not create a new infusionhistory
                 Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$set:{date:newdate,infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
                 Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inff){
-                console.log(inff);
+                if(inff != 0)
+                {
                 //link that infusion history file with the medication
                 Medication.collection.update({_id:ObjectId(medid)},{$push:{_infusionhistory:inff[0]._id}});
+                }
                 });
                 
                 //infusion history log file creation

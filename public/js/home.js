@@ -347,6 +347,7 @@ window.setInterval(function(){ // Set interval for checking
     if(date.getMinutes() >55){ // Check the time
         var nexthour=date.getHours()+1;
         var nexthour_formated;
+        console.log("code executed");
         if(nexthour<12)
         {
             nexthour_formated=nexthour+' '+'AM';
@@ -364,7 +365,7 @@ window.setInterval(function(){ // Set interval for checking
             var time=$this.text();
             if(time.indexOf(nexthour_formated) === 0||time.indexOf(nexthour_formated) === 1)
             {
-                // console.log($this.closest('#middlebar .not_infused').parent().parent().children('.infusionalert'));
+                console.log($this.closest('#middlebar .not_infused').parent().parent().children('.infusionalert'));
                 $this.closest('#middlebar .not_infused').addClass("nextinfusiontime");
                 $this.closest('#middlebar .not_infused').parent().parent().children('.schhold').addClass("displaydis");
                 $this.closest('#middlebar .not_infused').parent().parent().children('.infusionalert').removeClass("displaydis");
