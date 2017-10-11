@@ -534,12 +534,18 @@ client.on('message', function (topic, payload, packet) {
             //to get username and station name for log filename
             var user_name;
             var station_name;
+            console.log(userid);
+            console.log(stationid);
             Account.find({'_id':ObjectId(userid)}).exec(function (err,user) {
                 user_name=user[0].username;
+                console.log(user_name);
             });
             Station.find({'_id':ObjectId(stationid)}).exec(function (err,station) {
                 station_name=station[0].sname;
+                console.log(user_name);
             });
+            console.log(user_name);
+            console.log(station_name);
             if(status=='start')
             {       
                 //on start change timetable status to infusing
