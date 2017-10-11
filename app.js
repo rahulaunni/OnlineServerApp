@@ -506,13 +506,6 @@ client.on('message', function (topic, payload, packet) {
         else{
         var stationid=dev[0].sname;
         var userid=dev[0].uid;
-        var user_name,station_name;
-        Account.find({'_id':ObjectId(userid)}).exec(function (err,user) {
-            user_name=user[0].username;
-        });
-        Station.find({'_id':ObjectId(stationid)}).exec(function (err,station) {
-            station_name=station[0].sname;
-        });
         // console.log(user_name);
         // console.log(station_name);
         //check for the topic and if true; split the message and stores into different variables for ease of operation
@@ -538,6 +531,15 @@ client.on('message', function (topic, payload, packet) {
             var year = dateObj.getUTCFullYear();
             var newdate = day + "/" + month + "/" + year;
             var filenamebeg=day + "-" + month + "-" + year;
+            //to get username and station name for log filename
+            var user_name;
+            var station_name;
+            Account.find({'_id':ObjectId(userid)}).exec(function (err,user) {
+                user_name=user[0].username;
+            });
+            Station.find({'_id':ObjectId(stationid)}).exec(function (err,station) {
+                station_name=station[0].sname;
+            });
             if(status=='start')
             {       
                 //on start change timetable status to infusing
@@ -566,6 +568,7 @@ client.on('message', function (topic, payload, packet) {
                 });
                 
                 //infusion history log file creation
+
                 fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
                
                 }
@@ -606,9 +609,10 @@ client.on('message', function (topic, payload, packet) {
                 });
                 if(progress_width<90)
                 {
-                     Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
+                    Timetable.update({_id:timeid},{$set:{infused:"not_infused"}},function(err,bed){
                     if(err){console.log(err);}
                     }); 
+                    fs.appendFileSync("Logfiles/"+user_name+"_"+station_name+"_"+filenamebeg+"_"+timeid+".txt",status+","+rateml+","+volinfused+","+remaintime+","+tvol+'\n', "UTF-8",{'flags': 'a+'});
 
                 }
                 //if infusion is > 90% the DB set as infused and in infusionhistory file it is recored as the ending time of infusion 
