@@ -554,7 +554,7 @@ client.on('message', function (topic, payload, packet) {
                  //checking whether is there already a infusion history file associated with the timetable
                  //*******************review needed**************************************//
                 Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inf){
-                if (inf==0){s
+                if (inf==0){
                 //if not create a new infusionhistory
                 Infusionhistory.collection.update({_timetable:ObjectId(timeid),date:newdate},{$set:{date:newdate,infstarttime:inftime,infdate:infdate,sname:stationid,uid:userid}},{upsert:true});
                 Infusionhistory.find({'_timetable':ObjectId(timeid),'date':newdate}).exec(function(err,inff){
