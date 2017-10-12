@@ -522,6 +522,7 @@ client.on('message', function (topic, payload, packet) {
             var remaintime = ress[5];
             var tvol = ress[6];
             var meddpf=ress[7];
+            var dropCount=ress[8];
             var progress_width = ((volinfused/tvol)*100);
             var infdate= new Date();
             var inftime=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds();
@@ -556,7 +557,7 @@ client.on('message', function (topic, payload, packet) {
 
                  Medication.find({_id:ObjectId(medid)}).exec(function(err,med){
                 var medrate=med[0].rate;
-                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'start'+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'start'+'-'+dropCount+'\n', "UTF-8",{'flags': 'a+'});
                 });
                  //create an infusion history collection and add date and time of infusion
                  //checking whether is there already a infusion history file associated with the timetable
@@ -611,7 +612,7 @@ client.on('message', function (topic, payload, packet) {
                 Medication.find({_id:ObjectId(medid)}).exec(function(err,med){
                 if(err){console.log("err");}
                 var medrate=med[0].rate;
-                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'stop'+'\n', "UTF-8",{'flags': 'a+'});
+                fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+tvol+"_D"+meddpf+"_"+timeid+".txt",'stop'+'-'+dropCount+'\n', "UTF-8",{'flags': 'a+'});
                 });
                 if(progress_width<90)
                 {
@@ -695,33 +696,33 @@ cron.schedule('1 0-23 * * *', function(){
   });
 });
 //test log code***********************************************************************************************************
-client.on('message', function(topic, message) {
-    var res = topic.split("/");
-    var id = res[1];
-    var purpose=res[2];
-    if(purpose=='log')
-    {            
-        var msg = message.toString();
-        var ress = msg.split("-");
-        var medid = ress[0];
-        var timeid = ress[1];
-        var meddpf=ress[2];
-        var dcount=ress[3];
-        var etime=ress[4];
-        var srate=ress[5];
-        var ivol=ress[6];
-        var time=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds()+':'+(new Date()).getMilliseconds();
-        if(medid != 0)
-        {
-        Medication.find({_id:medid}).exec(function(err,med){
-        if(err){console.log(err);}
-        var medname=med[0].name;
-        var medrate=med[0].rate;
-        var medtvol=med[0].tvol;
-        fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+timeid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
-        });
-        }
-    }
+// client.on('message', function(topic, message) {
+//     var res = topic.split("/");
+//     var id = res[1];
+//     var purpose=res[2];
+//     if(purpose=='log')
+//     {            
+//         var msg = message.toString();
+//         var ress = msg.split("-");
+//         var medid = ress[0];
+//         var timeid = ress[1];
+//         var meddpf=ress[2];
+//         var dcount=ress[3];
+//         var etime=ress[4];
+//         var srate=ress[5];
+//         var ivol=ress[6];
+//         var time=(new Date()).getHours()+':'+(new Date()).getMinutes()+':'+(new Date()).getSeconds()+':'+(new Date()).getMilliseconds();
+//         if(medid != 0)
+//         {
+//         Medication.find({_id:medid}).exec(function(err,med){
+//         if(err){console.log(err);}
+//         var medname=med[0].name;
+//         var medrate=med[0].rate;
+//         var medtvol=med[0].tvol;
+//         fs.appendFileSync("TestLogfiles/"+"R"+medrate+"_V"+medtvol+"_D"+meddpf+"_"+timeid+".txt",time+','+ dcount+','+etime+','+srate+','+ivol+'\n', "UTF-8",{'flags': 'a+'});
+//         });
+//         }
+//     }
 
-});
-module.exports = app;
+// });
+// module.exports = app;
