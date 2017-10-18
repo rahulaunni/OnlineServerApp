@@ -15,9 +15,23 @@ var socket = io.connect('http://localhost');
                 	var status = res[2];
                 	var rateml = res[3];
                 	var volinfused = res[4];
-                	var remaintime = res[5];
+                	var remainingtime = res[5];
                 	var tvol = res[6];
+                    var remainingtimeHour=Math.trunc(remainingtime/60);
+                    var remainingtimeMinute=remainingtime%60;
+                    var formattedRemainingTime;
+                    if(remainingtimeHour !=0)
+                    {
+                        formattedRemainingTime=remainingtimeHour+' Hr '+remainingtimeMinute+' Mins';
+
+                    }
+                    else
+                    {
+                        formattedRemainingTime=remainingtimeMinute+' Mins';
+
+                    }
                 	var progress_width = ((volinfused/tvol)*100);
+                    console.log(formattedRemainingTime);
                     var progress_width_int=Math.trunc(progress_width);
                 	if(status=='start')
                 	{
@@ -32,7 +46,7 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details').removeClass("displaydis");
                         $('#'+medid+'details-rate').html(rateml);
                         $('#'+medid+'details-volume').html(volinfused);
-                        $('#'+medid+'details-time').html(remaintime);
+                        $('#'+medid+'details-time').html(formattedRemainingTime);
                         $('#'+medid+'progressbar').removeClass("displaydis");
                 		$('#'+medid+'progressbar').css("width",progress_width+'%');
                         $('#'+medid+'percentage').html(progress_width_int+'%');
@@ -60,7 +74,7 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details').removeClass("displaydis");
                         $('#'+medid+'details-rate').html(rateml);
                         $('#'+medid+'details-volume').html(volinfused);
-                        $('#'+medid+'details-time').html(remaintime);
+                        $('#'+medid+'details-time').html(formattedRemainingTime);
                         $('#'+medid+'progressbar').removeClass("displaydis");
                 		$('#'+medid+'progressbar').removeClass("progress-bar-danger");
                 		$('#'+medid+'progressbar').css("width",progress_width+'%');
@@ -123,7 +137,7 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
             
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
-                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
                          });
 
 
@@ -175,7 +189,7 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'ack-errtype').html(status);
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
-                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
                          });
 
 
@@ -196,14 +210,14 @@ var socket = io.connect('http://localhost');
                         $('#'+medid+'ack-errtype').html(status);
                         $('#'+medid+'details-ratediv').removeClass("backgroundRed");
                         $('#'+medid+'ack-btn').unbind().on("click", function(){
-                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
                          });
 
                 	}
 					else if(status=='Block_ACK')
                 	{
                 	
-                    socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                    socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
 
 
                 	}
@@ -222,7 +236,7 @@ var socket = io.connect('http://localhost');
                 	else if(status=='Rate Err_ACK')
                 	{
                 		
-                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'errackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
 
 
                 	}
@@ -230,7 +244,7 @@ var socket = io.connect('http://localhost');
 					else if(status=='Complete_ACK')
                 	{
                 		
-                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remaintime+'-'+tvol});
+                        socket.emit('publish', {topic:msg.topic,payload:medid+'-'+timeid+'-'+'cmpltackclicked'+'-'+rateml+'-'+volinfused+'-'+remainingtime+'-'+tvol});
 
 
                 	}
@@ -242,7 +256,7 @@ var socket = io.connect('http://localhost');
                                 $('#'+medid+'details').removeClass("displaydis");
                                 $('#'+medid+'details-rate').html(rateml);
                                 $('#'+medid+'details-volume').html(volinfused);
-                                $('#'+medid+'details-time').html(remaintime);
+                                $('#'+medid+'details-time').html(formattedRemainingTime);
                                 $('#'+medid+'progressbar').removeClass("progress-bar-danger");
                                 $('#'+medid+'progressbar').css("width",progress_width+'%');
                                 $('#'+medid+'percentage').html(progress_width_int+'%');
@@ -268,7 +282,7 @@ var socket = io.connect('http://localhost');
                                 $('#'+medid+'details').removeClass("displaydis");
                                 $('#'+medid+'details-rate').html(rateml);
                                 $('#'+medid+'details-volume').html(volinfused);
-                                $('#'+medid+'details-time').html(remaintime);
+                                $('#'+medid+'details-time').html(formattedRemainingTime);
                                 $('#'+medid+'progressbar').removeClass("progress-bar-danger");
                                 $('#'+medid+'progressbar').css("width",progress_width+'%');
                                 $('#'+medid+'percentage').html(progress_width_int+'%');

@@ -54,10 +54,7 @@ div.col-sm-12.col-md-12.col-lg-12.col-xs-12
                                         div.col-sm-4.col-md-4.col-lg-4.col-xs-12(id='#{med._id}'+'details-timediv') 
                                           p   
                                               span.glyphicon.glyphicon-time(style="font-size:120%") 
-                                              span(id='#{med._id}'+'details-timehours') 
-                                              span Hr
-                                              span(id='#{med._id}'+'details-timemins') 
-                                              span Mins
+                                              span(id='#{med._id}'+'details-time')  
               div.col-xs-12.col-sm-1.col-lg-1.col-md-1.del
                  span.btn-default.delete.glyphicon.glyphicon-remove.patrmv(id='#{bed._id}'+'remove')
                  span.btn-default.editpatient.glyphicon.glyphicon-pencil.patedit(data-url='/editpatient?bed=#{bed._id}')(id='#{bed._id}'+'edit')
