@@ -31,7 +31,6 @@ var socket = io.connect('http://localhost');
 
                     }
                 	var progress_width = ((volinfused/tvol)*100);
-                    console.log(formattedRemainingTime);
                     var progress_width_int=Math.trunc(progress_width);
                 	if(status=='start')
                 	{

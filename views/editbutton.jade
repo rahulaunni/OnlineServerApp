@@ -1,0 +1,24 @@
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+.col-sm-12.col-lg-12.col-xs-12.main
+  .col-sm-12.col-md-12.col-lg-12.col-xs-12.tab
+    ul.nav.nav-pills.ivsetpills
+      li
+        a.list(data-toggle='pill', data-url='/listbutton') View
+      li.active
+        a.add(data-toggle='pill', data-url='/addbutton') Add       
+  .col-sm-12.col-md-12.col-lg-12.col-xs-11.cnt
+    adddevice.h4 Add leButton
+  each button in buttons
+    form(role='form',action="/addbutton",method="post")
+      .form-group
+      .col-sm-12.col-md-12.col-lg-12.col-xs-11 
+        input.form-control(type='text', name="buttonid", placeholder='Button #ID' value='#{button.buttonid}' required)
+        br
+        select.form-control(name='bedid' required)
+          each bed in beds
+            option(value='#{bed._id}') #{bed.bname}
+        br
+        input.form-control(type='text', name="purpose", placeholder='Purpose' value='#{button.purpose}' required)
+        br
+      button.btn.btn-success#submit_button(type='submit') Submit

@@ -1,0 +1,34 @@
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+.col-xs-12.hidden-sm.hidden-md.hidden-lg &nbsp 
+div.col-sm-12.col-lg-12.col-md12.col-xs-12.main
+	.col-sm-12.col-lg-12.col-md12.col-xs-12.tab
+		ul.nav.nav-pills.ivsetpills
+			li.active
+				a.list(data-toggle='pill', data-url='/listbutton') View
+			li
+				a.add(data-toggle='pill', data-url='/addbutton') Add    
+	.col-sm-12.col-lg-12.col-md12.col-xs-12.cnt
+		each button in buttons
+			div.bedlistandbedcnfrm 
+				div.col-sm-12.col-md12.col-xs-11.col-lg-12.list-device.devicelist
+					.col-sm-10.col-lg-10.col-md-10.col.col-xs-8.d1
+						h4 #{button.buttonid}
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m1.btn-default.editbutton(data-url='/editbutton?button=#{button._id}')  
+						h4.glyphicon.glyphicon-pencil
+					.col-sm-1.col-md-1.col-lg-1.col-xs-2.m2.btn-default.removebutton
+						h4.glyphicon.glyphicon-remove
+				div.col-sm-12.col-md-12.col-lg-12.col-xs-11.delete-device.deleteconfirmationdropdown.displaydis
+					div.col-md-6.col-lg-6.hidden-xs.hidden-sm
+						h4 Deleting a Button will permanently remove it from your database
+					div.col-xs-12.col-sm-4.hidden-md.hidden-lg
+						h4 Delete Button?
+					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs.keepbuttondetails(style="padding-top:2px")
+						button.btn.btn-success(type="button") No,Keep Button 
+					div.col-md-3.col-sm-4.col-lg-3.col-xs-6.hidden-xs(style="padding-top:2px")
+						button.btn.btn-danger.deletebuttonconfirmbtn(type='submit' data-url='/deletebutton?button=#{button._id}') Yes,Remove Button
+					div.col-xs-6.hidden-md.hidden-sm.hidden-lg.keepbuttondetails(style="padding-bottom:2px")
+						button.btn.btn-success(type="button") Cancel
+					div.col-xs-6.hidden-md.hidden-sm.hidden-lg(style="padding-bottom:2px")
+						button.btn.btn-danger.deletedeviceconfirmbtn(type='submit' data-url='/deletebutton?button=#{button._id}') 	Delete
+
+script(src='/js/listbutton.js')

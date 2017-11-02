@@ -6,10 +6,11 @@ var passportLocalMongoose = require('passport-local-mongoose');
 var Bed = new Schema({
     bname: String,
     bedstatus:String,
+    buttonid:String,
     _station:{ type: Schema.ObjectId, ref: 'Station' },
     _patient:{ type: Schema.ObjectId, ref: 'Patient' },
     _medications:[{ type: Schema.ObjectId, ref: 'Medication'}],
-    _tasks:[{ type: Schema.ObjectId, ref: 'Tasks'}]
+    _button:{ type: Schema.ObjectId, ref: 'Button'}
 });
 
 

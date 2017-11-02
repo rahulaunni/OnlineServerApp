@@ -150,6 +150,11 @@ $(document).on("click","#middlebar .editivset",function(){
   $( ".middlebar" ).html( data );
 });
 });
+$(document).on("click","#middlebar .editbutton",function(){
+	$.get($(this).attr("data-url"), function( data ) {
+  $( ".middlebar" ).html( data );
+});
+});
 
 
 $(document).on("click","#middlebar .add",function(){

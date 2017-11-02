@@ -9,6 +9,7 @@ var Timetable = require('../models/timetable');
 var Device = require('../models/device');
 var Ivset = require('../models/ivset');
 var Tempaccount = require('../models/tempaccount');
+var Button = require('../models/button');
 var router = express.Router();
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
@@ -419,6 +420,76 @@ router.get('/listbed',checkAuthentication,function(req,res){
     });
 
 });
+//route to render add button page
+router.get('/addbutton', checkAuthentication, function(req, res) {
+    //to give option to select bed while adding bed
+    Bed.find({'_station':req.session.station}).populate('_station').exec(function(err, bed) {
+        if (err) return console.error(err);
+        res.render('addbutton', {
+            user: req.user,
+            beds: bed
+        });
+    });
+
+});
+
+//post route for addbutton
+router.post('/addbutton', checkAuthentication, function(req, res) {
+    // Button.collection.update({buttonid:req.body.buttonidid},{$set:{buttonid:req.body.buttonid,purpose:req.body.purpose,uid:req.user.id,sname:req.session.station,_bed:req.body.bedid}},{upsert:true})
+    var button= new Button({
+    buttonid: req.body.buttonid,
+    purpose:req.body.purpose,
+    _bed: req.body.bedid,
+    sname:req.session.station,
+    uid:req.user.id
+    });
+    //save the new button collection
+    button.save(function(err, button_to_add) {
+        if (err){return console.error(err);}
+            // change the property of corresponding Bed where the patient is admitted
+            //ref patient in the Bed and changed bed status to ''occupied
+            Bed.findOne({ _id: req.body.bedid}, function (err, doc){
+            console.log(button);
+            console.log(doc);
+             doc.buttonid = button.buttonid;
+              doc._button = button;
+              doc.save();
+            }); 
+    res.redirect('/');
+});
+});
+
+//route for render edit button , query has the button id find and send the details
+router.get('/editbutton',checkAuthentication,function(req,res){
+    Button.find({'_id':req.query.button}).exec(function(err,button){
+        Bed.find({'_station':req.session.station}).populate('_station').exec(function(err, bed) {
+        res.render('editbutton',{
+            buttons:button._id,
+            beds:bed
+        }); 
+        });    
+    });
+
+});
+
+//route for posting edit button
+router.post('/editbutton', checkAuthentication, function(req, res) {
+    var buttonid = ObjectId(req.body.id);
+    Button.collection.update({'_id':buttonid},{$set:{buttonid:req.body.buttonid,_bed:req.body.bedid,purpose:req.body.purpose}});
+    res.redirect('/');
+});
+
+//route for deleting a button from database, qury has the device id
+router.post('/deletebutton',checkAuthentication,function(req,res){
+    console.log(req.query.button);
+    var buttonid=ObjectId(req.query.button);
+    Button.collection.remove({_id:buttonid});
+    Bed.update({_button:buttonid},{$unset:{buttonid:""}},function(err,bed){
+        Bed.update({_button:buttonid},{$unset:{_button:""}},function(err,bed){
+        });
+    });
+    res.redirect('/listbutton');    
+});
 
 //post route to delete the bed from DB
 router.post('/deletebed',checkAuthentication,function(req,res){
@@ -428,6 +499,19 @@ router.post('/deletebed',checkAuthentication,function(req,res){
     //grab the bed id from query and remove it from data base
     Bed.collection.remove({_id:bedid});
     res.redirect('/listbed');    
+});
+
+//route to render list of button search all button linked with the station
+router.get('/listbutton',checkAuthentication,function(req,res){
+    Button.find({'sname':req.session.station}).exec(function(err,button){
+        if (err)return console,log(err);
+        res.render('listbutton',{
+            user: req.user,
+            buttons:button
+        });
+
+    });
+
 });
 
 //route to render add IV-set page
