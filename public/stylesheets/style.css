@@ -952,3 +952,24 @@ border:1px #CCCCCC solid;
   text-align: center;
 
 }
+/*style for Home page alert from button*/
+.buttonalert{
+  justify-content: center;
+  text-align: center;
+  vertical-align: center;
+  transition: all 1s;
+  position: relative;
+  top:-100%;
+  overflow: hidden;
+  background-color: #F0F3F3;
+  color:#e71f63;
+
+
+}
+.buttonalert div{
+  display:flex;
+  justify-content: center;
+  /*flex-direction: column;*/
+  text-align: center;
+
+}

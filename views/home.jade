@@ -7,7 +7,7 @@ div.col-sm-12.col-md-12.col-lg-12.col-xs-12
               div.col-xs-12.col-sm-2.col-lg-2.col-md-2.bed
                  h2 #{bed.bname}
                  h4 #{bed._patient.name} 
-              div.col-xs-12.col-sm-9.col-lg-9.col-md-9.medicines
+              div.col-xs-12.col-sm-9.col-lg-9.col-md-9.medicines(id='#{bed.buttonid}')
                                each med in bed._patient._medication
                                 div.col-sm-12.col-md-12.col-lg-12.col-xs-12.medicinehold.row-eq-height
                                    div.col-xs-12.col-sm-4.col-md-4.col-lg-4.medname #{med.name}
@@ -55,7 +55,7 @@ div.col-sm-12.col-md-12.col-lg-12.col-xs-12
                                           p   
                                               span.glyphicon.glyphicon-time(style="font-size:120%") 
                                               span(id='#{med._id}'+'details-time')  
-              div.col-xs-12.col-sm-1.col-lg-1.col-md-1.del
+              div.col-xs-12.col-sm-1.col-lg-1.col-md-1.del(id='#{bed.buttonid}'+'hide')
                  span.btn-default.delete.glyphicon.glyphicon-remove.patrmv(id='#{bed._id}'+'remove')
                  span.btn-default.editpatient.glyphicon.glyphicon-pencil.patedit(data-url='/editpatient?bed=#{bed._id}')(id='#{bed._id}'+'edit')
 
@@ -70,9 +70,17 @@ div.col-sm-12.col-md-12.col-lg-12.col-xs-12
                   button.btn.btn-success.patrmvcancel(type='submit') Cancel
                 div.col-xs-6.hidden-sm.hidden-md.hidden-lg(style="padding-bottom:2px")
                   button.btn.btn-danger.patrmvconfirm(type='submit' data-url='/removepatient?bed=#{bed._id}') Remove
-             
+              div.col-sm-10.col-md-10.col-lg-10.col-xs-12.buttonalert.displaydis(id='#{bed.buttonid}'+'message')
+                div.col-sm-6.col-md-6.col-lg-6.col-xs-12 
+                  h4 Patient Need&nbsp 
+                  h4(id='#{bed.buttonid}'+'purpose') 
+                div.col-sm-4.col-md-2.col-lg-2.hidden-xs
+                  button.btn.btn-danger.buttonacktrue(id= '#{bed.buttonid}'+'ack-btn',type='submit') Acknowledge
+  
+
                                           
 script(src="/js/home.js")
+script(src="/js/buttonaction.js")
 
 
 

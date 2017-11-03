@@ -114,9 +114,12 @@ var Timetable = require('./models/timetable');
 var Infusionhistory = require('./models/infusionhistory');
 var Device = require('./models/device');
 var Ivset = require('./models/ivset');
+var Button = require('./models/button');
+
 //subscribing to topic dripo/ on connect
 client.on('connect', function() {
     client.subscribe('dripo/#',{ qos: 1 });
+
 });
 
 //function fired on recieving a message from device in topic dripo/
@@ -480,6 +483,34 @@ io.sockets.on( "connection", function( socket )
 
     }
     });
+    
+//code for button socketio on reload
+    socket.on('join_button', function(data){
+        if(data=='retainsend'){
+            var client4=mqtt.connect('mqtt://localhost:1883');
+            client4.on('connect', function() {
+                client4.subscribe('aavo/#',{ qos: 1 });
+            });
+            client4.on('message', function (topic, payload, packet) {
+            var res = topic.split("/");
+            var id = res[1];
+             Button.find({'buttonid':id}).exec(function(err,button){
+             if (button==0){
+             }
+             //if device is found in DB emit that message to the browser via socket.io
+             else{
+             //check if the topic is correct #/mon is the topic for monitoring purpose
+             if(topic=='aavo/'+ id + '/alert')
+             {
+                 io.sockets.emit('mqtt_button',{'topic':topic.toString(),'payload':payload.toString()});
+
+             }
+             } 
+         });
+         });
+        }
+    });
+
      // socket connection indicates what mqtt topic to subscribe to in data.topic
     socket.on('subscribe', function (data) {
         //console.log('Subscribing to '+data.topic);
@@ -648,6 +679,32 @@ client.on('message', function (topic, payload, packet) {
 }
 });
 });
+var client2 = mqtt.connect('mqtt://localhost:1883');
+client2.on('connect', function() {
+    client2.subscribe('aavo/#',{ qos: 1 });
+
+});
+
+//socket io for button
+client2.on('message', function (topic, payload, packet){
+    var res = topic.split("/");
+    var buttonid = res[1];
+        //check the authenticity of the button as before
+        Button.find({'buttonid':buttonid}).exec(function(err,button){
+        if (button==0){
+            console.log("Button not in DB");
+            //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
+        }
+        else{
+            console.log(payload.toString());
+            io.sockets.emit('mqtt_button',{'topic':topic.toString(),'payload':payload.toString()});
+        }
+        });
+});
+
+
+
+
 //cron-Job********************************************************************************************************************
 //infused and skipped timetable of medicine back to not_infused
 cron.schedule('1 0-23 * * *', function(){
