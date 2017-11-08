@@ -436,7 +436,6 @@ router.get('/addbutton', checkAuthentication, function(req, res) {
 //post route for addbutton
 router.post('/addbutton', checkAuthentication, function(req, res) {
     // Button.collection.update({buttonid:req.body.buttonidid},{$set:{buttonid:req.body.buttonid,purpose:req.body.purpose,uid:req.user.id,sname:req.session.station,_bed:req.body.bedid}},{upsert:true})
-        console.log(req.body.purpose);
     var button= new Button({
     buttonid: req.body.buttonid,
     purpose:req.body.purpose,
@@ -450,8 +449,6 @@ router.post('/addbutton', checkAuthentication, function(req, res) {
             // change the property of corresponding Bed where the patient is admitted
             //ref patient in the Bed and changed bed status to ''occupied
             Bed.findOne({ _id: req.body.bedid}, function (err, doc){
-            console.log(button);
-            console.log(doc);
              doc.buttonid = button.buttonid;
               doc._button = button;
               doc.save();
@@ -482,7 +479,6 @@ router.post('/editbutton', checkAuthentication, function(req, res) {
 
 //route for deleting a button from database, qury has the device id
 router.post('/deletebutton',checkAuthentication,function(req,res){
-    console.log(req.query.button);
     var buttonid=ObjectId(req.query.button);
     Button.collection.remove({_id:buttonid});
     Bed.update({_button:buttonid},{$unset:{buttonid:""}},function(err,bed){
@@ -494,10 +490,19 @@ router.post('/deletebutton',checkAuthentication,function(req,res){
 
 //ajax request from buttonaction.js query has the buttonid and route will return corresponding purpose (to display in the  notification)
 router.get('/buttontopurpose', checkAuthentication, function(req, res) {
-    console.log(req.query.buttonid);
     Button.find({'buttonid':req.query.buttonid}).exec(function(err,button){
-    console.log(button[0].purpose);
     res.send(button[0].purpose);
+});
+});
+
+//ajax request from buttonalert.js query has the buttonid and route will return corresponding bedname and purpose (to display in the notification)
+router.get('/buttonidtopurpose', checkAuthentication, function(req, res) {
+    Button.find({'buttonid':req.query.buttonid}).populate({path:'_bed',model:'Bed'}).exec(function(err,bed){
+    var obj = {
+        bedname: bed[0]._bed.bname,
+        purpose: bed[0].purpose
+    };
+    res.send(JSON.stringify(obj));
 });
 });
 

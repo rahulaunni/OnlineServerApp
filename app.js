@@ -486,7 +486,7 @@ io.sockets.on( "connection", function( socket )
     
 //code for button socketio on reload
     socket.on('join_button', function(data){
-        if(data=='retainsend'){
+        if(data=='sendbtnalert'){
             var client4=mqtt.connect('mqtt://localhost:1883');
             client4.on('connect', function() {
                 client4.subscribe('aavo/#',{ qos: 1 });
@@ -507,7 +507,9 @@ io.sockets.on( "connection", function( socket )
              }
              } 
          });
+             client4.end();
          });
+
         }
     });
 
@@ -696,10 +698,10 @@ client2.on('message', function (topic, payload, packet){
             //client.publish('dripo/' + id + '/iv',"invalid",{ qos: 1, retain: false );
         }
         else{
-            console.log(payload.toString());
             io.sockets.emit('mqtt_button',{'topic':topic.toString(),'payload':payload.toString()});
         }
         });
+
 });
 
 
