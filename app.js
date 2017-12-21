@@ -15,7 +15,6 @@ var app = express();
 var ObjectId = require('mongodb').ObjectID;
 var fs = require('fs');
 var cron = require('node-cron');
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -523,6 +522,10 @@ io.sockets.on( "connection", function( socket )
     socket.on('publish', function (data) {
         //console.log('Publishing to '+data.topic);
         client.publish(data.topic,data.payload,{ qos: 1, retain: true });
+    });
+    socket.on('publish_button', function (data) {
+        //console.log('Publishing to '+data.topic);
+        client.publish(data.topic,data.payload,{ qos: 1, retain: false });
     });
 
 });

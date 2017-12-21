@@ -1,0 +1,133 @@
+infusing,57,0,315,100
+infusing,66,0,272,100
+infusing,66,1,270,100
+infusing,69,1,258,100
+infusing,69,2,255,100
+infusing,69,3,253,100
+infusing,72,3,242,100
+infusing,81,4,213,100
+Rate Err,90,4,192,100
+infusing,72,4,240,100
+infusing,69,5,247,100
+Rate Err,72,5,237,100
+infusing,69,6,245,100
+infusing,72,6,235,100
+infusing,69,7,242,100
+infusing,69,7,242,100
+infusing,69,8,240,100
+infusing,69,8,240,100
+infusing,93,9,176,100
+infusing,69,10,234,100
+infusing,69,10,234,100
+Rate Err,45,11,356,100
+infusing,66,11,242,100
+Rate Err,78,11,205,100
+infusing,57,13,274,100
+infusing,57,13,274,100
+Rate Err,45,14,344,100
+infusing,63,14,245,100
+stop,126,14,122,100
+stop,81,1,220,100
+infusing,63,0,285,100
+infusing,63,0,285,100
+infusing,63,0,285,100
+infusing,54,1,330,100
+infusing,60,1,297,100
+infusing,63,2,280,100
+infusing,57,3,306,100
+infusing,57,3,306,100
+infusing,57,4,303,100
+Block,141,4,122,100
+infusing,75,4,230,100
+infusing,60,5,285,100
+infusing,78,5,219,100
+infusing,54,6,313,100
+infusing,54,6,313,100
+infusing,24,6,705,100
+Rate Err,15,6,1128,100
+infusing,51,7,328,100
+Rate Err,156,7,107,100
+infusing,69,8,240,100
+infusing,60,9,273,100
+infusing,57,9,287,100
+infusing,54,10,300,100
+infusing,57,10,284,100
+infusing,57,11,281,100
+infusing,57,11,281,100
+infusing,54,11,296,100
+infusing,54,12,293,100
+infusing,63,12,251,100
+infusing,54,13,290,100
+infusing,54,13,290,100
+infusing,54,14,286,100
+infusing,51,14,303,100
+infusing,51,15,300,100
+infusing,51,15,300,100
+infusing,54,16,280,100
+infusing,51,16,296,100
+infusing,51,16,296,100
+infusing,51,17,292,100
+infusing,51,17,292,100
+infusing,48,18,307,100
+infusing,51,18,289,100
+infusing,51,19,285,100
+infusing,51,19,285,100
+infusing,54,19,270,100
+infusing,48,20,300,100
+Rate Err,48,20,300,100
+infusing,48,20,300,100
+Rate Err,48,20,300,100
+infusing,60,21,237,100
+infusing,36,21,395,100
+Rate Err,36,21,395,100
+infusing,63,22,222,100
+infusing,69,22,203,100
+Rate Err,72,23,192,100
+infusing,69,23,200,100
+Rate Err,108,24,126,100
+infusing,63,24,217,100
+infusing,51,24,268,100
+Rate Err,48,25,281,100
+infusing,69,27,190,100
+Rate Err,72,27,182,100
+infusing,69,27,190,100
+infusing,66,28,196,100
+infusing,66,28,196,100
+infusing,66,29,193,100
+infusing,72,30,175,100
+infusing,69,30,182,100
+infusing,69,31,180,100
+infusing,69,31,180,100
+infusing,69,32,177,100
+infusing,69,33,174,100
+infusing,69,33,174,100
+infusing,69,34,172,100
+infusing,69,34,172,100
+infusing,69,35,169,100
+Rate Err,72,36,160,100
+infusing,69,36,166,100
+infusing,69,36,166,100
+infusing,69,37,164,100
+infusing,72,37,157,100
+infusing,69,38,161,100
+infusing,69,39,159,100
+infusing,72,39,152,100
+Rate Err,72,40,150,100
+infusing,72,40,150,100
+infusing,69,40,156,100
+infusing,69,41,153,100
+infusing,69,42,151,100
+infusing,69,42,151,100
+infusing,69,43,148,100
+infusing,69,43,148,100
+infusing,72,44,140,100
+infusing,69,45,143,100
+infusing,69,45,143,100
+infusing,69,46,140,100
+Rate Err,75,46,129,100
+Block,126,46,77,100
+stop,42,48,222,100
+infusing,55,0,109,100
+infusing,55,0,109,100
+Block,55,0,109,100
+stop,55,0,109,100

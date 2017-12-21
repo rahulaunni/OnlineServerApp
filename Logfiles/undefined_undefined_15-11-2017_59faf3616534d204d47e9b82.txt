@@ -1,0 +1,61 @@
+infusing,72,1,332,400
+infusing,83,1,288,400
+infusing,79,2,302,400
+infusing,80,3,297,400
+infusing,81,3,294,400
+infusing,84,4,282,400
+infusing,83,5,285,400
+infusing,83,5,285,400
+infusing,72,6,328,400
+infusing,75,7,314,400
+infusing,73,7,323,400
+infusing,79,8,297,400
+infusing,79,9,296,400
+infusing,80,9,293,400
+infusing,75,10,312,400
+infusing,74,10,316,400
+infusing,91,11,256,400
+infusing,74,12,314,400
+infusing,74,12,314,400
+infusing,74,13,313,400
+infusing,74,14,312,400
+infusing,73,14,317,400
+infusing,74,15,312,400
+infusing,73,15,316,400
+infusing,74,16,311,400
+Rate Err,89,16,258,400
+infusing,80,17,287,400
+infusing,75,17,306,400
+infusing,66,18,347,400
+infusing,69,19,331,400
+infusing,32,19,714,400
+Rate Err,31,19,737,400
+infusing,93,20,245,400
+Rate Err,85,20,268,400
+infusing,81,20,281,400
+Rate Err,81,21,280,400
+infusing,80,21,284,400
+Rate Err,82,21,277,400
+infusing,89,22,254,400
+Rate Err,92,22,246,400
+infusing,73,22,310,400
+infusing,69,23,327,400
+infusing,70,23,323,400
+infusing,66,24,341,400
+infusing,59,25,381,400
+infusing,67,25,335,400
+infusing,63,26,356,400
+infusing,63,26,356,400
+infusing,52,27,430,400
+Rate Err,27,27,828,400
+infusing,88,27,254,400
+infusing,65,28,343,400
+infusing,70,28,318,400
+infusing,16,28,1395,400
+Rate Err,16,28,1395,400
+Block,19,29,1171,400
+infusing,62,29,359,400
+Rate Err,117,29,190,400
+infusing,68,30,326,400
+infusing,121,30,183,400
+stop,125,30,177,400

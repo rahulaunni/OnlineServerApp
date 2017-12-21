@@ -1,0 +1,31 @@
+infusing,96,0,165,88
+infusing,66,0,240,88
+Block,171,1,91,88
+infusing,69,1,226,88
+infusing,81,1,193,88
+infusing,57,2,271,88
+infusing,81,3,188,88
+infusing,75,3,204,88
+infusing,45,4,336,88
+infusing,75,4,201,88
+infusing,72,5,207,88
+Rate Err,72,5,207,88
+infusing,75,6,196,88
+infusing,99,6,149,88
+Rate Err,138,7,105,88
+infusing,96,9,148,88
+infusing,96,9,148,88
+infusing,99,9,143,88
+infusing,81,10,173,88
+infusing,81,11,171,88
+infusing,87,11,159,88
+infusing,72,12,190,88
+infusing,75,13,180,88
+infusing,75,13,180,88
+infusing,126,14,105,88
+Rate Err,69,14,193,88
+infusing,75,16,172,88
+infusing,69,16,187,88
+Rate Err,69,16,187,88
+infusing,78,16,166,88
+Rate Err,66,17,193,88
