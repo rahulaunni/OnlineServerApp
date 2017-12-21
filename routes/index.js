@@ -20,6 +20,8 @@ var wifiName = require('wifi-name');
 var ip = require('ip');
 var ObjectId = require('mongodb').ObjectID;
 var nodemailer = require("nodemailer");
+var ConnectRoles = require('connect-roles');
+
 //checking for the authentication and if not login redirects to /login page
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
@@ -34,8 +36,42 @@ router.get('/', checkAuthentication, function(req, res) {
         user: req.user
     });
 });
+
+//connect-roles config
+var user = new ConnectRoles({
+  failureHandler: function (req, res, action) {
+    // optional function to customise code that runs when 
+    // user fails authorisation 
+    var accept = req.headers.accept || '';
+    res.status(403);
+    if (~accept.indexOf('html')) {
+      res.render('access-denied', {action: action});
+    } else {
+      res.send('Access Denied - You don\'t have permission to: ' + action);
+    }
+  }
+});
+user.use('access admin page', function (req) {
+  if (req.user.roles === 'admin') {
+    return true;
+    console.log("admin request");
+  }
+});
+
+router.get('/admin', user.can('access admin page'),checkAuthentication, function (req, res) {
+console.log(req.user.roles);
+  res.send('admin');
+});
+
+
 //before rendering the page we have to sort the bed to list according to the time of its next infusion, the operations are to get that orders data
 router.get('/home', checkAuthentication, function(req, res) {
+    console.log(req.user.roles);
+    if(req.session.station != 'undefined')
+    {
+
+
+        console.log(req.session.station);
         //find timetable and sort in ascending order,there will be duplicates because multiple timetable collection has same bed reference
         Timetable.find({'station':req.session.station,'userid':req.user.id,'infused':{ $in:['not_infused','infusing','alerted','skipped']}}).sort({time:1}).populate({path:'station',model:'Station'}).exec(function(err,tim){
         if (err) return console.error(err);
@@ -258,6 +294,11 @@ router.get('/home', checkAuthentication, function(req, res) {
             });
     });
 });
+}
+else
+{
+    res.redirect('/login');
+}
 
 });
 
@@ -382,7 +423,7 @@ router.get('/viewpatient',checkAuthentication,function(req,res){
 });
 
 //route to render add bed page
-router.get('/addbed', checkAuthentication, function(req, res) {
+router.get('/addbed', user.can('access admin page'), checkAuthentication, function(req, res) {
     res.render('addbed', {
         user: req.user
     });

@@ -6,6 +6,7 @@ var Account = new Schema({
     username: String,
     password: String,
     hname: String,
+    roles: {type:String,enum:['admin','doctor','nurse'],default:['admin']}
 });
 Account.plugin(passportLocalMongoose);
 
